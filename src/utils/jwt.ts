@@ -1,7 +1,6 @@
 import jwt, { SignOptions } from 'jsonwebtoken'
 import { TokenPayload } from '~/schemas/Request/User.request'
 
-
 export const signToken = ({
   payload,
   privateKey,
