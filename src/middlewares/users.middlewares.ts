@@ -36,9 +36,6 @@ export const loginValidator = validate(
         notEmpty: {
           errorMessage: USERS_MESSAGES.EMAIL_IS_REQUIRED
         },
-        isEmail: {
-          errorMessage: USERS_MESSAGES.EMAIL_IS_INVALID
-        },
         trim: true,
         custom: {
           options: async (value, { req }) => {
