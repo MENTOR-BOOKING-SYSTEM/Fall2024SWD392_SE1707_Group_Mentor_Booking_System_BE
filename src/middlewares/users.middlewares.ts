@@ -43,8 +43,8 @@ export const loginValidator = validate(
         custom: {
           options: async (value, { req }) => {
             const [user] = await databaseService.query<User & { role: string }[]>(
-              'SELECT * FROM user u JOIN user_role ur ON u.userID = ur.userID JOIN role r ON ur.roleID = r.roleID WHERE u.email = ? AND u.password = ?',
-              [value, req.body.password]
+              'SELECT * FROM user u JOIN user_role ur ON u.userID = ur.userID JOIN role r ON ur.roleID = r.roleID WHERE (u.email = ? or u.studentCode = ?) AND u.password = ?',
+              [value, value, req.body.password]
             )
 
             if (user === null) {
