@@ -2,6 +2,7 @@ import User from '~/schemas/User.schema'
 import databaseService from './database.services'
 import { TokenRole, TokenType } from '~/constants/enums'
 import { signToken, verifyToken } from '~/utils/jwt'
+import { envConfig } from '~/constants/config';
 
 class UserService {
   private signAccessToken({ user_id, role }: { user_id: string; role: TokenRole }) {
@@ -11,9 +12,9 @@ class UserService {
         token_type: TokenType.AccessToken,
         role
       },
-      privateKey: process.env.JWT_SECRET_ACCESS_TOKEN as string,
+      privateKey: envConfig.jwtSecretAccessToken as string,
       options: {
-        expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN
+        expiresIn: envConfig.accessTokenExpiresIn
       }
     })
   }
@@ -26,7 +27,7 @@ class UserService {
           role,
           exp
         },
-        privateKey: process.env.JWT_SECRET_REFRESH_TOKEN as string
+        privateKey: envConfig.jwtSecretRefreshToken as string
       })
     }
     return signToken({
@@ -35,9 +36,9 @@ class UserService {
         token_type: TokenType.RefreshToken,
         role
       },
-      privateKey: process.env.JWT_SECRET_REFRESH_TOKEN as string,
+      privateKey: envConfig.jwtSecretRefreshToken as string,
       options: {
-        expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN
+        expiresIn: envConfig.refreshTokenExpiresIn
       }
     })
   }
@@ -47,7 +48,7 @@ class UserService {
   private decodeRefreshToken(refresh_token: string) {
     return verifyToken({
       token: refresh_token,
-      secretOrPublicKey: process.env.JWT_SECRET_REFRESH_TOKEN as string
+      secretOrPublicKey: envConfig.jwtSecretRefreshToken as string
     })
   }
   async login({ user_id, role }: { user_id: string; role: TokenRole }) {

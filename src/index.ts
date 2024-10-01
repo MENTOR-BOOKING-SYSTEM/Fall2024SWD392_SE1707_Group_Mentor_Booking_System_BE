@@ -5,11 +5,16 @@ import databaseService from './services/database.services'
 import usersRouter from './routes/users.routes'
 import { defaultErrorHandler } from './middlewares/errors.middlewares'
 import { verifyToken } from './utils/jwt'
+import { envConfig } from './constants/config'
+
+
 databaseService.connect()
 const app = express()
+console.log("hi", databaseService.query("select * from user"));
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-const port = process.env.PORT
+const port = envConfig.port
 app.use(cors())
 app.use('/users', usersRouter)
 app.use(defaultErrorHandler)
