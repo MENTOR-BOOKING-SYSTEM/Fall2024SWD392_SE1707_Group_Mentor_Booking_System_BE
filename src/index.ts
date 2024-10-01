@@ -10,7 +10,6 @@ import { envConfig } from './constants/config'
 
 databaseService.connect()
 const app = express()
-console.log("hi", databaseService.query("select * from user"));
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
