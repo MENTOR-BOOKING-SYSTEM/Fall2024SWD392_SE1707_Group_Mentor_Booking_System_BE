@@ -3,7 +3,9 @@ import databaseService from './database.services'
 import { TokenRole, TokenType } from '~/constants/enums'
 import { signToken, verifyToken } from '~/utils/jwt'
 import { envConfig } from '~/constants/config';
-
+import RefreshToken from '~/schemas/RefreshToken.schema';
+import { v4 as uuidv4 } from 'uuid';
+import { handlRandomId, sprearObjectToArray } from '~/utils/randomId';
 class UserService {
   private signAccessToken({ user_id, role }: { user_id: string; role: TokenRole }) {
     return signToken({
@@ -57,6 +59,12 @@ class UserService {
       role
     })
     const { iat, exp } = await this.decodeRefreshToken(refresh_token)
+
+    const data = new RefreshToken({ _id: handlRandomId(), token: refresh_token, userID: user_id, iat, exp })
+
+    await databaseService.query("insert into refresh_tokens(_id,token,created_at,userID,iat,exp) values (?,?,?,?,?,?)", sprearObjectToArray(data))
+
+
     return {
       access_token,
       refresh_token

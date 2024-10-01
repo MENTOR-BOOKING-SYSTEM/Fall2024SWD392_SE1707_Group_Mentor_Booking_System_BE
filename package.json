@@ -28,11 +28,13 @@
   },
   "homepage": "https://github.com/MENTOR-BOOKING-SYSTEM/Fall2024SWD392_SE1707_Group_Mentor_Booking_System_BE#readme",
   "dependencies": {
+    "@types/uuid": "^10.0.0",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "express-validator": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.11.3"
+    "mysql2": "^3.11.3",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

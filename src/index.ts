@@ -6,12 +6,14 @@ import usersRouter from './routes/users.routes'
 import { defaultErrorHandler } from './middlewares/errors.middlewares'
 import { verifyToken } from './utils/jwt'
 import { envConfig } from './constants/config'
+import { handlRandomId } from './utils/randomId'
 
 
 databaseService.connect()
 const app = express()
 
 app.use(express.json())
+
 app.use(express.urlencoded({ extended: true }))
 const port = envConfig.port
 app.use(cors())
