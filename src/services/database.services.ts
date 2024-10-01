@@ -5,7 +5,7 @@ class DatabaseService {
   private connection: Connection
   constructor() {
     this.connection = mysql.createConnection({
-      host: 'localhost',
+      host: 'bzjyg0s1aiyqx76l27tw-mysql.services.clever-cloud.com',
       user: process.env.DB_USER_NAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME
