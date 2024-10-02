@@ -6,7 +6,8 @@ import usersRouter from './routes/users.routes'
 import { defaultErrorHandler } from './middlewares/errors.middlewares'
 import { verifyToken } from './utils/jwt'
 import { envConfig } from './constants/config'
-
+import { config } from 'dotenv'
+config()
 
 databaseService.connect()
 const app = express()
