@@ -1,6 +1,11 @@
 import mysql, { Connection, Pool } from 'mysql2'
+<<<<<<< HEAD
 import { envConfig } from '~/constants/config'
 import User from '~/models/schemas/User.schema'
+=======
+import { envConfig } from '~/constants/config';
+import User from '~/schemas/User.schema'
+>>>>>>> 4d6d82d (edit env config)
 
 class DatabaseService {
   private connection: Pool
@@ -16,6 +21,7 @@ class DatabaseService {
   }
 
   async connect() {
+
     return new Promise((resolve, reject) => {
       this.connection.getConnection((err) => {
         if (err) {
