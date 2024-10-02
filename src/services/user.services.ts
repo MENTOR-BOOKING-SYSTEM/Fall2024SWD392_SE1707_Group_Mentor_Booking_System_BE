@@ -64,8 +64,8 @@ class UserService {
 
     await databaseService.query("insert into refresh_tokens(_id,token,created_at,userID,iat,exp) values (?,?,?,?,?,?)", sprearObjectToArray(data))
     return {
-      access_token,
-      refresh_token
+      accessToken: access_token,
+      refreshToken: refresh_token
     }
   }
 }
