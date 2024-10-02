@@ -1,4 +1,5 @@
 import mysql, { Connection, Pool } from 'mysql2'
+import { envConfig } from '~/constants/config';
 import User from '~/schemas/User.schema'
 
 class DatabaseService {
@@ -7,14 +8,15 @@ class DatabaseService {
     this.connection = mysql.createPool({
       host: "bzjyg0s1aiyqx76l27tw-mysql.services.clever-cloud.com",
       port: 20345,
-      user: process.env.DB_USER_NAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
+      user: envConfig.dbUserName,
+      password: envConfig.dbPassword,
+      database: envConfig.dbName,
       connectTimeout: 10000
     })
   }
 
   async connect() {
+
     return new Promise((resolve, reject) => {
       this.connection.getConnection((err) => {
         if (err) {
