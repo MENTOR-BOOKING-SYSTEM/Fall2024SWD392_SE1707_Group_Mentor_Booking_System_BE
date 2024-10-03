@@ -1,12 +1,14 @@
+import { reject } from 'lodash'
 import mysql, { Connection, Pool } from 'mysql2'
-import { envConfig } from '~/constants/config';
+import { resolve } from 'path'
+import { envConfig } from '~/constants/config'
 import User from '~/schemas/User.schema'
 
 class DatabaseService {
   private connection: Pool
   constructor() {
     this.connection = mysql.createPool({
-      host: "bzjyg0s1aiyqx76l27tw-mysql.services.clever-cloud.com",
+      host: 'bzjyg0s1aiyqx76l27tw-mysql.services.clever-cloud.com',
       port: 20345,
       user: envConfig.dbUserName,
       password: envConfig.dbPassword,
@@ -16,7 +18,6 @@ class DatabaseService {
   }
 
   async connect() {
-
     return new Promise((resolve, reject) => {
       this.connection.getConnection((err) => {
         if (err) {
@@ -28,6 +29,7 @@ class DatabaseService {
       })
     })
   }
+
   query<T>(sql: string, params?: (number | string)[]): Promise<T> {
     return new Promise((resolve, reject) => {
       this.connection.query(sql, params, (err, results) => {
@@ -40,6 +42,20 @@ class DatabaseService {
       })
     })
   }
+
+  insert<T>(sql: string, body: T): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.connection.query(sql, body, (err, results) => {
+        if (err) {
+          console.error('Lỗi khi tạo mới dữ liệu:', err)
+          reject(err)
+        } else {
+          resolve(results as any)
+        }
+      })
+    })
+  }
+
   close() {
     return new Promise((resolve, reject) => {
       this.connection.end((err) => {

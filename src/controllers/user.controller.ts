@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { TokenRole } from '~/constants/enums'
 import { USERS_MESSAGES } from '~/constants/messages'
+import { createUser } from '~/models/dto/createUserDto'
 import { LoginReqBody } from '~/schemas/Request/User.request'
 
 import User from '~/schemas/User.schema'
@@ -12,6 +13,17 @@ export const loginController = async (req: Request<ParamsDictionary, any, LoginR
   const user = req.user as User & { name: TokenRole }
 
   const result = await userService.login({ user_id: user.userID, role: user.name })
+
+  return res.json({
+    message: USERS_MESSAGES.LOGIN_SUCCESS,
+    result
+  })
+}
+
+export const createUserController = async (req: Request<ParamsDictionary, any, createUser>, res: Response) => {
+  const { password, studentCode, email, firstName, lastName } = req.body
+
+  const result = await userService.createUser({ password, studentCode, email, firstName, lastName })
 
   return res.json({
     message: USERS_MESSAGES.LOGIN_SUCCESS,

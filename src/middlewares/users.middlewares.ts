@@ -4,6 +4,7 @@ import User from '~/schemas/User.schema'
 import databaseService from '~/services/database.services'
 import { hashPassword } from '~/utils/crypto'
 import { validate } from '~/utils/validation'
+
 const passwordSchema: ParamSchema = {
   notEmpty: {
     errorMessage: USERS_MESSAGES.PASSWORD_IS_REQUIRED
@@ -29,6 +30,7 @@ const passwordSchema: ParamSchema = {
     }
   }
 }
+
 export const loginValidator = validate(
   checkSchema(
     {
