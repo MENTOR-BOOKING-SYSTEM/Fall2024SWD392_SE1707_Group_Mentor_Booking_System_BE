@@ -1,25 +1,29 @@
-import mysql, { Connection } from 'mysql'
+import mysql, { Connection, Pool } from 'mysql2'
+import { envConfig } from '~/constants/config'
 import User from '~/schemas/User.schema'
 
 class DatabaseService {
-  private connection: Connection
+  private connection: Pool
   constructor() {
-    this.connection = mysql.createConnection({
+    this.connection = mysql.createPool({
       host: 'bzjyg0s1aiyqx76l27tw-mysql.services.clever-cloud.com',
-      user: process.env.DB_USER_NAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME
+      port: 20345,
+      user: envConfig.dbUserName,
+      password: envConfig.dbPassword,
+      database: envConfig.dbName,
+      connectTimeout: 10000
     })
   }
 
-  connect() {
+  async connect() {
     return new Promise((resolve, reject) => {
-      this.connection.connect((err) => {
+      this.connection.getConnection((err) => {
         if (err) {
           console.error('Lỗi kết nối cơ sở dữ liệu:', err)
           reject(err)
         } else {
           console.log('Kết nối cơ sở dữ liệu thành công')
+          resolve('hi')
         }
       })
     })
@@ -31,7 +35,7 @@ class DatabaseService {
           console.error('Lỗi truy vấn:', err)
           reject(err)
         } else {
-          resolve(results)
+          resolve(results as T)
         }
       })
     })

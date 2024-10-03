@@ -36,9 +36,6 @@ export const loginValidator = validate(
         notEmpty: {
           errorMessage: USERS_MESSAGES.EMAIL_IS_REQUIRED
         },
-        isEmail: {
-          errorMessage: USERS_MESSAGES.EMAIL_IS_INVALID
-        },
         trim: true,
         custom: {
           options: async (value, { req }) => {
@@ -46,7 +43,6 @@ export const loginValidator = validate(
               'SELECT * FROM user u JOIN user_role ur ON u.userID = ur.userID JOIN role r ON ur.roleID = r.roleID WHERE (u.email = ? or u.studentCode = ?) AND u.password = ?',
               [value, value, req.body.password]
             )
-
             if (user === null) {
               throw new Error(USERS_MESSAGES.EMAIL_OR_PASSWORD_IS_INCORRECT)
             }
