@@ -63,8 +63,6 @@ class UserService {
     const data = new RefreshToken({ _id: handlRandomId(), token: refresh_token, userID: user_id, iat, exp })
 
     await databaseService.query("insert into refresh_tokens(_id,token,created_at,userID,iat,exp) values (?,?,?,?,?,?)", sprearObjectToArray(data))
-
-
     return {
       access_token,
       refresh_token
