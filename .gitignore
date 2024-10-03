@@ -3,3 +3,5 @@ dist/
 .env
 .env.development
 uploads/
+.DS_Store
+src/.DS_Store

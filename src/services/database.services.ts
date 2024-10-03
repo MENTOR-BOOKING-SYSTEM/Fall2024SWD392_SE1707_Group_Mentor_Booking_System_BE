@@ -24,7 +24,6 @@ class DatabaseService {
           reject(err)
         } else {
           console.log('Kết nối cơ sở dữ liệu thành công')
-          resolve("hi")
         }
       })
     })
