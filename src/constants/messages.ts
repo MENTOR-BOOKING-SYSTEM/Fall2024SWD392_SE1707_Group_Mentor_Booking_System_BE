@@ -64,3 +64,7 @@ export const USERS_MESSAGES = {
   REFRESH_TOKEN_SUCCESS: 'Refresh token success',
   GET_VIDEO_STATUS_SUCCESS: 'Get video status success'
 } as const
+
+export const POSTS_MESSAGES = {
+  CREATE_POST_SUCCESS: 'Tạo bài đăng thành công',
+} as const
