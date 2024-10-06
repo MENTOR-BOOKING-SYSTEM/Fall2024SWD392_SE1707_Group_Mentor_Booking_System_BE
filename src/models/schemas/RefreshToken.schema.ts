@@ -1,4 +1,3 @@
-
 import { handleRandomId } from '~/utils/randomId'
 
 export interface RefreshTokenType {

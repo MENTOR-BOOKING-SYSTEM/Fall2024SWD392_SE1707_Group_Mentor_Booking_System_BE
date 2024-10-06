@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express'
-import { loginController } from '~/controllers/user.controller'
+import { loginController } from '~/controllers/users.controller'
 import { loginValidator } from '~/middlewares/users.middlewares'
 import { wrapReqHandler } from '~/utils/handler'
 

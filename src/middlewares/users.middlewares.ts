@@ -1,9 +1,26 @@
+import { Request } from 'express'
 import { checkSchema, ParamSchema } from 'express-validator'
 import { USERS_MESSAGES } from '~/constants/messages'
-import User from '~/schemas/User.schema'
+import User from '~/models/schemas/User.schema'
 import databaseService from '~/services/database.services'
+import { verifyAccessToken } from '~/utils/commons'
 import { hashPassword } from '~/utils/crypto'
 import { validate } from '~/utils/validation'
+export const accessTokenValidator = validate(
+  checkSchema(
+    {
+      Authorization: {
+        custom: {
+          options: async (value: string, { req }) => {
+            const access_token = (value || '').split(' ')[1]
+            return await verifyAccessToken(access_token, req as Request)
+          }
+        }
+      }
+    },
+    ['headers']
+  )
+)
 const passwordSchema: ParamSchema = {
   notEmpty: {
     errorMessage: USERS_MESSAGES.PASSWORD_IS_REQUIRED

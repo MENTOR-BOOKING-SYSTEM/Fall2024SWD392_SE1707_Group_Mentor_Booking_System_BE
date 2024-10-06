@@ -29,5 +29,5 @@ export const envConfig = {
   jwtSecretRefreshToken: process.env.JWT_SECRET_REFRESH_TOKEN as string,
   passwordSecret: process.env.PASSWORD_SECRET as string,
   accessTokenExpiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN as string,
-  refreshTokenExpiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN as string,
+  refreshTokenExpiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN as string
 }
