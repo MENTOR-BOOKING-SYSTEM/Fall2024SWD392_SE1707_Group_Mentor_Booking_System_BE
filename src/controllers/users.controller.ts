@@ -2,9 +2,9 @@ import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { TokenRole } from '~/constants/enums'
 import { USERS_MESSAGES } from '~/constants/messages'
-import { LoginReqBody } from '~/schemas/Request/User.request'
+import { LoginReqBody } from '~/models/Request/User.request'
 
-import User from '~/schemas/User.schema'
+import User from '~/models/schemas/User.schema'
 import databaseService from '~/services/database.services'
 import userService from '~/services/user.services'
 

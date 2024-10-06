@@ -1,9 +1,26 @@
+import { Request } from 'express'
 import { checkSchema, ParamSchema } from 'express-validator'
 import { USERS_MESSAGES } from '~/constants/messages'
-import User from '~/schemas/User.schema'
+import User from '~/models/schemas/User.schema'
 import databaseService from '~/services/database.services'
+import { verifyAccessToken } from '~/utils/commons'
 import { hashPassword } from '~/utils/crypto'
 import { validate } from '~/utils/validation'
+export const accessTokenValidator = validate(
+  checkSchema(
+    {
+      Authorization: {
+        custom: {
+          options: async (value: string, { req }) => {
+            const access_token = (value || '').split(' ')[1]
+            return await verifyAccessToken(access_token, req as Request)
+          }
+        }
+      }
+    },
+    ['headers']
+  )
+)
 const passwordSchema: ParamSchema = {
   notEmpty: {
     errorMessage: USERS_MESSAGES.PASSWORD_IS_REQUIRED
@@ -40,9 +57,11 @@ export const loginValidator = validate(
         custom: {
           options: async (value, { req }) => {
             const [user] = await databaseService.query<User & { role: string }[]>(
-              'SELECT * FROM user u JOIN user_role ur ON u.userID = ur.userID JOIN role r ON ur.roleID = r.roleID WHERE (u.email = ? or u.studentCode = ?) AND u.password = ?',
-              [value, value, req.body.password]
+              'SELECT * FROM User u JOIN User_Role ur ON u.userID = ur.userID JOIN Role r ON ur.roleID = r.roleID WHERE u.email = ? AND u.password = ?',
+              [value, req.body.password]
             )
+            console.log(user);
+
             if (user === null) {
               throw new Error(USERS_MESSAGES.EMAIL_OR_PASSWORD_IS_INCORRECT)
             }
