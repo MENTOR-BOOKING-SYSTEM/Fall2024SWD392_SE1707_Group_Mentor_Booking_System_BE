@@ -15,3 +15,11 @@ export const createPostController = async (
     result: newPost
   });
 };
+
+export const getPostsController = async (req: Request, res: Response) => {
+  const posts = await postService.getPosts();
+  return res.status(200).json({
+    message: POSTS_MESSAGES.GET_POSTS_SUCCESS,
+    result: posts
+  });
+};

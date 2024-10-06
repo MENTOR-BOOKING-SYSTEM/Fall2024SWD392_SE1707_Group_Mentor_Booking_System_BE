@@ -13,6 +13,10 @@ class PostService {
     );
     return newPost;
   }
+  async getPosts() {
+    const posts = await databaseService.query('SELECT * FROM posts');
+    return posts;
+  }
 }
 
 const postService = new PostService();
