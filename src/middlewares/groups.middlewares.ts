@@ -4,11 +4,8 @@ import HTTP_STATUS from '~/constants/httpStatus'
 import { GROUPS_MESSAGES } from '~/constants/messages'
 import { ErrorWithStatus } from '~/models/Errors'
 import Group from '~/models/schemas/Group.schema'
-import Project, { ProjectType } from '~/models/schemas/Project.schema'
 import databaseService from '~/services/database.services'
 import { validate } from '~/utils/validation'
-import { Request } from 'express'
-import { TokenPayload } from '~/models/Request/User.request'
 export const createGroupValidator = validate(
   checkSchema({
     groupName: {
@@ -25,7 +22,10 @@ export const createGroupValidator = validate(
       },
       custom: {
         options: async (value) => {
-          const isExist = await databaseService.query<Group[]>(`select * from \`${DatabaseTable.Group}\` where groupName = ?`, [value])
+          const isExist = await databaseService.query<Group[]>(
+            `select * from \`${DatabaseTable.Group}\` where groupName = ?`,
+            [value]
+          )
 
           if (isExist.length > 0) {
             throw new ErrorWithStatus({
