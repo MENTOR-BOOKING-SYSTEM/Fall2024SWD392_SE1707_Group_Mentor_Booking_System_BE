@@ -59,9 +59,10 @@ class UserService {
       role
     })
     const { iat, exp } = await this.decodeRefreshToken(refresh_token)
+    const { _id, ...newToken } = new RefreshToken({ token: refresh_token, iat, exp, userID: user_id })
     await databaseService.query(
-      'insert into refresh_tokens(_id,  token,created_at, userID,iat,exp) values (?,?,?,?,?,?)',
-      handleSpreadObjectToArray(new RefreshToken({ token: refresh_token, iat, exp, userID: user_id }))
+      'insert into Refresh_Tokens( token,created_at, userID,iat,exp) values (?,?,?,?,?)',
+      handleSpreadObjectToArray(newToken)
     )
     return {
       accessToken: access_token,
