@@ -18,7 +18,9 @@ class GroupServices {
 
       handleSpreadObjectToArray(newGroup)
     )
-    const group = await databaseService.query<Group>(` SELECT * FROM \`${DatabaseTable.Group}\` WHERE groupID = ?`, [insertId])
+    const group = await databaseService.query<Group>(` SELECT * FROM \`${DatabaseTable.Group}\` WHERE groupID = ?`, [
+      insertId
+    ])
     return group
   }
 }

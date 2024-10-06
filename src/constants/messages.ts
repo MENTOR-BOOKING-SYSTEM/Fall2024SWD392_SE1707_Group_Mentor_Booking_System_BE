@@ -60,3 +60,6 @@ export const GROUPS_MESSAGES = {
   CREATE_GROUP_SUCCESSFULLY: 'Create group successfully',
   GROUP_NAME_ALREADY_EXIST: 'Group name already exist'
 } as const
+export const TECHNOLOGIES_MESSAGE = {
+  GET_TECHNOLOGIES_SUCCESSFULLY: "Get technologies successfully"
+} as const
