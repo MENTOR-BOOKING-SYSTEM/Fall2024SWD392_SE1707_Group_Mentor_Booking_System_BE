@@ -1,5 +1,5 @@
-import { ParamsDictionary } from 'express-serve-static-core'
-export interface Pagination extends ParamsDictionary {
+import { ParamsDictionary, Query } from 'express-serve-static-core'
+export interface Pagination extends Query {
   limit: string
   page: string
 }

@@ -5,6 +5,8 @@ import { signToken, verifyToken } from '~/utils/jwt'
 import { envConfig } from '~/constants/config'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { handleSpreadObjectToArray } from '~/utils/spreadObjectToArray'
+import { GetUserListQuery } from '~/models/Request/User.request'
+import { DatabaseTable } from '~/constants/databaseTable'
 
 class UserService {
   private signAccessToken({ user_id, role }: { user_id: string; role: TokenRole }) {
@@ -68,6 +70,16 @@ class UserService {
       accessToken: access_token,
       refreshToken: refresh_token
     }
+  }
+  async getListUser({ nonGroup }: GetUserListQuery) {
+
+    // edit dynamic logic find user here
+    const queryString = nonGroup === "true"
+      ? `select * from ${DatabaseTable.User} where userID not in (select userID from ${DatabaseTable.User_Group} )`
+      : 'select * from User'
+
+    const result = await databaseService.query<User[]>(queryString)
+    return result
   }
 }
 const userService = new UserService()

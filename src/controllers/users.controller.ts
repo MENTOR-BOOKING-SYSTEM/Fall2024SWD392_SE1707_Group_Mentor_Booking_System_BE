@@ -1,8 +1,9 @@
+import { log } from 'console'
 import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { TokenRole } from '~/constants/enums'
 import { USERS_MESSAGES } from '~/constants/messages'
-import { LoginReqBody } from '~/models/Request/User.request'
+import { GetUserListQuery, LoginReqBody } from '~/models/Request/User.request'
 
 import User from '~/models/schemas/User.schema'
 import databaseService from '~/services/database.services'
@@ -15,6 +16,18 @@ export const loginController = async (req: Request<ParamsDictionary, any, LoginR
 
   return res.json({
     message: USERS_MESSAGES.LOGIN_SUCCESS,
+    result
+  })
+}
+export const getListUsersController = async (
+  req: Request<ParamsDictionary, any, any, GetUserListQuery>,
+  res: Response
+) => {
+  const nonGroup = req.query.nonGroup
+  const result = await userService.getListUser({ nonGroup })
+
+  return res.json({
+    message: USERS_MESSAGES.GET_USER_LIST_SUCCESSFULLY,
     result
   })
 }
