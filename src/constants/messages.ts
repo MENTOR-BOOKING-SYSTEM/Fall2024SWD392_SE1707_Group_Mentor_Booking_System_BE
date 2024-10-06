@@ -49,7 +49,8 @@ export const USERS_MESSAGES = {
   USERNAME_EXISTED: 'Username existed',
   OLD_PASSWORD_NOT_MATCH: 'Old password not match',
   CHANGE_PASSWORD_SUCCESS: 'Change password success',
-  REFRESH_TOKEN_SUCCESS: 'Refresh token success'
+  REFRESH_TOKEN_SUCCESS: 'Refresh token success',
+  GET_USER_LIST_SUCCESSFULLY: 'Get user list successfully'
 } as const
 
 export const GROUPS_MESSAGES = {
@@ -61,5 +62,5 @@ export const GROUPS_MESSAGES = {
   GROUP_NAME_ALREADY_EXIST: 'Group name already exist'
 } as const
 export const TECHNOLOGIES_MESSAGE = {
-  GET_TECHNOLOGIES_SUCCESSFULLY: "Get technologies successfully"
+  GET_TECHNOLOGIES_SUCCESSFULLY: 'Get technologies successfully'
 } as const

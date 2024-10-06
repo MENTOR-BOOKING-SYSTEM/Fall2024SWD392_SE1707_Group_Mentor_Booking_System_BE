@@ -11,3 +11,6 @@ export interface LoginReqBody {
   email: string
   password: string
 }
+export interface GetUserListQuery {
+  nonGroup?: string
+}
