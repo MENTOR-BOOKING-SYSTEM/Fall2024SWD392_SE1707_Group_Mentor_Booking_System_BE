@@ -1,4 +1,3 @@
-
 import { log } from 'console'
 import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
@@ -26,7 +25,7 @@ export const getListUsersController = async (
 ) => {
   const nonGroup = req.query.nonGroup
   const users = await userService.getListUser({ nonGroup })
-  const result = users.map(({ password, forgotPasswordToken, ...rest }) => rest);
+  const result = users.map(({ password, forgotPasswordToken, ...rest }) => rest)
   return res.json({
     message: USERS_MESSAGES.GET_USER_LIST_SUCCESSFULLY,
     result

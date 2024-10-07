@@ -36,6 +36,32 @@ export const createGroupValidator = validate(
           return true
         }
       }
+    },
+    usersID: {
+      isArray: {
+        bail: true,
+        options: {
+          min: 1
+        },
+        errorMessage: GROUPS_MESSAGES.GROUP_LIST_USER_LENGTH
+      },
+      notEmpty: {
+        errorMessage: GROUPS_MESSAGES.GROUP_LIST_USER_REQUIRED
+      },
+      custom: {
+        options: async (value, { req }) => {
+          const isNonGroup = await databaseService.query<{ email: string }[]>(
+            `SELECT u.email FROM User u WHERE EXISTS (SELECT 1 FROM User_Group ug WHERE u.userID = ug.userID) AND u.userID IN (?)`,
+            [value]
+          )
+          if (isNonGroup.length > 0) {
+            throw new ErrorWithStatus({
+              status: HTTP_STATUS.BAD_REQUEST,
+              message: `${GROUPS_MESSAGES.USER_ALREADY_HAS_A_GROUP}: ${isNonGroup.map((item) => item.email + ' ,')}`
+            })
+          }
+        }
+      }
     }
   })
 )

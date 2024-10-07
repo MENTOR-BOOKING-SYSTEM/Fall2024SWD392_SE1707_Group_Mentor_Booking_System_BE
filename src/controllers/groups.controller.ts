@@ -7,9 +7,8 @@ import groupServices from '~/services/group.services'
 import userService from '~/services/user.services'
 
 export const createGroupController = async (req: Request<ParamsDictionary, any, CreateGroupReqBody>, res: Response) => {
-  const { groupName } = req.body
-
-  const result = await groupServices.createGroup(groupName)
+  const { groupName, usersID } = req.body
+  const result = await groupServices.createGroup(groupName, usersID)
 
   return res.json({
     message: GROUPS_MESSAGES.CREATE_GROUP_SUCCESSFULLY,

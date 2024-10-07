@@ -55,6 +55,9 @@ export const USERS_MESSAGES = {
 
 export const GROUPS_MESSAGES = {
   GROUP_NAME_IS_REQUIRED: 'Group name is required',
+  USER_ALREADY_HAS_A_GROUP: 'User already has a group',
+  GROUP_LIST_USER_LENGTH: 'Group list user length must be more than 1',
+  GROUP_LIST_USER_REQUIRED: 'Group list user is required',
   GROUP_NAME_LENGTH_MUST_BE_FROM_1_TO_100: 'Name length must be from 10 to 100',
   PROJECT_ID_IS_REQUIRED: 'Project id is required',
   PROJECT_IS_NOT_FOUND: 'Project is not found',

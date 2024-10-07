@@ -72,11 +72,11 @@ class UserService {
     }
   }
   async getListUser({ nonGroup }: GetUserListQuery) {
-
     // edit dynamic logic find user here
-    const queryString = nonGroup === "true"
-      ? `select * from ${DatabaseTable.User} where userID not in (select userID from ${DatabaseTable.User_Group} )`
-      : 'select * from User'
+    const queryString =
+      nonGroup === 'true'
+        ? `select * from ${DatabaseTable.User} where userID not in (select userID from ${DatabaseTable.User_Group} )`
+        : 'select * from User'
 
     const result = await databaseService.query<User[]>(queryString)
     return result
