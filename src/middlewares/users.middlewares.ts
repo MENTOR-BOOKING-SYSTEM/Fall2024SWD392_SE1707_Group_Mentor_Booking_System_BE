@@ -1,7 +1,10 @@
 import { Request } from 'express'
 import { checkSchema, ParamSchema } from 'express-validator'
+import { JsonWebTokenError } from 'jsonwebtoken'
+import { capitalize } from 'lodash'
+import HTTP_STATUS from '~/constants/httpStatus'
 import { ERROR_MESSAGES, USERS_MESSAGES } from '~/constants/messages'
-import { NotFoundError } from '~/models/Errors'
+import { ErrorWithStatus, NotFoundError } from '~/models/Errors'
 import User from '~/models/schemas/User.schema'
 import databaseService from '~/services/database.services'
 import { verifyTokenByType } from '~/utils/commons'
@@ -110,22 +113,18 @@ export const verifyForgotPasswordTokenValidator = validate(
       code: {
         custom: {
           options: async (value, { req }) => {
-            try {
-              const decoded_forgot_password_token = await verifyTokenByType(value, 'forgot_password_token')
-              const [user] = await databaseService.query<User[]>(
-                'SELECT email, forgotPasswordToken FROM User WHERE email = ?',
-                [decoded_forgot_password_token.email]
-              )
-              if (!user.email) {
-                throw new NotFoundError({ message: ERROR_MESSAGES.NOT_FOUND })
-              }
-              if (user.forgotPasswordToken !== value) {
-                throw new Error(ERROR_MESSAGES.BAD_REQUEST)
-              }
-              return true
-            } catch (error) {
+            const decoded_forgot_password_token = await verifyTokenByType(value, 'forgot_password_token')
+            const [user] = await databaseService.query<User[]>(
+              'SELECT email, forgotPasswordToken FROM User WHERE email = ?',
+              [decoded_forgot_password_token.email]
+            )
+            if (!user.email) {
+              throw new NotFoundError({ message: ERROR_MESSAGES.NOT_FOUND })
+            }
+            if (user.forgotPasswordToken !== value) {
               throw new Error(ERROR_MESSAGES.BAD_REQUEST)
             }
+            return true
           }
         }
       }
