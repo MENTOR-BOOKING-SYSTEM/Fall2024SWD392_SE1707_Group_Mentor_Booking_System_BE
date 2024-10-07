@@ -49,6 +49,7 @@ class UserService {
   private signAccessAndRefreshToken({ user_id, role }: { user_id: string; role: string[] }) {
     return Promise.all([this.signAccessToken({ user_id, role }), this.signRefreshToken({ user_id, role })])
   }
+
   private decodeRefreshToken(refresh_token: string) {
     return verifyToken({
       token: refresh_token,
@@ -78,6 +79,7 @@ class UserService {
       refreshToken: refresh_token
     }
   }
+
   async getListUser({ nonGroup }: GetUserListQuery) {
     // edit dynamic logic find user here
     const queryString =
@@ -87,6 +89,12 @@ class UserService {
 
     const result = await databaseService.query<User[]>(queryString)
     return result
+  }
+
+  async forgotPassword(email: string) {
+    const forgotPasswordToken = await this.signForgotPasswordToken(email)
+    await databaseService.query('UPDATE User SET forgotPasswordToken = ? WHERE email = ?', [forgotPasswordToken, email])
+    return forgotPasswordToken
   }
 }
 const userService = new UserService()

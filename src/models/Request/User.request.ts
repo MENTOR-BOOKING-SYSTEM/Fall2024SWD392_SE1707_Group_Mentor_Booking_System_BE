@@ -14,3 +14,11 @@ export interface LoginReqBody {
 export interface GetUserListQuery {
   nonGroup?: string
 }
+
+export interface ForgotPasswordReqBody {
+  email: string
+}
+
+export interface VerifyForgotPasswordTokenReqQuery {
+  code?: string
+}

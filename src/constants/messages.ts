@@ -50,7 +50,8 @@ export const USERS_MESSAGES = {
   OLD_PASSWORD_NOT_MATCH: 'Old password not match',
   CHANGE_PASSWORD_SUCCESS: 'Change password success',
   REFRESH_TOKEN_SUCCESS: 'Refresh token success',
-  GET_USER_LIST_SUCCESSFULLY: 'Get user list successfully'
+  GET_USER_LIST_SUCCESSFULLY: 'Get user list successfully',
+  VERIFY_FORGOT_PASSWORD_TOKEN_SUCCESSFULLY: 'Verify forgot password token successfully'
 } as const
 
 export const GROUPS_MESSAGES = {
@@ -64,6 +65,7 @@ export const GROUPS_MESSAGES = {
   CREATE_GROUP_SUCCESSFULLY: 'Create group successfully',
   GROUP_NAME_ALREADY_EXIST: 'Group name already exist'
 } as const
+
 export const TECHNOLOGIES_MESSAGE = {
   GET_TECHNOLOGIES_SUCCESSFULLY: 'Get technologies successfully'
 } as const
@@ -80,3 +82,15 @@ export const PROJECTS_MESSAGE = {
   MENTOR_ID_IS_REQUIRED_FOR_STUDENT_OR_BUSINESS_ROLE: 'Mentor id is required for student or business role',
   CAN_NOT_SEND_MORE_PROJECT: 'No more projects can be submitted because the previous project is being processed'
 } as const
+
+export const EMAIL_MESSAGES = {
+  RESET_PASSWORD_EMAIL_SUBJECT: 'Action Required: Reset Your Password'
+} as const
+
+export const ERROR_MESSAGES = {
+  UNAUTHORIZED: 'Unauthorized access',
+  NOT_FOUND: 'Resource not found',
+  FORBIDDEN: 'Forbidden access',
+  BAD_REQUEST: 'Bad request',
+  CONFLICT: 'Conflict'
+}
