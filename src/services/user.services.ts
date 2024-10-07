@@ -47,6 +47,20 @@ class UserService {
       }
     })
   }
+
+  private signForgotPasswordToken(email: string) {
+    return signToken({
+      payload: {
+        email,
+        token_type: TokenType.ForgotPasswordToken
+      },
+      privateKey: envConfig.jwtSecretForgotPasswordToken as string,
+      options: {
+        expiresIn: envConfig.forgotPasswordTokenExpiresIn
+      }
+    })
+  }
+
   private signAccessAndRefreshToken({ user_id, role }: { user_id: string; role: string[] }) {
     return Promise.all([this.signAccessToken({ user_id, role }), this.signRefreshToken({ user_id, role })])
   }
