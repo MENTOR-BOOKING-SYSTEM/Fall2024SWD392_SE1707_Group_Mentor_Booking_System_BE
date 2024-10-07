@@ -21,7 +21,18 @@ export default class User {
   createdAt: Date
   updatedAt: Date
   groupID: string
-  constructor({ userID, password, studentCode, email, firstName, lastName, createdAt, updatedAt, groupID, forgotPasswordToken }: UserType) {
+  constructor({
+    userID,
+    password,
+    studentCode,
+    email,
+    firstName,
+    lastName,
+    createdAt,
+    updatedAt,
+    groupID,
+    forgotPasswordToken
+  }: UserType) {
     this.userID = userID
     this.password = password
     this.studentCode = studentCode
