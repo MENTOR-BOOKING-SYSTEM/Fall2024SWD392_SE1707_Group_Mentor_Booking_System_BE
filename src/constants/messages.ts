@@ -96,14 +96,3 @@ export const PROJECTS_MESSAGE = {
   CAN_NOT_SEND_MORE_PROJECT: 'No more projects can be submitted because the previous project is being processed'
 } as const
 
-export const EMAIL_MESSAGES = {
-  RESET_PASSWORD_EMAIL_SUBJECT: 'Action Required: Reset Your Password'
-} as const
-
-export const ERROR_MESSAGES = {
-  UNAUTHORIZED: 'Unauthorized access',
-  NOT_FOUND: 'Resource not found',
-  FORBIDDEN: 'Forbidden access',
-  BAD_REQUEST: 'Bad request',
-  CONFLICT: 'Conflict'
-}
