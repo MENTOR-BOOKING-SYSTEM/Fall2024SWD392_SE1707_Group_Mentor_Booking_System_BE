@@ -1,7 +1,7 @@
 interface UserType {
   userID: string
   password: string
-  studentCode: string
+  username: string
   email: string
   firstName: string
   forgotPasswordToken?: string | null
@@ -13,7 +13,7 @@ interface UserType {
 export default class User {
   userID: string
   password: string
-  studentCode: string
+  username: string
   email: string
   firstName: string
   forgotPasswordToken: string | null
@@ -24,7 +24,7 @@ export default class User {
   constructor({
     userID,
     password,
-    studentCode,
+    username,
     email,
     firstName,
     lastName,
@@ -35,7 +35,7 @@ export default class User {
   }: UserType) {
     this.userID = userID
     this.password = password
-    this.studentCode = studentCode
+    this.username = username
     this.email = email
     this.forgotPasswordToken = forgotPasswordToken || null
     this.firstName = firstName

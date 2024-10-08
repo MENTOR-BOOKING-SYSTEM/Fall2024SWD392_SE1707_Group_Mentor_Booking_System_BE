@@ -1,15 +1,14 @@
-import { Request } from 'express'
-import { checkSchema, ParamSchema } from 'express-validator'
-import { JsonWebTokenError } from 'jsonwebtoken'
-import { capitalize } from 'lodash'
-import HTTP_STATUS from '~/constants/httpStatus'
-import { ERROR_MESSAGES, USERS_MESSAGES } from '~/constants/messages'
-import { ErrorWithStatus, NotFoundError } from '~/models/Errors'
 import User from '~/models/schemas/User.schema'
 import databaseService from '~/services/database.services'
+import { Request } from 'express'
+import { checkSchema } from 'express-validator'
+import { ERROR_MESSAGES, USERS_MESSAGES } from '~/constants/messages'
+import { NotFoundError } from '~/models/Errors'
+import { confirmPasswordSchema, forgotPasswordSchema, passwordSchema } from '~/models/Form'
 import { verifyTokenByType } from '~/utils/commons'
-import { hashPassword } from '~/utils/crypto'
 import { validate } from '~/utils/validation'
+import { hashPassword } from '~/utils/crypto'
+
 export const accessTokenValidator = validate(
   checkSchema(
     {
@@ -28,31 +27,7 @@ export const accessTokenValidator = validate(
     ['headers']
   )
 )
-const passwordSchema: ParamSchema = {
-  notEmpty: {
-    errorMessage: USERS_MESSAGES.PASSWORD_IS_REQUIRED
-  },
-  isString: {
-    errorMessage: USERS_MESSAGES.PASSWORD_MUST_BE_A_STRING
-  },
-  isLength: {
-    options: {
-      min: 6,
-      max: 50
-    },
-    errorMessage: USERS_MESSAGES.PASSWORD_LENGTH_MUST_BE_FROM_6_TO_50
-  },
-  isStrongPassword: {
-    errorMessage: USERS_MESSAGES.PASSWORD_MUST_BE_STRONG,
-    options: {
-      minLength: 6,
-      minLowercase: 1,
-      minUppercase: 1,
-      minNumbers: 1,
-      minSymbols: 1
-    }
-  }
-}
+
 export const loginValidator = validate(
   checkSchema(
     {
@@ -65,7 +40,7 @@ export const loginValidator = validate(
           options: async (value, { req }) => {
             const [user] = await databaseService.query<User & { role: string }[]>(
               'SELECT * FROM User u JOIN User_Role ur ON u.userID = ur.userID JOIN Role r ON ur.roleID = r.roleID WHERE (u.email = ? OR u.username = ?) AND u.password = ?',
-              [value, value, req.body.password]
+              [value, value, hashPassword(req.body.password)]
             )
             if (!user) {
               throw new Error(USERS_MESSAGES.EMAIL_OR_PASSWORD_IS_INCORRECT)
@@ -110,25 +85,19 @@ export const forgotPasswordValidator = validate(
 export const verifyForgotPasswordTokenValidator = validate(
   checkSchema(
     {
-      code: {
-        custom: {
-          options: async (value, { req }) => {
-            const decoded_forgot_password_token = await verifyTokenByType(value, 'forgot_password_token')
-            const [user] = await databaseService.query<User[]>(
-              'SELECT email, forgotPasswordToken FROM User WHERE email = ?',
-              [decoded_forgot_password_token.email]
-            )
-            if (!user.email) {
-              throw new NotFoundError({ message: ERROR_MESSAGES.NOT_FOUND })
-            }
-            if (user.forgotPasswordToken !== value) {
-              throw new Error(ERROR_MESSAGES.BAD_REQUEST)
-            }
-            return true
-          }
-        }
-      }
+      code: forgotPasswordSchema
     },
     ['query']
+  )
+)
+
+export const resetPasswordValidator = validate(
+  checkSchema(
+    {
+      forgotPasswordToken: forgotPasswordSchema,
+      password: passwordSchema,
+      confirmPassword: confirmPasswordSchema
+    },
+    ['body']
   )
 )
