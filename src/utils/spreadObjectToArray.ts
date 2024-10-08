@@ -1,3 +1,3 @@
 export const handleSpreadObjectToArray = (value: object) => {
-  return Object.values(value);
+  return Object.values(value)
 }

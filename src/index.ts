@@ -7,6 +7,8 @@ import { defaultErrorHandler } from './middlewares/errors.middlewares'
 import { verifyToken } from './utils/jwt'
 import { envConfig } from './constants/config'
 import { config } from 'dotenv'
+import groupsRouter from './routes/groups.routes'
+import technologyRouter from './routes/technologies.routes'
 config()
 
 databaseService.connect()
@@ -20,6 +22,8 @@ const port = envConfig.port
 app.use(cors())
 
 app.use('/users', usersRouter)
+app.use('/groups', groupsRouter)
+app.use('/technologies', technologyRouter)
 
 app.use(defaultErrorHandler)
 

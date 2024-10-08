@@ -1,11 +1,11 @@
+import { log } from 'console'
 import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { TokenRole } from '~/constants/enums'
 import { USERS_MESSAGES } from '~/constants/messages'
-import { createUser } from '~/models/dto/createUserDto'
-import { LoginReqBody } from '~/schemas/Request/User.request'
+import { GetUserListQuery, LoginReqBody } from '~/models/Request/User.request'
 
-import User from '~/schemas/User.schema'
+import User from '~/models/schemas/User.schema'
 import databaseService from '~/services/database.services'
 import userService from '~/services/user.services'
 
@@ -19,14 +19,15 @@ export const loginController = async (req: Request<ParamsDictionary, any, LoginR
     result
   })
 }
-
-export const createUserController = async (req: Request<ParamsDictionary, any, createUser>, res: Response) => {
-  const { password, studentCode, email, firstName, lastName } = req.body
-
-  const result = await userService.createUser({ password, studentCode, email, firstName, lastName })
-
+export const getListUsersController = async (
+  req: Request<ParamsDictionary, any, any, GetUserListQuery>,
+  res: Response
+) => {
+  const nonGroup = req.query.nonGroup
+  const users = await userService.getListUser({ nonGroup })
+  const result = users.map(({ password, forgotPasswordToken, ...rest }) => rest)
   return res.json({
-    message: USERS_MESSAGES.LOGIN_SUCCESS,
+    message: USERS_MESSAGES.GET_USER_LIST_SUCCESSFULLY,
     result
   })
 }

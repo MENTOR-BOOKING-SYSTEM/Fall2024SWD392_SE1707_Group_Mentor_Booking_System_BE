@@ -1,8 +1,7 @@
 import { reject } from 'lodash'
 import mysql, { Connection, Pool } from 'mysql2'
-import { resolve } from 'path'
 import { envConfig } from '~/constants/config'
-import User from '~/schemas/User.schema'
+import User from '~/models/schemas/User.schema'
 
 class DatabaseService {
   private connection: Pool

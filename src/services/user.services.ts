@@ -1,11 +1,12 @@
-import User from '~/schemas/User.schema'
+import User from '~/models/schemas/User.schema'
 import databaseService from './database.services'
 import { TokenRole, TokenType } from '~/constants/enums'
 import { signToken, verifyToken } from '~/utils/jwt'
 import { envConfig } from '~/constants/config'
-import RefreshToken from '~/schemas/RefreshToken.schema'
+import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { handleSpreadObjectToArray } from '~/utils/spreadObjectToArray'
-import { createUser } from '~/models/dto/createUserDto'
+import { GetUserListQuery } from '~/models/Request/User.request'
+import { DatabaseTable } from '~/constants/databaseTable'
 
 class UserService {
   private signAccessToken({ user_id, role }: { user_id: string; role: TokenRole }) {
@@ -64,18 +65,25 @@ class UserService {
       role
     })
     const { iat, exp } = await this.decodeRefreshToken(refresh_token)
+    const { _id, ...newToken } = new RefreshToken({ token: refresh_token, iat, exp, userID: user_id })
     await databaseService.query(
-      'insert into refresh_tokens(_id,  token,created_at, userID,iat,exp) values (?,?,?,?,?,?)',
-      handleSpreadObjectToArray(new RefreshToken({ token: refresh_token, iat, exp, userID: user_id }))
+      'insert into Refresh_Tokens( token,created_at, userID,iat,exp) values (?,?,?,?,?)',
+      handleSpreadObjectToArray(newToken)
     )
     return {
       accessToken: access_token,
       refreshToken: refresh_token
     }
   }
-  async createUser(dto: createUser): Promise<string> {
-    const user = await databaseService.insert<createUser>('INSERT INTO user() VALUE (?, ?, ?, ?, ?) ', dto)
-    return user
+  async getListUser({ nonGroup }: GetUserListQuery) {
+    // edit dynamic logic find user here
+    const queryString =
+      nonGroup === 'true'
+        ? `select * from ${DatabaseTable.User} where userID not in (select userID from ${DatabaseTable.User_Group} )`
+        : 'select * from User'
+
+    const result = await databaseService.query<User[]>(queryString)
+    return result
   }
 }
 const userService = new UserService()
