@@ -7,6 +7,7 @@ import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { handleSpreadObjectToArray } from '~/utils/spreadObjectToArray'
 import { GetUserListQuery } from '~/models/Request/User.request'
 import { DatabaseTable } from '~/constants/databaseTable'
+import { hashPassword } from '~/utils/crypto'
 
 class UserService {
   private signAccessToken({ user_id, role }: { user_id: string; role: string[] }) {
@@ -95,6 +96,14 @@ class UserService {
     const forgotPasswordToken = await this.signForgotPasswordToken(email)
     await databaseService.query('UPDATE User SET forgotPasswordToken = ? WHERE email = ?', [forgotPasswordToken, email])
     return forgotPasswordToken
+  }
+
+  async resetPassword(password: string, email: string) {
+    await databaseService.query('UPDATE User SET password = ?, forgotPasswordToken = ? WHERE email = ?', [
+      hashPassword(password),
+      null,
+      email
+    ])
   }
 }
 const userService = new UserService()

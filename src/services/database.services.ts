@@ -27,7 +27,7 @@ class DatabaseService {
       })
     })
   }
-  query<T>(sql: string, params?: (number | string)[]): Promise<T> {
+  query<T>(sql: string, params?: (number | string | null)[]): Promise<T> {
     return new Promise((resolve, reject) => {
       this.connection.query(sql, params, (err, results) => {
         if (err) {
