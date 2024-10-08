@@ -22,6 +22,8 @@ export const isProduction = env === 'production'
 
 export const envConfig = {
   port: (process.env.PORT as string) || 4000,
+  backendUrl: process.env.BACKEND_URL as string,
+  frontendUrl: process.env.FRONTEND_URL as string,
   dbName: process.env.DB_NAME as string,
   dbUserName: process.env.DB_USER_NAME as string,
   dbPassword: process.env.DB_PASSWORD as string,
@@ -29,5 +31,9 @@ export const envConfig = {
   jwtSecretRefreshToken: process.env.JWT_SECRET_REFRESH_TOKEN as string,
   passwordSecret: process.env.PASSWORD_SECRET as string,
   accessTokenExpiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN as string,
-  refreshTokenExpiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN as string
+  refreshTokenExpiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN as string,
+  nodeMailerEmail: process.env.NODE_MAILER_EMAIL as string,
+  nodeMailerPassword: process.env.NODE_MAILER_PASSWORD as string,
+  jwtSecretForgotPasswordToken: process.env.JWT_SECRET_FORGOT_PASSWORD_TOKEN as string,
+  forgotPasswordTokenExpiresIn: process.env.FORGOT_PASSWORD_EXPIRES_IN as string
 }

@@ -46,15 +46,31 @@ class UserService {
       }
     })
   }
+
+  private signForgotPasswordToken(email: string) {
+    return signToken({
+      payload: {
+        email,
+        token_type: TokenType.ForgotPasswordToken
+      },
+      privateKey: envConfig.jwtSecretForgotPasswordToken as string,
+      options: {
+        expiresIn: envConfig.forgotPasswordTokenExpiresIn
+      }
+    })
+  }
+
   private signAccessAndRefreshToken({ user_id, role }: { user_id: string; role: TokenRole }) {
     return Promise.all([this.signAccessToken({ user_id, role }), this.signRefreshToken({ user_id, role })])
   }
+
   private decodeRefreshToken(refresh_token: string) {
     return verifyToken({
       token: refresh_token,
       secretOrPublicKey: envConfig.jwtSecretRefreshToken as string
     })
   }
+
   async login({ user_id, role }: { user_id: string; role: TokenRole }) {
     const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
       user_id,
@@ -71,6 +87,7 @@ class UserService {
       refreshToken: refresh_token
     }
   }
+
   async getListUser({ nonGroup }: GetUserListQuery) {
     // edit dynamic logic find user here
     const queryString =
@@ -80,6 +97,12 @@ class UserService {
 
     const result = await databaseService.query<User[]>(queryString)
     return result
+  }
+
+  async forgotPassword(email: string) {
+    const forgotPasswordToken = await this.signForgotPasswordToken(email)
+    await databaseService.query('UPDATE User SET forgotPasswordToken = ? WHERE email = ?', [forgotPasswordToken, email])
+    return forgotPasswordToken
   }
 }
 const userService = new UserService()
