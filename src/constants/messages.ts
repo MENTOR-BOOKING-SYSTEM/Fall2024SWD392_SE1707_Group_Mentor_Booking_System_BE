@@ -67,5 +67,5 @@ export const USERS_MESSAGES = {
 
 export const POSTS_MESSAGES = {
   CREATE_POST_SUCCESS: 'Tạo bài đăng thành công',
-  GET_POSTS_SUCCESS: 'Lấy bài đăng thành công'
+  GET_POSTS_SUCCESS: 'Lấy danh sách bài đăng thành công'
 } as const
