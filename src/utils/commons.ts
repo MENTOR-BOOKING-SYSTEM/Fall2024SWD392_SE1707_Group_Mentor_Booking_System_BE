@@ -16,7 +16,7 @@ export const numberEnumToArray = (numberEnum: { [key: string]: string | number }
 export const verifyTokenByType = async (token: string, tokenType: TokenType, req?: Request) => {
   if (!token) {
     throw new ErrorWithStatus({
-      message: USERS_MESSAGES.ACCESS_TOKEN_IS_REQUIRED,
+      message: USERS_MESSAGES.TOKEN_IS_REQUIRED,
       status: HTTP_STATUS.UNAUTHORIZED
     })
   }

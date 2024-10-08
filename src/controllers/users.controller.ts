@@ -8,6 +8,7 @@ import {
   ForgotPasswordReqBody,
   GetUserListQuery,
   LoginReqBody,
+  TokenPayload,
   VerifyForgotPasswordTokenReqQuery
 } from '~/models/Request/User.request'
 
@@ -38,7 +39,7 @@ export const forgotPasswordController = async (
     subject: EMAIL_MESSAGES.RESET_PASSWORD_EMAIL_SUBJECT,
     body: readFileSync('src/templates/reset-password.html', 'utf8').replace(
       '{{resetPasswordLink}}',
-      envConfig.backendUrl + `/verify-code?code=${forgotPasswordToken}`
+      envConfig.frontendUrl + `/verify-code?code=${forgotPasswordToken}`
     )
   })
 
@@ -51,8 +52,17 @@ export const verifyForgotPasswordTokenController = async (
   req: Request<ParamsDictionary, any, any, VerifyForgotPasswordTokenReqQuery>,
   res: Response
 ) => {
+  return res.json({ message: USERS_MESSAGES.VERIFY_FORGOT_PASSWORD_TOKEN_SUCCESSFULLY })
+}
+
+export const resetPasswordController = async (req: Request<ParamsDictionary, any, any>, res: Response) => {
+  const { email } = req.decoded_forgot_password_token as TokenPayload
+  const { password } = req.body
+
+  await userService.resetPassword(password, email)
+
   return res.json({
-    message: USERS_MESSAGES.VERIFY_FORGOT_PASSWORD_TOKEN_SUCCESSFULLY
+    message: USERS_MESSAGES.RESET_PASSWORD_SUCCESS
   })
 }
 
