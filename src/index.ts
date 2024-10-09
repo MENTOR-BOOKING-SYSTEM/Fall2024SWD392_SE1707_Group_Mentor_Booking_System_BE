@@ -9,6 +9,8 @@ import { verifyToken } from './utils/jwt'
 import { envConfig } from './constants/config'
 import { config } from 'dotenv'
 import postsRouter from './routes/posts.routes';
+import groupsRouter from './routes/groups.routes'
+import technologyRouter from './routes/technologies.routes'
 config()
 
 databaseService.connect()
@@ -18,8 +20,12 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 const port = envConfig.port
 app.use(cors())
+
 app.use('/users', usersRouter)
 app.use('/posts', postsRouter)
+app.use('/groups', groupsRouter)
+app.use('/technologies', technologyRouter)
+
 app.use(defaultErrorHandler)
 app.listen(port, () => {
   console.log(`Example app listening on port ${port} `)

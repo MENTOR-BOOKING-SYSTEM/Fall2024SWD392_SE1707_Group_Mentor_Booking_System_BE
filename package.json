@@ -5,17 +5,24 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "dev": "NODE_ENV=development npx nodemon",
-    "dev:stag": "NODE_ENV=staging npx nodemon",
-    "dev:prod": "NODE_ENV=production npx nodemon",
+    "dev": "cross-env NODE_ENV=development npx nodemon",
+    "dev:stag": "cross-env NODE_ENV=staging npx nodemon",
+    "dev:prod": "cross-env NODE_ENV=production npx nodemon",
     "build": "rimraf ./dist && tsc && tsc-alias",
     "start:dev": "NODE_ENV=development node dist/index.js",
     "start:stag": "NODE_ENV=staging node dist/index.js",
     "start:prod": "NODE_ENV=production  node dist/index.js",
     "lint": "eslint .",
+    "prepare": "husky",
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write ."
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "npm run format:write",
+      "npm run lint"
+    ]
   },
   "repository": {
     "type": "git",
@@ -32,8 +39,10 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "express-validator": "^7.2.0",
+    "husky": "^9.1.6",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.3",
+    "nodemailer": "^6.9.15",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
@@ -42,8 +51,10 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/lodash": "^4.17.9",
     "@types/node": "^22.5.4",
+    "@types/nodemailer": "^6.4.16",
     "@typescript-eslint/eslint-plugin": "^7.16.0",
     "@typescript-eslint/parser": "^7.16.0",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",

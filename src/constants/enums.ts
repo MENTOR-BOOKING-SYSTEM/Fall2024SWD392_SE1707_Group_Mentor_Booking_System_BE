@@ -8,3 +8,7 @@ export enum TokenRole {
   Student,
   Mentor
 }
+export enum ProjectStatus {
+  Pending,
+  Accepted
+}

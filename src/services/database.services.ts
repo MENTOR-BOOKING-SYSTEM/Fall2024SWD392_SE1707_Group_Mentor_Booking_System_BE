@@ -1,12 +1,12 @@
 import mysql, { Connection, Pool } from 'mysql2'
-import { envConfig } from '~/constants/config';
-import User from '~/schemas/User.schema'
+import { envConfig } from '~/constants/config'
+import User from '~/models/schemas/User.schema'
 
 class DatabaseService {
   private connection: Pool
   constructor() {
     this.connection = mysql.createPool({
-      host: "bzjyg0s1aiyqx76l27tw-mysql.services.clever-cloud.com",
+      host: 'bzjyg0s1aiyqx76l27tw-mysql.services.clever-cloud.com',
       port: 20345,
       user: envConfig.dbUserName,
       password: envConfig.dbPassword,
@@ -16,7 +16,6 @@ class DatabaseService {
   }
 
   async connect() {
-
     return new Promise((resolve, reject) => {
       this.connection.getConnection((err) => {
         if (err) {
@@ -28,7 +27,7 @@ class DatabaseService {
       })
     })
   }
-  query<T>(sql: string, params?: (number | string)[]): Promise<T> {
+  query<T>(sql: string, params?: (number | string | null)[]): Promise<T> {
     return new Promise((resolve, reject) => {
       this.connection.query(sql, params, (err, results) => {
         if (err) {
