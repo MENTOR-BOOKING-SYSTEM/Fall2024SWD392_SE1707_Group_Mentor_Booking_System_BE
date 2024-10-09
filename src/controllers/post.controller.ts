@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { POSTS_MESSAGES } from '~/constants/messages';
 import postService from '~/services/post.services';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { CreatePostReqBody } from '~/schemas/Request/Post.request';
+import { CreatePostReqBody } from '~/models/Request/Post.request';
 
 export const createPostController = async (
   req: Request<ParamsDictionary, any, CreatePostReqBody>,
