@@ -21,6 +21,7 @@ export const USERS_MESSAGES = {
   DATE_OF_BIRTH_MUST_BE_ISO8601: 'Date of birth must be ISO8601',
   LOGIN_SUCCESS: 'Login success',
   REGISTER_SUCCESS: 'Register success',
+  TOKEN_IS_REQUIRED: 'Token is required',
   ACCESS_TOKEN_IS_REQUIRED: 'Access token is required',
   REFRESH_TOKEN_IS_REQUIRED: 'Refresh token is required',
   REFRESH_TOKEN_IS_INVALID: 'Refresh token is invalid',
@@ -38,33 +39,49 @@ export const USERS_MESSAGES = {
   RESET_PASSWORD_SUCCESS: 'Reset password success',
   GET_ME_SUCCESS: 'Get my profile success',
   USER_NOT_VERIFIED: 'User not verified',
-  BIO_MUST_BE_STRING: 'Bio must be a string',
-  BIO_LENGTH: 'Bio length must be from 1 to 200',
-  LOCATION_MUST_BE_STRING: 'Location must be a string',
-  LOCATION_LENGTH: 'Location length must be from 1 to 200',
-  WEBSITE_MUST_BE_STRING: 'Website must be a string',
-  WEBSITE_LENGTH: 'Website length must be from 1 to 200',
   USERNAME_MUST_BE_STRING: 'Username must be a string',
   USERNAME_INVALID:
     'Username must be 4-15 characters long and contain only letters, numbers, underscores, not only numbers',
-  IMAGE_URL_MUST_BE_STRING: 'Avatar must be a string',
-  IMAGE_URL_LENGTH: 'Avatar length must be from 1 to 200',
   UPDATE_ME_SUCCESS: 'Update my profile success',
   GET_PROFILE_SUCCESS: 'Get profile success',
-  FOLLOW_SUCCESS: 'Follow success',
   INVALID_USER_ID: 'Invalid user id',
-  FOLLOWED: 'Followed',
   ALREADY_UNFOLLOWED: 'Already unfollowed',
   UNFOLLOW_SUCCESS: 'Unfollow success',
   USERNAME_EXISTED: 'Username existed',
   OLD_PASSWORD_NOT_MATCH: 'Old password not match',
   CHANGE_PASSWORD_SUCCESS: 'Change password success',
-  GMAIL_NOT_VERIFIED: 'Gmail not verified',
-  UPLOAD_SUCCESS: 'Upload success',
   REFRESH_TOKEN_SUCCESS: 'Refresh token success',
-  GET_VIDEO_STATUS_SUCCESS: 'Get video status success'
+  GET_USER_LIST_SUCCESSFULLY: 'Get user list successfully',
+  VERIFY_FORGOT_PASSWORD_TOKEN_SUCCESSFULLY: 'Verify forgot password token successfully'
 } as const
 
 export const POSTS_MESSAGES = {
   CREATE_POST_SUCCESS: 'Tạo bài đăng thành công',
 } as const
+export const GROUPS_MESSAGES = {
+  GROUP_NAME_IS_REQUIRED: 'Group name is required',
+  USER_ALREADY_HAS_A_GROUP: 'User already has a group',
+  GROUP_LIST_USER_LENGTH: 'Group list user length must be more than 1',
+  GROUP_LIST_USER_REQUIRED: 'Group list user is required',
+  GROUP_NAME_LENGTH_MUST_BE_FROM_1_TO_100: 'Name length must be from 10 to 100',
+  PROJECT_ID_IS_REQUIRED: 'Project id is required',
+  PROJECT_IS_NOT_FOUND: 'Project is not found',
+  CREATE_GROUP_SUCCESSFULLY: 'Create group successfully',
+  GROUP_NAME_ALREADY_EXIST: 'Group name already exist'
+} as const
+
+export const TECHNOLOGIES_MESSAGE = {
+  GET_TECHNOLOGIES_SUCCESSFULLY: 'Get technologies successfully'
+} as const
+
+export const EMAIL_MESSAGES = {
+  RESET_PASSWORD_EMAIL_SUBJECT: 'Action Required: Reset Your Password'
+} as const
+
+export const ERROR_MESSAGES = {
+  UNAUTHORIZED: 'Unauthorized access',
+  NOT_FOUND: 'Resource not found',
+  FORBIDDEN: 'Forbidden access',
+  BAD_REQUEST: 'Bad request',
+  CONFLICT: 'Conflict'
+}

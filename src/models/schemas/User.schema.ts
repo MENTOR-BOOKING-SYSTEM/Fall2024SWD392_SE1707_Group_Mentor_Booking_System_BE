@@ -1,9 +1,10 @@
 interface UserType {
   userID: string
   password: string
-  studentCode: string
+  username: string
   email: string
   firstName: string
+  forgotPasswordToken?: string | null
   lastName: string
   createdAt?: Date
   updatedAt?: Date
@@ -12,18 +13,31 @@ interface UserType {
 export default class User {
   userID: string
   password: string
-  studentCode: string
+  username: string
   email: string
   firstName: string
+  forgotPasswordToken: string | null
   lastName: string
   createdAt: Date
   updatedAt: Date
   groupID: string
-  constructor({ userID, password, studentCode, email, firstName, lastName, createdAt, updatedAt, groupID }: UserType) {
+  constructor({
+    userID,
+    password,
+    username,
+    email,
+    firstName,
+    lastName,
+    createdAt,
+    updatedAt,
+    groupID,
+    forgotPasswordToken
+  }: UserType) {
     this.userID = userID
     this.password = password
-    this.studentCode = studentCode
+    this.username = username
     this.email = email
+    this.forgotPasswordToken = forgotPasswordToken || null
     this.firstName = firstName
     this.lastName = lastName
     this.createdAt = createdAt || new Date()
