@@ -62,6 +62,7 @@ class UserService {
   }
 
   private signAccessAndRefreshToken({ user_id, role }: { user_id: string; role: string[] }) {
+
     return Promise.all([this.signAccessToken({ user_id, role }), this.signRefreshToken({ user_id, role })])
   }
 
@@ -71,6 +72,7 @@ class UserService {
       secretOrPublicKey: envConfig.jwtSecretRefreshToken as string
     })
   }
+
   async login({ user_id }: { user_id: string }) {
     const roleUser = await databaseService.query<{ roleName: string }[]>(
       `SELECT r.roleName FROM User u JOIN User_Role ur ON u.userID = ur.userID JOIN Role r ON ur.roleID = r.roleID where u.userID = ? `,
