@@ -34,6 +34,32 @@ class PostService {
     const count = await databaseService.query<{ count: number }>('SELECT COUNT(*) as count FROM group_members WHERE groupID = ?', [groupID]);
     return count ? count.count : 0; // Trả về 0 nếu không tìm thấy nhóm
   }
+
+  async filterPosts({ skills, groupSize, mentorName }: { skills?: string[], groupSize?: number, mentorName?: string }) {
+    const query = `
+      SELECT * FROM posts
+      WHERE (techID IN (?) OR ? IS NULL)
+      AND (groupID IN (SELECT groupID FROM groups WHERE memberCount >= ? OR ? IS NULL))
+      AND (userID IN (SELECT userID FROM users WHERE firstName LIKE ? OR lastName LIKE ? OR ? IS NULL))
+    `;
+    const posts = await databaseService.query(query, [
+      skills ? skills.join(',') : null,
+      skills ? skills.join(',') : null,
+      groupSize ? groupSize : null,
+      groupSize ? groupSize : null,
+      `%${mentorName}%`,
+      mentorName ? `%${mentorName}%` : null,
+      mentorName ? `%${mentorName}%` : null,
+      mentorName ? mentorName : null
+    ]);
+    
+    return posts;
+  }
+
+  async searchPostsByTitle(title: string) {
+    const posts = await databaseService.query('SELECT * FROM posts WHERE name LIKE ?', [`%${title}%`]);
+    return posts;
+  }
 }
 
 const postService = new PostService();
