@@ -9,7 +9,7 @@ import { GetUserListQuery } from '~/models/Request/User.request'
 import { DatabaseTable } from '~/constants/databaseTable'
 
 class UserService {
-  private signAccessToken({ user_id, role }: { user_id: string; role: TokenRole }) {
+  private signAccessToken({ user_id, role }: { user_id: string; role: string[] }) {
     return signToken({
       payload: {
         user_id,
@@ -22,7 +22,7 @@ class UserService {
       }
     })
   }
-  private signRefreshToken({ user_id, role, exp }: { user_id: string; role: TokenRole; exp?: number }) {
+  private signRefreshToken({ user_id, role, exp }: { user_id: string; role: string[]; exp?: number }) {
     if (exp) {
       return signToken({
         payload: {
@@ -46,7 +46,7 @@ class UserService {
       }
     })
   }
-  private signAccessAndRefreshToken({ user_id, role }: { user_id: string; role: TokenRole }) {
+  private signAccessAndRefreshToken({ user_id, role }: { user_id: string; role: string[] }) {
     return Promise.all([this.signAccessToken({ user_id, role }), this.signRefreshToken({ user_id, role })])
   }
   private decodeRefreshToken(refresh_token: string) {
@@ -55,7 +55,14 @@ class UserService {
       secretOrPublicKey: envConfig.jwtSecretRefreshToken as string
     })
   }
-  async login({ user_id, role }: { user_id: string; role: TokenRole }) {
+  async login({ user_id }: { user_id: string }) {
+    const roleUser = await databaseService.query<{ roleName: string }[]>(
+      `SELECT r.roleName FROM User u JOIN User_Role ur ON u.userID = ur.userID JOIN Role r ON ur.roleID = r.roleID where u.userID = ? `,
+      [user_id]
+    )
+    const role = (roleUser as { roleName: string }[]).map((item) => item.roleName)
+    console.log(roleUser)
+
     const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
       user_id,
       role

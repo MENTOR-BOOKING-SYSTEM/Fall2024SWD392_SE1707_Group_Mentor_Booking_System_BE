@@ -60,7 +60,7 @@ export const loginValidator = validate(
               'SELECT * FROM User u JOIN User_Role ur ON u.userID = ur.userID JOIN Role r ON ur.roleID = r.roleID WHERE u.email = ? AND u.password = ?',
               [value, req.body.password]
             )
-            if (user === null) {
+            if (!user) {
               throw new Error(USERS_MESSAGES.EMAIL_OR_PASSWORD_IS_INCORRECT)
             }
             req.user = user

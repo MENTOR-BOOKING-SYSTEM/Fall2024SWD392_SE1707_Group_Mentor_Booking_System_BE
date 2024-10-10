@@ -1,4 +1,3 @@
-import { log } from 'console'
 import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { TokenRole } from '~/constants/enums'
@@ -6,13 +5,11 @@ import { USERS_MESSAGES } from '~/constants/messages'
 import { GetUserListQuery, LoginReqBody } from '~/models/Request/User.request'
 
 import User from '~/models/schemas/User.schema'
-import databaseService from '~/services/database.services'
 import userService from '~/services/user.services'
 
 export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
-  const user = req.user as User & { name: TokenRole }
-
-  const result = await userService.login({ user_id: user.userID, role: user.name })
+  const user = req.user as User & { role: TokenRole }
+  const result = await userService.login({ user_id: user.userID })
 
   return res.json({
     message: USERS_MESSAGES.LOGIN_SUCCESS,

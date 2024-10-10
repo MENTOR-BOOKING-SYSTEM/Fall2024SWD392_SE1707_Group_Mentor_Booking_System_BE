@@ -9,6 +9,7 @@ import { envConfig } from './constants/config'
 import { config } from 'dotenv'
 import groupsRouter from './routes/groups.routes'
 import technologyRouter from './routes/technologies.routes'
+import projectRouter from './routes/projects.routes'
 config()
 
 databaseService.connect()
@@ -22,6 +23,7 @@ app.use(cors())
 app.use('/users', usersRouter)
 app.use('/groups', groupsRouter)
 app.use('/technologies', technologyRouter)
+app.use('/projects', projectRouter)
 
 app.use(defaultErrorHandler)
 app.listen(port, () => {

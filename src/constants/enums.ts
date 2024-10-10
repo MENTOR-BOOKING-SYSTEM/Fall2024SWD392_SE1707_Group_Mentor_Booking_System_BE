@@ -5,10 +5,15 @@ export enum TokenType {
   EmailVerifyToken
 }
 export enum TokenRole {
-  Student,
-  Mentor
+  Student = 'Student',
+  Business = 'Business',
+  Mentor = 'Mentor',
+  Admin = 'Admin'
 }
 export enum ProjectStatus {
-  Pending,
-  Accepted
+  Accepted,
+  Rejected,
+  Considered,
+  Created,
+  Pending
 }
