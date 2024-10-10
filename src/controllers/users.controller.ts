@@ -17,9 +17,8 @@ import emailService from '~/services/email.services'
 import userService from '~/services/user.services'
 
 export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
-  const user = req.user as User & { name: TokenRole }
-
-  const result = await userService.login({ user_id: user.userID, role: user.name })
+  const user = req.user as User & { role: TokenRole }
+  const result = await userService.login({ user_id: user.userID })
 
   return res.json({
     message: USERS_MESSAGES.LOGIN_SUCCESS,

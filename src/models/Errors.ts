@@ -8,12 +8,16 @@ type ErrorsType = Record<
     [key: string]: any
   }
 >
-export class ErrorWithStatus {
+export class ErrorWithStatus<T = any> {
   message: string
   status: number
-  constructor({ message, status }: { message: string; status: number }) {
+  data?: T
+  constructor({ message, status, data }: { message: string; status: number; data?: T }) {
     this.message = message
     this.status = status
+    if (data) {
+      this.data = data
+    }
   }
 }
 
