@@ -160,6 +160,13 @@ class UserService {
       refresh_token: new_refresh_token
     }
   }
+
+  async logout(refresh_token: string) {
+    await databaseService.query('DELETE FROM Refresh_Tokens WHERE token = ?', [refresh_token])
+    return {
+      message: USERS_MESSAGES.LOGOUT_SUCCESS
+    }
+  }
 }
 
 const userService = new UserService()
