@@ -52,7 +52,8 @@ export const USERS_MESSAGES = {
   CHANGE_PASSWORD_SUCCESS: 'Change password success',
   REFRESH_TOKEN_SUCCESS: 'Refresh token success',
   GET_USER_LIST_SUCCESSFULLY: 'Get user list successfully',
-  VERIFY_FORGOT_PASSWORD_TOKEN_SUCCESSFULLY: 'Verify forgot password token successfully'
+  VERIFY_FORGOT_PASSWORD_TOKEN_SUCCESSFULLY: 'Verify forgot password token successfully',
+  UPLOAD_SUCCESS: "Upload image successfully"
 } as const
 
 export const GROUPS_MESSAGES = {
@@ -69,19 +70,6 @@ export const GROUPS_MESSAGES = {
 
 export const TECHNOLOGIES_MESSAGE = {
   GET_TECHNOLOGIES_SUCCESSFULLY: 'Get technologies successfully'
-} as const
-export const PROJECTS_MESSAGE = {
-  PROJECT_NAME_CAN_NOT_EMPTY: 'Project name can not empty',
-  SUBMIT_PROJECT_SUCESSFULLY: 'Sumit project sucessfully',
-  FUNCTIONAL_REQUIREMENT_CAN_NOT_EMPTY: 'Functional requirement cant not empty',
-  ACTORS_IS_REQUIRED: 'Actors is required',
-  TECHNOLOGY_IS_REQUIRED: 'Technology is required',
-  TECHNOLOGY_IS_NOT_FOUND: 'Technology not found is :',
-  MENTOR_DOES_NOT_NEED_TO_REQUEST_PROJECT_REVIEW_FROM_OTHER_MENTOR:
-    'MENTOR DOES NOT NEED TO REQUEST PROJECT REVIEW FROM OTHER MENTOR',
-  PROJECT_NAME_ALREADY_EXISTS: 'Project name already exist',
-  MENTOR_ID_IS_REQUIRED_FOR_STUDENT_OR_BUSINESS_ROLE: 'Mentor id is required for student or business role',
-  CAN_NOT_SEND_MORE_PROJECT: 'No more projects can be submitted because the previous project is being processed'
 } as const
 
 export const EMAIL_MESSAGES = {
@@ -108,6 +96,3 @@ export const PROJECTS_MESSAGE = {
   MENTOR_ID_IS_REQUIRED_FOR_STUDENT_OR_BUSINESS_ROLE: 'Mentor id is required for student or business role',
   CAN_NOT_SEND_MORE_PROJECT: 'No more projects can be submitted because the previous project is being processed'
 } as const
-
-
-

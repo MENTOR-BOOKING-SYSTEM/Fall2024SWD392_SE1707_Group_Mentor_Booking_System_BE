@@ -35,5 +35,9 @@ export const envConfig = {
   nodeMailerEmail: process.env.NODE_MAILER_EMAIL as string,
   nodeMailerPassword: process.env.NODE_MAILER_PASSWORD as string,
   jwtSecretForgotPasswordToken: process.env.JWT_SECRET_FORGOT_PASSWORD_TOKEN as string,
-  forgotPasswordTokenExpiresIn: process.env.FORGOT_PASSWORD_EXPIRES_IN as string
+  forgotPasswordTokenExpiresIn: process.env.FORGOT_PASSWORD_EXPIRES_IN as string,
+  s3SecretAccessKey: process.env.S3_SECRET_ACCESS_KEY as string,
+  s3AccessKeyId: process.env.S3_ACCESS_KEY_ID as string,
+  s3Endpoint: process.env.S3_ENDPOINT as string
 }
+

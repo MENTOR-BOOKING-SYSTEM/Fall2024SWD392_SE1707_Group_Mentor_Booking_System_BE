@@ -10,6 +10,15 @@ export enum TokenRole {
   Mentor = 'Mentor',
   Admin = 'Admin'
 }
+export enum MediaQuery {
+  Image = 'image',
+  Video = 'video'
+}
+export enum MediaType {
+  Image,
+  Video,
+  HLS
+}
 export enum ProjectStatus {
   Accepted,
   Rejected,
