@@ -83,6 +83,7 @@ export const TECHNOLOGIES_MESSAGE = {
   GET_TECHNOLOGIES_SUCCESSFULLY: 'Get technologies successfully',
   TECHNOLOGY_NAME_IS_REQUIRED: 'Tên công nghệ là bắt buộc',
   TECHNOLOGY_NAME_MUST_BE_A_STRING: 'Tên công nghệ phải là một chuỗi',
+  GET_TECHNOLOGIES_BY_PROJECT_SUCCESSFULLY: 'Lấy danh sách công nghệ theo dự án thành công'
 } as const
 
 export const EMAIL_MESSAGES = {
