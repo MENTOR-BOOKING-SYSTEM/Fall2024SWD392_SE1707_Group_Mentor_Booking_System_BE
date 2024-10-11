@@ -21,7 +21,9 @@ class ProjectServices {
     ])
     const [project] = projects
     return {
-      project, collaborators, technologies
+      project,
+      collaborators,
+      technologies
     }
   }
   async createProject(body: submitProjectBody, user_id: string, roles: string[]) {
