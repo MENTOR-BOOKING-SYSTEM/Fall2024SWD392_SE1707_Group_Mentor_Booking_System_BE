@@ -77,3 +77,16 @@ export const getListUsersController = async (
     result
   })
 }
+
+export const editProfileController = async (
+  req: Request<ParamsDictionary, any, { firstName?: string; lastName?: string; avatarUrl?: string }>,
+  res: Response
+) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const { firstName, lastName, avatarUrl } = req.body
+  const result = await userService.updateProfile(user_id, { firstName, lastName, avatarUrl })
+  return res.json({
+    message: USERS_MESSAGES.UPDATE_ME_SUCCESS,
+    result
+  })
+}

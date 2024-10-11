@@ -120,6 +120,31 @@ class UserService {
       email
     ])
   }
+
+  async updateProfile(
+    user_id: string,
+    payload: { firstName?: string; lastName?: string; avatarUrl?: string }
+  ) {
+    const updateFields = Object.entries(payload)
+      .filter(([_, value]) => value !== undefined)
+      .map(([key, value]) => `${key} = ?`)
+      .join(', ')
+
+    const updateValues = Object.values(payload).filter((value) => value !== undefined)
+
+    if (updateFields.length > 0) {
+      const query = `UPDATE ${DatabaseTable.User} SET ${updateFields} WHERE userID = ?`
+      await databaseService.query(query, [...updateValues, user_id])
+    }
+
+    const [updatedUser] = await databaseService.query<User[]>(
+      `SELECT firstName, lastName, avatarUrl FROM ${DatabaseTable.User} WHERE userID = ?`,
+      [user_id]
+    )
+
+    return updatedUser
+  }
 }
+
 const userService = new UserService()
 export default userService
