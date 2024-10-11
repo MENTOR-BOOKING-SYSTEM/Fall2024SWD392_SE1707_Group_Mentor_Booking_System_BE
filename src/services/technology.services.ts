@@ -9,17 +9,6 @@ class TechnologyServices {
     )
     return result
   }
-
-  async getTechnologiesByProjectId(projectId: string) {
-    const technologies = await databaseService.query(
-      `SELECT t.* FROM ${DatabaseTable.Technology} t
-       JOIN ${DatabaseTable.Project_Technology} pt ON t.techID = pt.techID
-       WHERE pt.projectID = ?`,
-      [projectId]
-    );
-    return technologies;
-  }
 }
-
 const technologyServices = new TechnologyServices()
 export default technologyServices
