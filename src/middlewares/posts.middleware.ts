@@ -1,5 +1,5 @@
 import { checkSchema } from 'express-validator';
-import { POSTS_MESSAGES } from '~/constants/messages';
+import { GROUPS_MESSAGES, POSTS_MESSAGES, TECHNOLOGIES_MESSAGE } from '~/constants/messages';
 import { validate } from '~/utils/validation';
 
 export const createPostValidator = validate(
@@ -29,19 +29,19 @@ export const createPostValidator = validate(
       },
       groupID: {
         notEmpty: {
-          errorMessage: POSTS_MESSAGES.GROUP_ID_IS_REQUIRED
+          errorMessage: GROUPS_MESSAGES.GROUP_ID_IS_REQUIRED
         },
         isString: {
-          errorMessage: POSTS_MESSAGES.GROUP_ID_MUST_BE_A_STRING
+          errorMessage: GROUPS_MESSAGES.GROUP_ID_MUST_BE_A_STRING
         },
         trim: true
       },
       technologyName: {
         notEmpty: {
-          errorMessage: POSTS_MESSAGES.TECHNOLOGY_NAME_IS_REQUIRED
+          errorMessage: TECHNOLOGIES_MESSAGE.TECHNOLOGY_NAME_IS_REQUIRED
         },
         isString: {
-          errorMessage: POSTS_MESSAGES.TECHNOLOGY_NAME_MUST_BE_A_STRING
+          errorMessage: TECHNOLOGIES_MESSAGE.TECHNOLOGY_NAME_MUST_BE_A_STRING
         },
         trim: true
       }

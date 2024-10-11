@@ -67,7 +67,7 @@ class PostService {
       return null;
     }
     
-    const postDetail = post[0] as any;
+    const postDetail = (post as any[])[0];
     
     // Lấy thông tin chi tiết của project
     const project = await databaseService.query('SELECT * FROM projects WHERE projectID = ?', [postDetail.projectID]);
@@ -82,8 +82,8 @@ class PostService {
     
     return {
       ...postDetail,
-      project: project[0] as { projectID: string; projectName: string; },
-      guide: guide[0] as { userID: string; avatarUrl: string; firstName: string; lastName: string; },
+      project: (project as { projectID: string; projectName: string; }[])[0],
+      guide: (guide as { userID: string; avatarUrl: string; firstName: string; lastName: string; }[])[0],
       technologies,
       membersCount
     };
