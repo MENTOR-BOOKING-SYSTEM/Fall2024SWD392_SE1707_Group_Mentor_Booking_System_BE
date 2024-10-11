@@ -62,7 +62,6 @@ class UserService {
   }
 
   private signAccessAndRefreshToken({ user_id, role }: { user_id: string; role: string[] }) {
-
     return Promise.all([this.signAccessToken({ user_id, role }), this.signRefreshToken({ user_id, role })])
   }
 

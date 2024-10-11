@@ -10,8 +10,10 @@ import { config } from 'dotenv'
 import groupsRouter from './routes/groups.routes'
 import technologyRouter from './routes/technologies.routes'
 import projectRouter from './routes/projects.routes'
+import mediasRouter from './routes/medias.routes'
+import { initFolder } from './utils/file'
 config()
-
+initFolder()
 databaseService.connect()
 const app = express()
 
@@ -24,6 +26,7 @@ app.use('/users', usersRouter)
 app.use('/groups', groupsRouter)
 app.use('/technologies', technologyRouter)
 app.use('/projects', projectRouter)
+app.use("/medias", mediasRouter)
 
 app.use(defaultErrorHandler)
 app.listen(port, () => {
