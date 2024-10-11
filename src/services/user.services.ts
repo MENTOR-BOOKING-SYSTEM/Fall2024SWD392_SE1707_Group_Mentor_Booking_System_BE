@@ -124,13 +124,13 @@ class UserService {
     ])
   }
 
-  async refreshToken(refresh_token: string) {
-    const decoded_refresh_token = await this.decodeRefreshToken(refresh_token)
+  async refreshToken(refreshToken: string) {
+    const decoded_refresh_token = await this.decodeRefreshToken(refreshToken)
     const { user_id, exp, iat } = decoded_refresh_token
 
     const [refresh_token_db] = await databaseService.query<RefreshToken[]>(
       'SELECT * FROM Refresh_Tokens WHERE token = ?',
-      [refresh_token]
+      [refreshToken]
     )
 
     if (!refresh_token_db) {
@@ -138,7 +138,7 @@ class UserService {
     }
 
     if (Date.now() >= exp * 1000) {
-      await databaseService.query('DELETE FROM Refresh_Tokens WHERE token = ?', [refresh_token])
+      await databaseService.query('DELETE FROM Refresh_Tokens WHERE token = ?', [refreshToken])
       throw new AuthError({ message: USERS_MESSAGES.REFRESH_TOKEN_IS_EXPIRED })
     }
 
@@ -153,7 +153,7 @@ class UserService {
       this.signRefreshToken({ user_id, role, exp })
     ])
 
-    await databaseService.query('UPDATE Refresh_Tokens SET token = ? WHERE token = ?', [new_refresh_token, refresh_token])
+    await databaseService.query('UPDATE Refresh_Tokens SET token = ? WHERE token = ?', [new_refresh_token, refreshToken])
 
     return {
       access_token: new_access_token,
@@ -161,8 +161,8 @@ class UserService {
     }
   }
 
-  async logout(refresh_token: string) {
-    await databaseService.query('DELETE FROM Refresh_Tokens WHERE token = ?', [refresh_token])
+  async logout(refreshToken: string) {
+    await databaseService.query('DELETE FROM Refresh_Tokens WHERE token = ?', [refreshToken])
     return {
       message: USERS_MESSAGES.LOGOUT_SUCCESS
     }

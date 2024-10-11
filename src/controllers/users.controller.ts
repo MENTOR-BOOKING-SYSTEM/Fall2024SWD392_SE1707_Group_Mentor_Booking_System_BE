@@ -79,11 +79,11 @@ export const getListUsersController = async (
 }
 
 export const refreshTokenController = async (
-  req: Request<ParamsDictionary, any, { refresh_token: string }>,
+  req: Request<ParamsDictionary, any, { refreshToken: string }>,
   res: Response
 ) => {
-  const { refresh_token } = req.body
-  const result = await userService.refreshToken(refresh_token)
+  const { refreshToken } = req.body
+  const result = await userService.refreshToken(refreshToken)
   return res.json({
     message: USERS_MESSAGES.REFRESH_TOKEN_SUCCESS,
     result
@@ -91,8 +91,8 @@ export const refreshTokenController = async (
 }
 
 export const logoutController = async (req: Request, res: Response) => {
-  const { refresh_token } = req.body
-  const result = await userService.logout(refresh_token)
+  const { refreshToken } = req.body
+  const result = await userService.logout(refreshToken)
   return res.json({
     message: USERS_MESSAGES.LOGOUT_SUCCESS,
     result
