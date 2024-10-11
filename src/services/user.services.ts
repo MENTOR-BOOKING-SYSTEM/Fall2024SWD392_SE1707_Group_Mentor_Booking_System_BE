@@ -161,6 +161,21 @@ class UserService {
 
     return user
   }
+
+  async getProfile(user_id: string) {
+    const [user] = await databaseService.query<User[]>(
+      `SELECT userID, email, username, firstName, lastName, avatarUrl 
+       FROM ${DatabaseTable.User} 
+       WHERE userID = ?`,
+      [user_id]
+    )
+    
+    if (!user) {
+      throw new NotFoundError({ message: USERS_MESSAGES.USER_NOT_FOUND })
+    }
+
+    return user
+  }
 }
 
 const userService = new UserService()
