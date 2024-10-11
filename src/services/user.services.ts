@@ -8,6 +8,8 @@ import { handleSpreadObjectToArray } from '~/utils/spreadObjectToArray'
 import { GetUserListQuery } from '~/models/Request/User.request'
 import { DatabaseTable } from '~/constants/databaseTable'
 import { hashPassword } from '~/utils/crypto'
+import { NotFoundError } from '~/models/Errors'
+import { USERS_MESSAGES } from '~/constants/messages'
 
 class UserService {
   private signAccessToken({ user_id, role }: { user_id: string; role: string[] }) {
@@ -143,6 +145,21 @@ class UserService {
     )
 
     return updatedUser
+  }
+
+  async getMe(user_id: string) {
+    const [user] = await databaseService.query<User[]>(
+      `SELECT userID, email, username, firstName, lastName, avatarUrl 
+       FROM ${DatabaseTable.User} 
+       WHERE userID = ?`,
+      [user_id]
+    )
+    
+    if (!user) {
+      throw new NotFoundError({ message: USERS_MESSAGES.USER_NOT_FOUND })
+    }
+
+    return user
   }
 }
 

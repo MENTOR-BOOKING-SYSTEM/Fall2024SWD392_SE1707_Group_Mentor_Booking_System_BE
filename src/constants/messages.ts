@@ -42,7 +42,7 @@ export const USERS_MESSAGES = {
   USERNAME_MUST_BE_STRING: 'Username must be a string',
   USERNAME_INVALID:
     'Username must be 4-15 characters long and contain only letters, numbers, underscores, not only numbers',
-  UPDATE_ME_SUCCESS: 'Cập nhật hồ sơ thành công',
+  UPDATE_ME_SUCCESS: 'Update my profile success',
   GET_PROFILE_SUCCESS: 'Get profile success',
   INVALID_USER_ID: 'Invalid user id',
   ALREADY_UNFOLLOWED: 'Already unfollowed',
