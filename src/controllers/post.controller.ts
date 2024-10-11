@@ -60,3 +60,20 @@ export const searchPostsController = async (req: Request, res: Response) => {
     result: searchedPosts
   });
 };
+
+export const getPostDetailController = async (req: Request, res: Response) => {
+  const { postID } = req.params;
+  const postDetail = await postService.getPostDetail(postID);
+  
+  if (!postDetail) {
+    return res.status(404).json({
+      message: "Không tìm thấy bài đăng",
+      result: null
+    });
+  }
+  
+  return res.status(200).json({
+    message: POSTS_MESSAGES.GET_POST_DETAIL_SUCCESS,
+    result: postDetail
+  });
+};

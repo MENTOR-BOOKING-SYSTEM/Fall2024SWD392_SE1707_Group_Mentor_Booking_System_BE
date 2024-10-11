@@ -60,6 +60,34 @@ class PostService {
     const posts = await databaseService.query('SELECT * FROM posts WHERE name LIKE ?', [`%${title}%`]);
     return posts;
   }
+
+  async getPostDetail(postID: string) {
+    const post = await databaseService.query('SELECT * FROM posts WHERE postID = ?', [postID]);
+    if (!post || Object.keys(post).length === 0) {
+      return null;
+    }
+    
+    const postDetail = post[0] as any;
+    
+    // Lấy thông tin chi tiết của project
+    const project = await databaseService.query('SELECT * FROM projects WHERE projectID = ?', [postDetail.projectID]);
+    // Lấy thông tin của người hướng dẫn
+    const guide = await databaseService.query('SELECT userID, avatarUrl, firstName, lastName FROM users WHERE userID = ?', [postDetail.userID]);
+    
+    // Lấy thông tin về công nghệ
+    const technologies = await databaseService.query('SELECT techID, techName FROM technologies WHERE techID IN (?)', [postDetail.techID]);
+    
+    // Lấy số lượng thành viên
+    const membersCount = await this.getMembersCount(postDetail.groupID);
+    
+    return {
+      ...postDetail,
+      project: project[0] as { projectID: string; projectName: string; },
+      guide: guide[0] as { userID: string; avatarUrl: string; firstName: string; lastName: string; },
+      technologies,
+      membersCount
+    };
+  }
 }
 
 const postService = new PostService();

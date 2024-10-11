@@ -57,7 +57,8 @@ export const USERS_MESSAGES = {
 
 export const POSTS_MESSAGES = {
   CREATE_POST_SUCCESS: 'Tạo bài đăng thành công',
-  GET_POSTS_SUCCESS: 'Lấy danh sách bài đăng thành công'
+  GET_POSTS_SUCCESS: 'Lấy danh sách bài đăng thành công',
+  GET_POST_DETAIL_SUCCESS: 'Lấy chi tiết bài đăng thành công'
 } as const
 export const GROUPS_MESSAGES = {
   GROUP_NAME_IS_REQUIRED: 'Group name is required',

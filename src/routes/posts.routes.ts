@@ -3,7 +3,8 @@ import {
   createPostController,
   getPostsController,
   filterPostsController,
-  searchPostsController
+  searchPostsController,
+  getPostDetailController
 } from '~/controllers/post.controller';
 import { wrapReqHandler } from '~/utils/handler';
 
@@ -13,5 +14,6 @@ postsRouter.post('/', wrapReqHandler(createPostController));
 postsRouter.get('/', wrapReqHandler(getPostsController));
 postsRouter.get('/filter', wrapReqHandler(filterPostsController)); // Route cho lọc bài đăng
 postsRouter.get('/search', wrapReqHandler(searchPostsController)); // Route cho tìm kiếm bài đăng
+postsRouter.get('/:postID', wrapReqHandler(getPostDetailController));
 
 export default postsRouter;
