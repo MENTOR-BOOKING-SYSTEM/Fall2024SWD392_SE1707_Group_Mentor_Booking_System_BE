@@ -8,6 +8,9 @@ import { handleSpreadObjectToArray } from '~/utils/spreadObjectToArray'
 import { GetUserListQuery } from '~/models/Request/User.request'
 import { DatabaseTable } from '~/constants/databaseTable'
 import { hashPassword } from '~/utils/crypto'
+import { TokenPayload } from '~/models/Request/User.request'
+import { AuthError } from '~/models/Errors'
+import { USERS_MESSAGES } from '~/constants/messages'
 
 class UserService {
   private signAccessToken({ user_id, role }: { user_id: string; role: string[] }) {
@@ -120,6 +123,44 @@ class UserService {
       email
     ])
   }
+
+  async refreshToken(refresh_token: string) {
+    const decoded_refresh_token = await this.decodeRefreshToken(refresh_token)
+    const { user_id, exp, iat } = decoded_refresh_token
+
+    const [refresh_token_db] = await databaseService.query<RefreshToken[]>(
+      'SELECT * FROM Refresh_Tokens WHERE token = ?',
+      [refresh_token]
+    )
+
+    if (!refresh_token_db) {
+      throw new AuthError({ message: USERS_MESSAGES.REFRESH_TOKEN_IS_INVALID })
+    }
+
+    if (Date.now() >= exp * 1000) {
+      await databaseService.query('DELETE FROM Refresh_Tokens WHERE token = ?', [refresh_token])
+      throw new AuthError({ message: USERS_MESSAGES.REFRESH_TOKEN_IS_EXPIRED })
+    }
+
+    const roleUser = await databaseService.query<{ roleName: string }[]>(
+      `SELECT r.roleName FROM User u JOIN User_Role ur ON u.userID = ur.userID JOIN Role r ON ur.roleID = r.roleID where u.userID = ? `,
+      [user_id]
+    )
+    const role = roleUser.map((item) => item.roleName)
+
+    const [new_access_token, new_refresh_token] = await Promise.all([
+      this.signAccessToken({ user_id, role }),
+      this.signRefreshToken({ user_id, role, exp })
+    ])
+
+    await databaseService.query('UPDATE Refresh_Tokens SET token = ? WHERE token = ?', [new_refresh_token, refresh_token])
+
+    return {
+      access_token: new_access_token,
+      refresh_token: new_refresh_token
+    }
+  }
 }
+
 const userService = new UserService()
 export default userService

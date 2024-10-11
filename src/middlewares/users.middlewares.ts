@@ -8,6 +8,7 @@ import { confirmPasswordSchema, forgotPasswordSchema, passwordSchema } from '~/m
 import { verifyTokenByType } from '~/utils/commons'
 import { validate } from '~/utils/validation'
 import { hashPassword } from '~/utils/crypto'
+import { envConfig } from '~/constants/config'
 
 export const accessTokenValidator = validate(
   checkSchema(
@@ -97,6 +98,30 @@ export const resetPasswordValidator = validate(
       forgotPasswordToken: forgotPasswordSchema,
       password: passwordSchema,
       confirmPassword: confirmPasswordSchema
+    },
+    ['body']
+  )
+)
+
+export const refreshTokenValidator = validate(
+  checkSchema(
+    {
+      refresh_token: {
+        notEmpty: {
+          errorMessage: USERS_MESSAGES.REFRESH_TOKEN_IS_REQUIRED
+        },
+        custom: {
+          options: async (value: string, { req }) => {
+            try {
+              const decoded_refresh_token = await verifyTokenByType(value, 'refresh_token', req as Request)
+              req.decoded_refresh_token = decoded_refresh_token
+            } catch (error) {
+              throw new Error(USERS_MESSAGES.REFRESH_TOKEN_IS_INVALID)
+            }
+            return true
+          }
+        }
+      }
     },
     ['body']
   )

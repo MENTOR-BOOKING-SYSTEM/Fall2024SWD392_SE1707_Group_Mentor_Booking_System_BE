@@ -50,10 +50,11 @@ export const USERS_MESSAGES = {
   USERNAME_EXISTED: 'Username existed',
   OLD_PASSWORD_NOT_MATCH: 'Old password not match',
   CHANGE_PASSWORD_SUCCESS: 'Change password success',
-  REFRESH_TOKEN_SUCCESS: 'Refresh token success',
+  REFRESH_TOKEN_IS_EXPIRED: 'Refresh token is expired',
   GET_USER_LIST_SUCCESSFULLY: 'Get user list successfully',
   VERIFY_FORGOT_PASSWORD_TOKEN_SUCCESSFULLY: 'Verify forgot password token successfully',
-  UPLOAD_SUCCESS: "Upload image successfully"
+  UPLOAD_SUCCESS: 'Upload image successfully',
+  REFRESH_TOKEN_SUCCESS: 'Refresh token success'
 } as const
 
 export const GROUPS_MESSAGES = {

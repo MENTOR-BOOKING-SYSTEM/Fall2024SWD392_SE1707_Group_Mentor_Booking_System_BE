@@ -77,3 +77,15 @@ export const getListUsersController = async (
     result
   })
 }
+
+export const refreshTokenController = async (
+  req: Request<ParamsDictionary, any, { refresh_token: string }>,
+  res: Response
+) => {
+  const { refresh_token } = req.body
+  const result = await userService.refreshToken(refresh_token)
+  return res.json({
+    message: USERS_MESSAGES.REFRESH_TOKEN_SUCCESS,
+    result
+  })
+}

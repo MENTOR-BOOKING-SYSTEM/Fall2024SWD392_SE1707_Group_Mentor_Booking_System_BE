@@ -4,7 +4,8 @@ import {
   getListUsersController,
   loginController,
   resetPasswordController,
-  verifyForgotPasswordTokenController
+  verifyForgotPasswordTokenController,
+  refreshTokenController
 } from '~/controllers/users.controller'
 import { paginationValidator } from '~/middlewares/pagination.middlewares'
 import {
@@ -12,7 +13,8 @@ import {
   forgotPasswordValidator,
   loginValidator,
   resetPasswordValidator,
-  verifyForgotPasswordTokenValidator
+  verifyForgotPasswordTokenValidator,
+  refreshTokenValidator
 } from '~/middlewares/users.middlewares'
 import { wrapReqHandler } from '~/utils/handler'
 
@@ -27,5 +29,7 @@ usersRouter.post('/forgot-password', forgotPasswordValidator, wrapReqHandler(for
 usersRouter.get('/verify-code', verifyForgotPasswordTokenValidator, wrapReqHandler(verifyForgotPasswordTokenController))
 
 usersRouter.post('/reset-password', resetPasswordValidator, wrapReqHandler(resetPasswordController))
+
+usersRouter.post('/refresh-token', refreshTokenValidator, wrapReqHandler(refreshTokenController))
 
 export default usersRouter
