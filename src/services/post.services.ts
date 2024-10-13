@@ -3,6 +3,13 @@ import Post from '~/models/schemas/Post.schema';
 import databaseService from './database.services';
 import { CreatePostReqBody } from '~/models/Request/Post.request';
 
+interface Guide {
+  userID: string;
+  avatarUrl: string;
+  firstName: string;
+  lastName: string;
+}
+
 class PostService {
   async createPost({ name, description, groupID, techID }: CreatePostReqBody) {
     const postID = uuidv4();
@@ -14,19 +21,51 @@ class PostService {
     return newPost;
   }
   
-  async getPosts() {
-    const posts: any[] = await databaseService.query('SELECT * FROM posts');
-    // Cần thêm logic để lấy thông tin chi tiết cho từng bài đăng
+  async getPosts(query: {
+    page?: number,
+    limit?: number,
+    technologies?: number[],
+    email?: string[],
+    groupMembers?: number
+  }) {
+    const { page = 1, limit = 10, technologies, email, groupMembers } = query;
+    const offset = (page - 1) * limit;
+
+    let sqlQuery = 'SELECT * FROM posts WHERE 1=1';
+    const params: any[] = [];
+
+    if (technologies && technologies.length > 0) {
+      sqlQuery += ' AND techID IN (?)';
+      params.push(technologies);
+    }
+
+    if (email && email.length > 0) {
+      sqlQuery += ' AND userID IN (SELECT userID FROM users WHERE email IN (?))';
+      params.push(email);
+    }
+
+    if (groupMembers) {
+      sqlQuery += ' AND groupID IN (SELECT groupID FROM groups WHERE memberCount >= ?)';
+      params.push(groupMembers);
+    }
+
+    sqlQuery += ' LIMIT ? OFFSET ?';
+    params.push(limit, offset);
+
+    const posts: any[] = await databaseService.query(sqlQuery, params);
+
+    // Lấy thông tin chi tiết cho từng bài đăng
     const detailedPosts = await Promise.all(posts.map(async (post: any) => {
-      const guide = await databaseService.query('SELECT userID, avatarUrl, firstName, lastName FROM users WHERE userID = ?', [post.userID]);
+      const guide = await databaseService.query<Guide[]>('SELECT userID, avatarUrl, firstName, lastName FROM users WHERE userID = ?', [post.userID]);
       const technologies = await databaseService.query('SELECT techID, techName FROM technologies WHERE techID IN (?)', [post.techID]);
       return {
         ...post,
-        guide,
+        guide: guide[0],
         technologies,
-        members: await this.getMembersCount(post.groupID) // Giả sử có phương thức để lấy số lượng thành viên
+        members: await this.getMembersCount(post.groupID)
       };
     }));
+
     return detailedPosts;
   }
 
