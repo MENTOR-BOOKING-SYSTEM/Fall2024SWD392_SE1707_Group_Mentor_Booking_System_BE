@@ -77,3 +77,34 @@ export const getListUsersController = async (
     result
   })
 }
+
+export const editProfileController = async (
+  req: Request<ParamsDictionary, any, { firstName?: string; lastName?: string; avatarUrl?: string }>,
+  res: Response
+) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const { firstName, lastName, avatarUrl } = req.body
+  const result = await userService.updateProfile(user_id, { firstName, lastName, avatarUrl })
+  return res.json({
+    message: USERS_MESSAGES.UPDATE_ME_SUCCESS,
+    result
+  })
+}
+
+export const getMeController = async (req: Request, res: Response) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const user = await userService.getMe(user_id)
+  return res.json({
+    message: USERS_MESSAGES.GET_ME_SUCCESS,
+    result: user
+  })
+}
+
+export const getProfileController = async (req: Request, res: Response) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const user = await userService.getProfile(user_id)
+  return res.json({
+    message: USERS_MESSAGES.GET_PROFILE_SUCCESS,
+    result: user
+  })
+}

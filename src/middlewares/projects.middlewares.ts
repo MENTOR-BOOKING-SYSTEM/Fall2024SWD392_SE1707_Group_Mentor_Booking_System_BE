@@ -96,7 +96,6 @@ export const submitProjectValidator = validate(
       }
     },
     mentorID: {
-      optional: true,
       isString: true,
       custom: {
         options: async (value, { req }) => {

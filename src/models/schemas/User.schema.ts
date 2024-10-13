@@ -5,10 +5,10 @@ interface UserType {
   email: string
   firstName: string
   forgotPasswordToken?: string | null
+  avatarUrl?: string | null
   lastName: string
   createdAt?: Date
   updatedAt?: Date
-  groupID?: string
 }
 export default class User {
   userID: string
@@ -17,10 +17,10 @@ export default class User {
   email: string
   firstName: string
   forgotPasswordToken: string | null
+  avatarUrl: string | null
   lastName: string
   createdAt: Date
   updatedAt: Date
-  groupID: string
   constructor({
     userID,
     password,
@@ -30,8 +30,8 @@ export default class User {
     lastName,
     createdAt,
     updatedAt,
-    groupID,
-    forgotPasswordToken
+    forgotPasswordToken,
+    avatarUrl
   }: UserType) {
     this.userID = userID
     this.password = password
@@ -40,8 +40,8 @@ export default class User {
     this.forgotPasswordToken = forgotPasswordToken || null
     this.firstName = firstName
     this.lastName = lastName
+    this.avatarUrl = avatarUrl || null
     this.createdAt = createdAt || new Date()
     this.updatedAt = updatedAt || new Date()
-    this.groupID = groupID || ''
   }
 }
