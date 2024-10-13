@@ -123,10 +123,7 @@ class UserService {
     ])
   }
 
-  async updateProfile(
-    user_id: string,
-    payload: { firstName?: string; lastName?: string; avatarUrl?: string }
-  ) {
+  async updateProfile(user_id: string, payload: { firstName?: string; lastName?: string; avatarUrl?: string }) {
     const updateFields = Object.entries(payload)
       .filter(([_, value]) => value !== undefined)
       .map(([key, value]) => `${key} = ?`)
@@ -154,7 +151,7 @@ class UserService {
        WHERE userID = ?`,
       [user_id]
     )
-    
+
     if (!user) {
       throw new NotFoundError({ message: USERS_MESSAGES.USER_NOT_FOUND })
     }
@@ -169,7 +166,7 @@ class UserService {
        WHERE userID = ?`,
       [user_id]
     )
-    
+
     if (!user) {
       throw new NotFoundError({ message: USERS_MESSAGES.USER_NOT_FOUND })
     }
