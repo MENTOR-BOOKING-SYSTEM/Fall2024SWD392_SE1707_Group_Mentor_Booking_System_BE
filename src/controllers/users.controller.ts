@@ -117,3 +117,12 @@ export const getUsersByRolesController = async (req: Request, res: Response) => 
     result: users
   });
 }
+
+export const getStudentsInSameGroupController = async (req: Request, res: Response) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const students = await userService.getStudentsInSameGroup(user_id)
+  return res.json({
+    message: USERS_MESSAGES.GET_STUDENTS_IN_SAME_GROUP_SUCCESS,
+    result: students
+  })
+}

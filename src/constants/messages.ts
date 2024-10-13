@@ -53,7 +53,8 @@ export const USERS_MESSAGES = {
   REFRESH_TOKEN_SUCCESS: 'Refresh token success',
   GET_USER_LIST_SUCCESSFULLY: 'Get user list successfully',
   VERIFY_FORGOT_PASSWORD_TOKEN_SUCCESSFULLY: 'Verify forgot password token successfully',
-  UPLOAD_SUCCESS: "Upload image successfully"
+  UPLOAD_SUCCESS: "Upload image successfully",
+  GET_STUDENTS_IN_SAME_GROUP_SUCCESS: 'Get students in same group successfully'
 } as const
 
 export const POSTS_MESSAGES = {
