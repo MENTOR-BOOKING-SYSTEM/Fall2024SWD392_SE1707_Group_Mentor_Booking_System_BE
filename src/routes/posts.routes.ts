@@ -2,18 +2,19 @@ import { Router } from 'express';
 import {
   createPostController,
   getPostsController,
-  filterPostsController,
-  searchPostsController,
   getPostDetailController
 } from '~/controllers/post.controller';
 import { wrapReqHandler } from '~/utils/handler';
+import { accessTokenValidator } from '~/middlewares/users.middlewares';
 
 const postsRouter = Router();
 
+// Thêm accessTokenValidator làm middleware cho tất cả các route
+postsRouter.use(accessTokenValidator);
+
 postsRouter.post('/', wrapReqHandler(createPostController));
 postsRouter.get('/', wrapReqHandler(getPostsController));
-postsRouter.get('/filter', wrapReqHandler(filterPostsController)); // Route cho lọc bài đăng
-postsRouter.get('/search', wrapReqHandler(searchPostsController)); // Route cho tìm kiếm bài đăng
+postsRouter.get('/all', wrapReqHandler(getPostsController));
 postsRouter.get('/:postID', wrapReqHandler(getPostDetailController));
 
 export default postsRouter;

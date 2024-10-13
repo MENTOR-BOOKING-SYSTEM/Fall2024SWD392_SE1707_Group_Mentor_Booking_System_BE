@@ -17,47 +17,19 @@ export const createPostController = async (
 };
 
 export const getPostsController = async (req: Request, res: Response) => {
-  const posts = await postService.getPosts();
-  return res.status(200).json({
+  const { page, limit, technologies, email, groupMembers } = req.query;
+
+  const posts = await postService.getPosts({
+    page: Number(page),
+    limit: Number(limit),
+    technologies: technologies ? (technologies as string).split(',').map(Number) : undefined,
+    email: email ? (email as string).split(',') : undefined,
+    groupMembers: groupMembers ? Number(groupMembers) : undefined
+  });
+
+  return res.json({
     message: POSTS_MESSAGES.GET_POSTS_SUCCESS,
     result: posts
-  });
-};
-
-export const filterPostsController = async (req: Request, res: Response) => {
-  const { skills, groupSize, mentorName } = req.query;
-  const skillsArray = Array.isArray(skills) ? skills : skills ? [skills] : undefined;
-  const groupSizeValue = groupSize ? Number(groupSize) : undefined; // Sử dụng undefined thay vì null
-  const filteredPosts = await postService.filterPosts({ 
-    skills: skillsArray as string[], // Đảm bảo rằng skillsArray là một mảng chuỗi
-    groupSize: groupSizeValue, // Sử dụng biến đã được xác định
-    mentorName: mentorName as string // Đảm bảo rằng mentorName là một chuỗi
-  });
-  if (filteredPosts) {
-    return res.status(200).json({
-      message: POSTS_MESSAGES.GET_POSTS_SUCCESS,
-      result: filteredPosts
-    });
-  } else {
-    return res.status(404).json({
-      message: "Không tìm thấy bài đăng",
-      result: null
-    });
-  }
-};
-
-export const searchPostsController = async (req: Request, res: Response) => {
-  const { title } = req.query;
-  if (typeof title !== 'string') {
-    return res.status(400).json({
-      message: "Yêu cầu không hợp lệ",
-      result: null
-    });
-  }
-  const searchedPosts = await postService.searchPostsByTitle(title);
-  return res.status(200).json({
-    message: POSTS_MESSAGES.GET_POSTS_SUCCESS,
-    result: searchedPosts
   });
 };
 
