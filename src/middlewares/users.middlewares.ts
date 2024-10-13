@@ -144,16 +144,24 @@ export const getUsersByRolesValidator = validate(
     {
       role: {
         in: ['query'],
-        isArray: {
-          errorMessage: 'Vai trò phải là một mảng'
+        isString: {
+          errorMessage: 'Vai trò phải là một chuỗi JSON hợp lệ'
         },
         custom: {
           options: (value) => {
-            if (!Array.isArray(value)) {
-              value = [value];
+            try {
+              const roles = JSON.parse(value);
+              if (!Array.isArray(roles)) {
+                throw new Error('Vai trò phải là một mảng');
+              }
+              const validRoles = Object.values(TokenRole);
+              return roles.every((role: string | number) => 
+                typeof role === 'string' ? validRoles.includes(role as TokenRole) : 
+                (typeof role === 'number' && role > 0 && role <= validRoles.length)
+              );
+            } catch (error) {
+              throw new Error('Vai trò không hợp lệ');
             }
-            const validRoles = Object.values(TokenRole);
-            return value.every((role: string) => validRoles.includes(role as TokenRole));
           },
           errorMessage: 'Vai trò không hợp lệ'
         }
