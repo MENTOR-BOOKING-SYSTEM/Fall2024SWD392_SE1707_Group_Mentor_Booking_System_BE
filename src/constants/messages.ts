@@ -109,5 +109,6 @@ export const PROJECTS_MESSAGE = {
     'MENTOR DOES NOT NEED TO REQUEST PROJECT REVIEW FROM OTHER MENTOR',
   PROJECT_NAME_ALREADY_EXISTS: 'Project name already exist',
   MENTOR_ID_IS_REQUIRED_FOR_STUDENT_OR_BUSINESS_ROLE: 'Mentor id is required for student or business role',
-  CAN_NOT_SEND_MORE_PROJECT: 'No more projects can be submitted because the previous project is being processed'
+  CAN_NOT_SEND_MORE_PROJECT: 'No more projects can be submitted because the previous project is being processed',
+  TECHNOLOGY_MUST_BE_AN_ARRAY_WITH_AT_LEAST_1_ELEMENT: 'Technology Must Be An Array With At Least 1 Element'
 } as const

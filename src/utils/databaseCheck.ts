@@ -1,9 +1,12 @@
+import { ColumnID } from '~/constants/enums'
 import databaseService from '~/services/database.services'
 
-export const databaseCheck = async (table: string, valueToCheck: number[]) => {
-  const techName = await databaseService.query<{ techID: number }[]>(`SELECT techID FROM ${table}`)
+export const databaseCheck = async (table: string, column: ColumnID, valueToCheck: number[]) => {
+  const result = await databaseService.query<{ [key: string]: number }[]>(`SELECT ${column} FROM ${table}`)
+  const existingValues = result.map((row) => row[column])
   const notExist: number[] = valueToCheck.filter((item: number) => {
-    return !techName.some((tech) => tech.techID === item)
+    return !existingValues.includes(item)
   })
+
   return notExist
 }
