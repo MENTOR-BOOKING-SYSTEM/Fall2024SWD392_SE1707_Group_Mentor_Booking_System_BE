@@ -29,7 +29,9 @@ class ProjectServices {
   async createProject(body: submitProjectBody, user_id: string, roles: string[]) {
     const { technologies, collaborators, mentorID, ...project } = body
     const { projectID, ...rest } = new Project(project)
+
     const role = roles.some((item) => item === TokenRole.Mentor) ? TokenRole.Reviewer : TokenRole.Mentor
+
     const userIdReviewProject = roles.some((item) => item === TokenRole.Mentor) ? 0 : mentorID
     const result = await databaseService.query<OkPacket>(
       `Insert into ${DatabaseTable.Project}(
