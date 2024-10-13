@@ -7,7 +7,8 @@ import {
   verifyForgotPasswordTokenController,
   editProfileController,
   getMeController,
-  getProfileController
+  getProfileController,
+  getStudentsInSameGroupController
 } from '~/controllers/users.controller'
 import { paginationValidator } from '~/middlewares/pagination.middlewares'
 import {
@@ -37,5 +38,7 @@ usersRouter.patch('/edit-profile', accessTokenValidator, editProfileValidator, w
 usersRouter.get('/me', accessTokenValidator, wrapReqHandler(getMeController))
 
 usersRouter.get('/profile', accessTokenValidator, wrapReqHandler(getProfileController))
+
+usersRouter.get('/same-group-students', accessTokenValidator, wrapReqHandler(getStudentsInSameGroupController))
 
 export default usersRouter

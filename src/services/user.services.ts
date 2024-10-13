@@ -173,6 +173,18 @@ class UserService {
 
     return user
   }
+
+  async getStudentsInSameGroup(user_id: string) {
+    const query = `
+      SELECT u.userID, u.avatarUrl, u.email
+      FROM User u
+      JOIN User_Group ug1 ON u.userID = ug1.userID
+      JOIN User_Group ug2 ON ug1.groupID = ug2.groupID
+      WHERE ug2.userID = ? AND u.userID != ?
+    `
+    const students = await databaseService.query<{ userID: string; avatarUrl: string; email: string }[]>(query, [user_id, user_id])
+    return students
+  }
 }
 
 const userService = new UserService()
