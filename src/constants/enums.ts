@@ -27,3 +27,7 @@ export enum ProjectStatus {
   Created,
   Pending
 }
+export enum ColumnID {
+  Technology = "techID",
+  User = "userID"
+}
