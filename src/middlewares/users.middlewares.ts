@@ -8,6 +8,7 @@ import { confirmPasswordSchema, forgotPasswordSchema, passwordSchema } from '~/m
 import { verifyTokenByType } from '~/utils/commons'
 import { validate } from '~/utils/validation'
 import { hashPassword } from '~/utils/crypto'
+import { TokenRole } from '~/constants/enums'
 
 export const accessTokenValidator = validate(
   checkSchema(
@@ -135,5 +136,29 @@ export const editProfileValidator = validate(
       }
     },
     ['body']
+  )
+)
+
+export const getUsersByRolesValidator = validate(
+  checkSchema(
+    {
+      role: {
+        in: ['query'],
+        isArray: {
+          errorMessage: 'Vai trò phải là một mảng'
+        },
+        custom: {
+          options: (value) => {
+            if (!Array.isArray(value)) {
+              value = [value];
+            }
+            const validRoles = Object.values(TokenRole);
+            return value.every((role: string) => validRoles.includes(role as TokenRole));
+          },
+          errorMessage: 'Vai trò không hợp lệ'
+        }
+      }
+    },
+    ['query']
   )
 )

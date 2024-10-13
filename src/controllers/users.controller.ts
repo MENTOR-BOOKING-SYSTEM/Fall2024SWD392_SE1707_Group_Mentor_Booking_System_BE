@@ -108,3 +108,12 @@ export const getProfileController = async (req: Request, res: Response) => {
     result: user
   })
 }
+
+export const getUsersByRolesController = async (req: Request, res: Response) => {
+  const roles = req.query.role as string[];
+  const users = await userService.getUsersByRoles(roles);
+  return res.json({
+    message: USERS_MESSAGES.GET_USER_LIST_SUCCESSFULLY,
+    result: users
+  });
+}

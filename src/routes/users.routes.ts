@@ -7,7 +7,8 @@ import {
   verifyForgotPasswordTokenController,
   editProfileController,
   getMeController,
-  getProfileController
+  getProfileController,
+  getUsersByRolesController
 } from '~/controllers/users.controller'
 import { paginationValidator } from '~/middlewares/pagination.middlewares'
 import {
@@ -16,7 +17,8 @@ import {
   loginValidator,
   resetPasswordValidator,
   verifyForgotPasswordTokenValidator,
-  editProfileValidator
+  editProfileValidator,
+  getUsersByRolesValidator
 } from '~/middlewares/users.middlewares'
 import { wrapReqHandler } from '~/utils/handler'
 
@@ -37,5 +39,7 @@ usersRouter.patch('/edit-profile', accessTokenValidator, editProfileValidator, w
 usersRouter.get('/me', accessTokenValidator, wrapReqHandler(getMeController))
 
 usersRouter.get('/profile', accessTokenValidator, wrapReqHandler(getProfileController))
+
+usersRouter.get('/role', accessTokenValidator, getUsersByRolesValidator, wrapReqHandler(getUsersByRolesController))
 
 export default usersRouter
