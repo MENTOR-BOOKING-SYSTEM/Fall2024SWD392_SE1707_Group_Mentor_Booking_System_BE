@@ -38,6 +38,8 @@ export const envConfig = {
   forgotPasswordTokenExpiresIn: process.env.FORGOT_PASSWORD_EXPIRES_IN as string,
   s3SecretAccessKey: process.env.S3_SECRET_ACCESS_KEY as string,
   s3AccessKeyId: process.env.S3_ACCESS_KEY_ID as string,
-  s3Endpoint: process.env.S3_ENDPOINT as string
+  s3Endpoint: process.env.S3_ENDPOINT as string,
+  gcpClientId: process.env.GCP_CLIENT_ID as string,
+  gcpClientSecret: process.env.GCP_CLIENT_SECRET as string,
+  gcpRedirectUri: process.env.GCP_REDIRECT_URI as string
 }
-

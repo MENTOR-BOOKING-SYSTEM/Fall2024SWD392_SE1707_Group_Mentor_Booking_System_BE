@@ -8,7 +8,7 @@ import { databaseCheck } from '~/utils/databaseCheck'
 import { validate } from '~/utils/validation'
 import { Request } from 'express'
 import { TokenPayload } from '~/models/Request/User.request'
-import { TokenRole } from '~/constants/enums'
+import { ColumnID, TokenRole } from '~/constants/enums'
 import User from '~/models/schemas/User.schema'
 import Project from '~/models/schemas/Project.schema'
 
@@ -66,11 +66,10 @@ export const submitProjectValidator = validate(
       isString: true
     },
     technologies: {
-      optional: true,
-      isArray: true,
+      isArray: { options: { min: 1 }, errorMessage: PROJECTS_MESSAGE.TECHNOLOGY_MUST_BE_AN_ARRAY_WITH_AT_LEAST_1_ELEMENT },
       custom: {
         options: async (value, { req }) => {
-          const notExist = await databaseCheck(DatabaseTable.Technology, value)
+          const notExist = await databaseCheck(DatabaseTable.Technology, ColumnID.Technology, value)
           if (notExist.length > 0) {
             throw new ErrorWithStatus({
               status: HTTP_STATUS.BAD_REQUEST,
@@ -81,12 +80,11 @@ export const submitProjectValidator = validate(
       }
     },
     collaborators: {
-      optional: true,
       isArray: true,
       custom: {
         options: async (value, { req }) => {
-          const notExist = await databaseCheck(DatabaseTable.User, value)
-          if (notExist) {
+          const notExist = await databaseCheck(DatabaseTable.User, ColumnID.User, value)
+          if (notExist.length > 0) {
             throw new ErrorWithStatus({
               status: HTTP_STATUS.BAD_REQUEST,
               message: `${USERS_MESSAGES.USER_NOT_FOUND}: ${notExist.map((item) => item + ' ')} `
@@ -96,7 +94,6 @@ export const submitProjectValidator = validate(
       }
     },
     mentorID: {
-      optional: true,
       isString: true,
       custom: {
         options: async (value, { req }) => {

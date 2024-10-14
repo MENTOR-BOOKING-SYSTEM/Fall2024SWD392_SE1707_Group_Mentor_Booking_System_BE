@@ -6,7 +6,11 @@ import {
   resetPasswordController,
   verifyForgotPasswordTokenController,
   refreshTokenController,
-  logoutController
+  logoutController,
+  editProfileController,
+  getMeController,
+  getProfileController,
+  getStudentsInSameGroupController
 } from '~/controllers/users.controller'
 import { paginationValidator } from '~/middlewares/pagination.middlewares'
 import {
@@ -15,7 +19,8 @@ import {
   loginValidator,
   resetPasswordValidator,
   verifyForgotPasswordTokenValidator,
-  refreshTokenValidator
+  refreshTokenValidator,
+  editProfileValidator
 } from '~/middlewares/users.middlewares'
 import { wrapReqHandler } from '~/utils/handler'
 
@@ -34,5 +39,13 @@ usersRouter.post('/reset-password', resetPasswordValidator, wrapReqHandler(reset
 usersRouter.post('/refresh-token', refreshTokenValidator, wrapReqHandler(refreshTokenController))
 
 usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapReqHandler(logoutController))
+
+usersRouter.patch('/edit-profile', accessTokenValidator, editProfileValidator, wrapReqHandler(editProfileController))
+
+usersRouter.get('/me', accessTokenValidator, wrapReqHandler(getMeController))
+
+usersRouter.get('/profile', accessTokenValidator, wrapReqHandler(getProfileController))
+
+usersRouter.get('/same-group-students', accessTokenValidator, wrapReqHandler(getStudentsInSameGroupController))
 
 export default usersRouter

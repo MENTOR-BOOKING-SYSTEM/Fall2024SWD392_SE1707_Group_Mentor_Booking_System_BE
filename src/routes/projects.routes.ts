@@ -6,4 +6,5 @@ import { wrapReqHandler } from '~/utils/handler'
 
 const projectRouter = Router()
 projectRouter.post('/submit', accessTokenValidator, submitProjectValidator, wrapReqHandler(submitProjectController))
+
 export default projectRouter
