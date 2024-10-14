@@ -5,7 +5,7 @@ import {
   loginController,
   resetPasswordController,
   verifyForgotPasswordTokenController,
-  refreshTokenController
+  refreshTokenController,
   editProfileController,
   getMeController,
   getProfileController,
@@ -18,7 +18,7 @@ import {
   loginValidator,
   resetPasswordValidator,
   verifyForgotPasswordTokenValidator,
-  refreshTokenValidator
+  refreshTokenValidator,
   editProfileValidator
 } from '~/middlewares/users.middlewares'
 import { wrapReqHandler } from '~/utils/handler'

@@ -120,6 +120,13 @@ export const refreshTokenValidator = validate(
             }
             return true
           }
+        }
+      }
+    },
+    ['body']
+  )
+)
+
 export const editProfileValidator = validate(
   checkSchema(
     {

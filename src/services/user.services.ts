@@ -160,6 +160,7 @@ class UserService {
       access_token: new_access_token,
       refresh_token: new_refresh_token
     }
+  }
   async updateProfile(user_id: string, payload: { firstName?: string; lastName?: string; avatarUrl?: string }) {
     const updateFields = Object.entries(payload)
       .filter(([_, value]) => value !== undefined)
