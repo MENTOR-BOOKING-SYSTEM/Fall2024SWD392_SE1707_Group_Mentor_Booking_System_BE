@@ -43,6 +43,14 @@ class CriteriaService {
     );
     return criteria || null;
   }
+
+  async getCriteriaBySemesterId(semesterID: string): Promise<Criteria[]> {
+    const criteria = await databaseService.query<Criteria[]>(
+      'SELECT c.* FROM Criteria c JOIN SemesterCriteria sc ON c.criteriaID = sc.criteriaID WHERE sc.semesterID = ?',
+      [semesterID]
+    );
+    return criteria;
+  }
 }
 
 const criteriaService = new CriteriaService();
