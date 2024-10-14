@@ -53,7 +53,7 @@ export const USERS_MESSAGES = {
   REFRESH_TOKEN_SUCCESS: 'Refresh token success',
   GET_USER_LIST_SUCCESSFULLY: 'Get user list successfully',
   VERIFY_FORGOT_PASSWORD_TOKEN_SUCCESSFULLY: 'Verify forgot password token successfully',
-  UPLOAD_SUCCESS: "Upload image successfully",
+  UPLOAD_SUCCESS: 'Upload image successfully',
   GET_STUDENTS_IN_SAME_GROUP_SUCCESS: 'Get students in same group successfully'
 } as const
 
@@ -80,6 +80,18 @@ export const GROUPS_MESSAGES = {
   CREATE_GROUP_SUCCESSFULLY: 'Create group successfully',
   GROUP_NAME_ALREADY_EXIST: 'Group name already exist'
 } as const
+
+export const SEMESTERS_MESSAGES = {
+  SEMESTER_NAME_TYPE_INVALID: 'Semester name must be a string',
+  SEMESTER_NAME_ALREADY_EXISTS: 'Semester name already exists',
+  DESCRIPTION_TYPE_INVALID: 'Description must be a string',
+  DATE_TYPE_INVALID: 'Date format invalid',
+  START_DATE_BEFORE_END_DATE: 'Start date must not be before end date',
+  INVALID_PERIOD: 'A semester must last for 16 weeks',
+  SEMESTERS_OVERLAP: 'Semesters overlap',
+  SEMESTER_CREATED_SUCCESSFULLY: 'Semester created successfully',
+  SEMESTER_NOT_FOUND: 'Semester not found'
+}
 
 export const TECHNOLOGIES_MESSAGE = {
   GET_TECHNOLOGIES_SUCCESSFULLY: 'Get technologies successfully',
