@@ -58,18 +58,19 @@ export const USERS_MESSAGES = {
 } as const
 
 export const POSTS_MESSAGES = {
-  CREATE_POST_SUCCESS: 'Tạo bài đăng thành công',
-  GET_POSTS_SUCCESS: 'Lấy danh sách bài đăng thành công',
-  GET_POST_DETAIL_SUCCESS: 'Lấy chi tiết bài đăng thành công',
-  DESCRIPTION_IS_REQUIRED: 'Mô tả bài đăng là bắt buộc',
-  DESCRIPTION_MUST_BE_A_STRING: 'Mô tả bài đăng phải là một chuỗi',
-  NAME_LENGTH_MUST_BE_FROM_1_TO_100: 'Độ dài tên phải từ 1 đến 100 ký tự',
-  NAME_MUST_BE_A_STRING: 'Tên phải là một chuỗi',
-  NAME_IS_REQUIRED: 'Tên là bắt buộc'
+  CREATE_POST_SUCCESS: 'Create post successfully',
+  GET_POSTS_SUCCESS: 'Get posts successfully',
+  GET_POST_DETAIL_SUCCESS: 'Get post detail successfully',
+  DESCRIPTION_IS_REQUIRED: 'Description is required',
+  DESCRIPTION_MUST_BE_A_STRING: 'Description must be a string',
+  NAME_LENGTH_MUST_BE_FROM_1_TO_100: 'Name length must be from 1 to 100',
+  NAME_MUST_BE_A_STRING: 'Name must be a string',
+  NAME_IS_REQUIRED: 'Name is required'
 } as const
+
 export const GROUPS_MESSAGES = {
-  GROUP_ID_IS_REQUIRED: 'ID nhóm là bắt buộc',
-  GROUP_ID_MUST_BE_A_STRING: 'ID nhóm phải là một chuỗi',
+  GROUP_ID_IS_REQUIRED: 'Group id is required',
+  GROUP_ID_MUST_BE_A_STRING: 'Group id must be a string',
   GROUP_NAME_IS_REQUIRED: 'Group name is required',
   USER_ALREADY_HAS_A_GROUP: 'User already has a group',
   GROUP_LIST_USER_LENGTH: 'Group list user length must be more than 1',
@@ -83,9 +84,9 @@ export const GROUPS_MESSAGES = {
 
 export const TECHNOLOGIES_MESSAGE = {
   GET_TECHNOLOGIES_SUCCESSFULLY: 'Get technologies successfully',
-  TECHNOLOGY_NAME_IS_REQUIRED: 'Tên công nghệ là bắt buộc',
-  TECHNOLOGY_NAME_MUST_BE_A_STRING: 'Tên công nghệ phải là một chuỗi',
-  GET_TECHNOLOGIES_BY_PROJECT_SUCCESSFULLY: 'Lấy danh sách công nghệ theo dự án thành công'
+  TECHNOLOGY_NAME_IS_REQUIRED: 'Technology name is required',
+  TECHNOLOGY_NAME_MUST_BE_A_STRING: 'Technology name must be a string',
+  GET_TECHNOLOGIES_BY_PROJECT_SUCCESSFULLY: 'Get technologies by project successfully'
 } as const
 
 export const EMAIL_MESSAGES = {
@@ -113,3 +114,14 @@ export const PROJECTS_MESSAGE = {
   CAN_NOT_SEND_MORE_PROJECT: 'No more projects can be submitted because the previous project is being processed',
   TECHNOLOGY_MUST_BE_AN_ARRAY_WITH_AT_LEAST_1_ELEMENT: 'Technology Must Be An Array With At Least 1 Element'
 } as const
+
+export const CRITERIA_MESSAGES = {
+  CREATE_CRITERIA_SUCCESSFULLY: 'Create criteria successfully',
+  GET_ALL_CRITERIA_SUCCESSFULLY: 'Get all criteria successfully',
+  CRITERIA_NAME_IS_REQUIRED: 'Criteria name is required',
+  CRITERIA_NAME_MUST_BE_A_STRING: 'Criteria name must be a string',
+  CRITERIA_TYPE_IS_REQUIRED: 'Criteria type is required',
+  CRITERIA_TYPE_MUST_BE_A_STRING: 'Criteria type must be a string',
+  CRITERIA_DESCRIPTION_MUST_BE_A_STRING: 'Criteria description must be a string',
+  CRITERIA_NAME_ALREADY_EXISTS: 'Criteria name already exists'
+} as const;
