@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import criteriaService from '~/services/criteria.services';
 import { CRITERIA_MESSAGES } from '~/constants/messages';
-import { ConflictError } from '~/models/Errors';
+import { ConflictError, NotFoundError } from '~/models/Errors';
 
 export const createCriteriaController = async (req: Request, res: Response) => {
   const { name, type, description } = req.body;
@@ -28,3 +28,16 @@ export const getAllCriteriaController = async (req: Request, res: Response) => {
   });
 };
 
+export const getCriteriaByIdController = async (req: Request, res: Response) => {
+  const { criteriaID } = req.params;
+  const criteria = await criteriaService.getCriteriaById(criteriaID);
+  
+  if (!criteria) {
+    throw new NotFoundError({ message: CRITERIA_MESSAGES.CRITERIA_NOT_FOUND });
+  }
+  
+  return res.status(200).json({
+    message: CRITERIA_MESSAGES.GET_CRITERIA_SUCCESSFULLY,
+    result: criteria
+  });
+};

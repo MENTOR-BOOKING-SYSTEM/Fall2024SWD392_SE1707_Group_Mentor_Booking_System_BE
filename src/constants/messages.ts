@@ -118,10 +118,12 @@ export const PROJECTS_MESSAGE = {
 export const CRITERIA_MESSAGES = {
   CREATE_CRITERIA_SUCCESSFULLY: 'Create criteria successfully',
   GET_ALL_CRITERIA_SUCCESSFULLY: 'Get all criteria successfully',
+  GET_CRITERIA_SUCCESSFULLY: 'Get criteria successfully',
   CRITERIA_NAME_IS_REQUIRED: 'Criteria name is required',
   CRITERIA_NAME_MUST_BE_A_STRING: 'Criteria name must be a string',
   CRITERIA_TYPE_IS_REQUIRED: 'Criteria type is required',
   CRITERIA_TYPE_MUST_BE_A_STRING: 'Criteria type must be a string',
   CRITERIA_DESCRIPTION_MUST_BE_A_STRING: 'Criteria description must be a string',
-  CRITERIA_NAME_ALREADY_EXISTS: 'Criteria name already exists'
+  CRITERIA_NAME_ALREADY_EXISTS: 'Criteria name already exists',
+  CRITERIA_NOT_FOUND: 'Criteria not found'
 } as const;

@@ -35,8 +35,15 @@ class CriteriaService {
     const criteria = await databaseService.query<Criteria[]>('SELECT * FROM Criteria');
     return criteria;
   }
+
+  async getCriteriaById(criteriaID: string): Promise<Criteria | null> {
+    const [criteria] = await databaseService.query<Criteria[]>(
+      'SELECT * FROM Criteria WHERE criteriaID = ?',
+      [criteriaID]
+    );
+    return criteria || null;
+  }
 }
 
 const criteriaService = new CriteriaService();
 export default criteriaService;
-
