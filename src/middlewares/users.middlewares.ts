@@ -120,6 +120,35 @@ export const refreshTokenValidator = validate(
             }
             return true
           }
+export const editProfileValidator = validate(
+  checkSchema(
+    {
+      firstName: {
+        optional: true,
+        isString: {
+          errorMessage: 'Tên phải là chuỗi'
+        },
+        trim: true,
+        isLength: {
+          options: { min: 1, max: 50 },
+          errorMessage: 'Tên phải có độ dài từ 1 đến 50 ký tự'
+        }
+      },
+      lastName: {
+        optional: true,
+        isString: {
+          errorMessage: 'Họ phải là chuỗi'
+        },
+        trim: true,
+        isLength: {
+          options: { min: 1, max: 50 },
+          errorMessage: 'Họ phải có độ dài từ 1 đến 50 ký tự'
+        }
+      },
+      avatarUrl: {
+        optional: true,
+        isURL: {
+          errorMessage: 'URL ảnh đại diện không hợp lệ'
         }
       }
     },

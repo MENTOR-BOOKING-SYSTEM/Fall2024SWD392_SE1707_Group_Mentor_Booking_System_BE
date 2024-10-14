@@ -29,8 +29,10 @@ class ProjectServices {
   async createProject(body: submitProjectBody, user_id: string, roles: string[]) {
     const { technologies, collaborators, mentorID, ...project } = body
     const { projectID, ...rest } = new Project(project)
-    const role = roles.some((item) => item === TokenRole.Mentor) ? TokenRole.Mentor : roles[0]
-    const userIdReviewProject = roles.some((item) => item === TokenRole.Mentor) ? user_id : mentorID
+
+    const role = roles.some((item) => item === TokenRole.Mentor) ? TokenRole.Reviewer : TokenRole.Mentor
+
+    const userIdReviewProject = roles.some((item) => item === TokenRole.Mentor) ? 0 : mentorID
     const result = await databaseService.query<OkPacket>(
       `Insert into ${DatabaseTable.Project}(
     projectName,
@@ -43,12 +45,12 @@ class ProjectServices {
     status)  values (?,?,?,?,?,?,?,?)`,
       handleSpreadObjectToArray(rest)
     )
-    if (collaborators) {
-      if (technologies) {
+    if (collaborators && collaborators.length > 0) {
+      if (technologies && technologies.length > 0) {
         const userOwnProjectPromises = collaborators.map((item) =>
           databaseService.query<{ userID: string; projectID: string }>(
             `Insert into ${DatabaseTable.User_Own_Project}(userID,projectID) VALUES (?,?)`,
-            [result.insertId, item]
+            [item, result.insertId]
           )
         )
         const projectTechnology = technologies.map((item) =>
@@ -69,7 +71,7 @@ class ProjectServices {
         const userOwnProjectPromises = collaborators.map((item) =>
           databaseService.query<{ userID: string; projectID: string }>(
             `Insert into ${DatabaseTable.User_Own_Project}(userID,projectID) VALUES (?,?)`,
-            [result.insertId, item]
+            [item, result.insertId,]
           )
         )
         await Promise.all([
@@ -81,7 +83,7 @@ class ProjectServices {
         ])
       }
     } else {
-      if (technologies) {
+      if (technologies && technologies.length > 0) {
         const projectTechnology = technologies.map((item) =>
           databaseService.query(`insert into ${DatabaseTable.Project_Technology}(projectID,techID) VALUES (?,?)`, [
             result.insertId,
