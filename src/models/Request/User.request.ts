@@ -1,4 +1,3 @@
-
 import { TokenRole, TokenType } from '~/constants/enums'
 import { JwtPayload } from 'jsonwebtoken'
 export interface TokenPayload extends JwtPayload {
@@ -26,4 +25,7 @@ export interface ForgotPasswordReqBody {
 
 export interface VerifyForgotPasswordTokenReqQuery {
   code?: string
+}
+export interface JoinGroupReqBody {
+  groupId: number
 }

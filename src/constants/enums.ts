@@ -9,7 +9,7 @@ export enum TokenRole {
   Business = 'Business',
   Mentor = 'Mentor',
   Admin = 'Admin',
-  Reviewer = "Reviewer"
+  Reviewer = 'Reviewer'
 }
 export enum MediaQuery {
   Image = 'image',
@@ -28,6 +28,6 @@ export enum ProjectStatus {
   Pending
 }
 export enum ColumnID {
-  Technology = "techID",
-  User = "userID"
+  Technology = 'techID',
+  User = 'userID'
 }

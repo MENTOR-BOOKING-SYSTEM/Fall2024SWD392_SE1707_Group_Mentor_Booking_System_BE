@@ -71,7 +71,7 @@ class ProjectServices {
         const userOwnProjectPromises = collaborators.map((item) =>
           databaseService.query<{ userID: string; projectID: string }>(
             `Insert into ${DatabaseTable.User_Own_Project}(userID,projectID) VALUES (?,?)`,
-            [item, result.insertId,]
+            [item, result.insertId]
           )
         )
         await Promise.all([
