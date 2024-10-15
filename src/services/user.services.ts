@@ -63,7 +63,7 @@ class UserService {
     })
   }
 
-  private signAccessAndRefreshToken({ user_id, role, exp }: { user_id: string; role: string[], exp?: number }) {
+  private signAccessAndRefreshToken({ user_id, role, exp }: { user_id: string; role: string[]; exp?: number }) {
     return Promise.all([this.signAccessToken({ user_id, role }), this.signRefreshToken({ user_id, role, exp })])
   }
   async refreshToken({
@@ -73,7 +73,7 @@ class UserService {
     exp
   }: {
     user_id: string
-    refreshToken: string,
+    refreshToken: string
     role: string[]
     exp: number
   }) {
@@ -83,7 +83,10 @@ class UserService {
     ])
     const [access_token, new_refresh_token] = token
     const { iat } = await this.decodeRefreshToken(new_refresh_token)
-    await databaseService.query(`Insert into ${DatabaseTable.Refresh_Token}(_id,token,created_at,userID,iat,exp) values(?,?,?,?,?,?)`, handleSpreadObjectToArray(new RefreshToken({ token: new_refresh_token, userID: user_id, exp, iat })))
+    await databaseService.query(
+      `Insert into ${DatabaseTable.Refresh_Token}(_id,token,created_at,userID,iat,exp) values(?,?,?,?,?,?)`,
+      handleSpreadObjectToArray(new RefreshToken({ token: new_refresh_token, userID: user_id, exp, iat }))
+    )
     return {
       access_token,
       refresh_token: new_refresh_token
@@ -204,8 +207,15 @@ class UserService {
       JOIN User_Group ug2 ON ug1.groupID = ug2.groupID
       WHERE ug2.userID = ? AND u.userID != ?
     `
-    const students = await databaseService.query<{ userID: string; avatarUrl: string; email: string }[]>(query, [user_id, user_id])
+    const students = await databaseService.query<{ userID: string; avatarUrl: string; email: string }[]>(query, [
+      user_id,
+      user_id
+    ])
     return students
+  }
+  async joinGroup({ userID, groupID }: { userID: number, groupID: number }) {
+    const result = await databaseService.query(`Insert into ${DatabaseTable.User_Group}(userID,groupID,position) values (?,?,?)`, [userID, groupID, "Proposal"])
+    return result
   }
 }
 
