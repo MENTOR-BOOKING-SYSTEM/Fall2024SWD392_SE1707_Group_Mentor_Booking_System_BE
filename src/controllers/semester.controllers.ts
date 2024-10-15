@@ -15,3 +15,11 @@ export const createSemesterController = async (
     message: SEMESTERS_MESSAGES.SEMESTER_CREATED_SUCCESSFULLY
   })
 }
+
+export const getCurrentPhaseController = async (req: Request, res: Response) => {
+  const currentPhase = req.currentPhase
+  res.send({
+    message: SEMESTERS_MESSAGES.GET_CURRENT_PHASE_SUCCESSFULLY,
+    result: currentPhase
+  })
+}

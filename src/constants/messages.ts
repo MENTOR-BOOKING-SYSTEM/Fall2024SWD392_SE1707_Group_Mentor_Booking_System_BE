@@ -91,7 +91,9 @@ export const SEMESTERS_MESSAGES = {
   INVALID_PERIOD: 'A semester must last for 16 weeks',
   SEMESTERS_OVERLAP: 'Semesters overlap',
   SEMESTER_CREATED_SUCCESSFULLY: 'Semester created successfully',
-  SEMESTER_NOT_FOUND: 'Semester not found'
+  SEMESTER_NOT_FOUND: 'Semester not found',
+  GET_CURRENT_PHASE_SUCCESSFULLY: 'Get current phase successfully',
+  TIMESTAMP_NOT_FOUND: 'Timestamp not found'
 }
 
 export const TECHNOLOGIES_MESSAGE = {
@@ -139,5 +141,5 @@ export const CRITERIA_MESSAGES = {
   CRITERIA_NAME_ALREADY_EXISTS: 'Criteria name already exists',
   CRITERIA_NOT_FOUND: 'Criteria not found',
   SEMESTER_ID_IS_REQUIRED: 'Semester ID is required',
-  GET_CRITERIA_BY_SEMESTER_SUCCESSFULLY: 'Get criteria by semester successfully',
-} as const;
+  GET_CRITERIA_BY_SEMESTER_SUCCESSFULLY: 'Get criteria by semester successfully'
+} as const
