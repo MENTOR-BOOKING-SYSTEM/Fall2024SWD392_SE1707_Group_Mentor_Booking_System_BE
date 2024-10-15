@@ -65,23 +65,3 @@ export const createGroupValidator = validate(
     }
   })
 )
-export const getRequestPendingValidator = validate(checkSchema({
-  groupID: {
-    notEmpty: true,
-    isNumeric: true,
-    custom: {
-      options: async (value, { req }) => {
-        const isExist = await databaseService.query<{ groupID: string }[]>(`select groupID from \`${DatabaseTable.Group}\` where groupID =? `, [value])
-        console.log(isExist);
-
-        if (!(isExist.length > 0)) {
-          throw new ErrorWithStatus({
-            message: GROUPS_MESSAGES.GROUP_NOT_FOUND,
-            status: HTTP_STATUS.NOT_FOUND
-          })
-        }
-        return true
-      }
-    }
-  }
-}, ['params']))

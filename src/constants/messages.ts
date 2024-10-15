@@ -81,8 +81,7 @@ export const GROUPS_MESSAGES = {
   PROJECT_IS_NOT_FOUND: 'Project is not found',
   CREATE_GROUP_SUCCESSFULLY: 'Create group successfully',
   GROUP_NAME_ALREADY_EXIST: 'Group name already exist',
-  GROUP_NOT_FOUND: "Group is not found",
-  GET_REQUEST_PENDING_SUCCESSFULLY: "Get request pending successfully"
+  GROUP_NOT_FOUND: "Group is not found"
 } as const
 
 export const SEMESTERS_MESSAGES = {
