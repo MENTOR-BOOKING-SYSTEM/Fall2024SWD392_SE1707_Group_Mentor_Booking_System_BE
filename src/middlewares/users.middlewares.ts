@@ -3,11 +3,17 @@ import databaseService from '~/services/database.services'
 import { Request } from 'express'
 import { checkSchema } from 'express-validator'
 import { ERROR_MESSAGES, USERS_MESSAGES } from '~/constants/messages'
-import { NotFoundError } from '~/models/Errors'
+import { ErrorWithStatus, NotFoundError } from '~/models/Errors'
 import { confirmPasswordSchema, forgotPasswordSchema, passwordSchema } from '~/models/Form'
 import { verifyTokenByType } from '~/utils/commons'
 import { validate } from '~/utils/validation'
 import { hashPassword } from '~/utils/crypto'
+import HTTP_STATUS from '~/constants/httpStatus'
+import { verifyToken } from '~/utils/jwt'
+import { DatabaseTable } from '~/constants/databaseTable'
+import { envConfig } from '~/constants/config'
+import { JsonWebTokenError } from 'jsonwebtoken'
+import { capitalize } from 'lodash'
 
 export const accessTokenValidator = validate(
   checkSchema(
@@ -17,6 +23,7 @@ export const accessTokenValidator = validate(
           options: async (value: string, { req }) => {
             const access_token = (value || '').split(' ')[1]
             const decoded_access_token = await verifyTokenByType(access_token, 'access_token', req as Request)
+
             if (decoded_access_token) {
               return true
             }
@@ -27,7 +34,48 @@ export const accessTokenValidator = validate(
     ['headers']
   )
 )
-
+export const refreshTokenValidator = validate(
+  checkSchema(
+    {
+      refreshToken: {
+        trim: true,
+        custom: {
+          options: async (value, { req }) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.REFRESH_TOKEN_IS_REQUIRED,
+                status: HTTP_STATUS.UNAUTHORIZED
+              })
+            }
+            try {
+              const [decoded_refresh_token, refresh_token] = await Promise.all([
+                verifyToken({ token: value, secretOrPublicKey: envConfig.jwtSecretRefreshToken as string }),
+                databaseService.query<{ token: string }>(`Select token from ${DatabaseTable.Refresh_Token} where token = ?`, [value])
+              ])
+              if (refresh_token === null) {
+                throw new ErrorWithStatus({
+                  message: USERS_MESSAGES.USED_REFRESH_TOKEN_OR_NOT_EXIST,
+                  status: HTTP_STATUS.UNAUTHORIZED
+                })
+              }
+              ; (req as Request).decoded_refresh_token = decoded_refresh_token
+            } catch (error) {
+              if (error instanceof JsonWebTokenError) {
+                throw new ErrorWithStatus({
+                  message: capitalize(error.message),
+                  status: HTTP_STATUS.UNAUTHORIZED
+                })
+              }
+              throw error
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
 export const loginValidator = validate(
   checkSchema(
     {
