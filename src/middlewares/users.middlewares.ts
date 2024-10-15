@@ -2,7 +2,7 @@ import User from '~/models/schemas/User.schema'
 import databaseService from '~/services/database.services'
 import { Request } from 'express'
 import { checkSchema } from 'express-validator'
-import { ERROR_MESSAGES, USERS_MESSAGES } from '~/constants/messages'
+import { ERROR_MESSAGES, GROUPS_MESSAGES, USERS_MESSAGES } from '~/constants/messages'
 import { ErrorWithStatus, NotFoundError } from '~/models/Errors'
 import { confirmPasswordSchema, forgotPasswordSchema, passwordSchema } from '~/models/Form'
 import { verifyTokenByType } from '~/utils/commons'
@@ -50,7 +50,10 @@ export const refreshTokenValidator = validate(
             try {
               const [decoded_refresh_token, refresh_token] = await Promise.all([
                 verifyToken({ token: value, secretOrPublicKey: envConfig.jwtSecretRefreshToken as string }),
-                databaseService.query<{ token: string }>(`Select token from ${DatabaseTable.Refresh_Token} where token = ?`, [value])
+                databaseService.query<{ token: string }>(
+                  `Select token from ${DatabaseTable.Refresh_Token} where token = ?`,
+                  [value]
+                )
               ])
               if (refresh_token === null) {
                 throw new ErrorWithStatus({
@@ -184,4 +187,27 @@ export const editProfileValidator = validate(
     },
     ['body']
   )
+)
+export const joinGroupValidator = validate(
+  checkSchema({
+    groupId: {
+      notEmpty: true,
+      isNumeric: true,
+      custom: {
+        options: async (value, { req }) => {
+          const isExist = await databaseService.query<{ groupID: string }[]>(
+            `select groupID from  \`${DatabaseTable.Group}\`  where groupID = ?`,
+            [value]
+          )
+          if (!(isExist.length < 0)) {
+            throw new ErrorWithStatus({
+              message: GROUPS_MESSAGES.GROUP_NOT_FOUND,
+              status: HTTP_STATUS.NOT_FOUND
+            })
+          }
+          return true
+        }
+      }
+    }
+  })
 )

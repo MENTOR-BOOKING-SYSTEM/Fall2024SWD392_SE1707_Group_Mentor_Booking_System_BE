@@ -10,7 +10,8 @@ import {
   getProfileController,
   getStudentsInSameGroupController,
   getCurrentUserInfoController,
-  refreshTokenController
+  refreshTokenController,
+  joinGroupController
 } from '~/controllers/users.controller'
 import { paginationValidator } from '~/middlewares/pagination.middlewares'
 import {
@@ -20,14 +21,15 @@ import {
   resetPasswordValidator,
   verifyForgotPasswordTokenValidator,
   editProfileValidator,
-  refreshTokenValidator
+  refreshTokenValidator,
+  joinGroupValidator
 } from '~/middlewares/users.middlewares'
 import { wrapReqHandler } from '~/utils/handler'
 
 const usersRouter = Router()
 
 usersRouter.post('/login', loginValidator, wrapReqHandler(loginController))
-
+usersRouter.post('/join', accessTokenValidator, joinGroupValidator, wrapReqHandler(joinGroupController))
 usersRouter.get('/', paginationValidator, accessTokenValidator, wrapReqHandler(getListUsersController))
 
 usersRouter.post('/forgot-password', forgotPasswordValidator, wrapReqHandler(forgotPasswordController))

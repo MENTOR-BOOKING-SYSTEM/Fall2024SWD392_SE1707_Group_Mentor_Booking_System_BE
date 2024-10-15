@@ -17,10 +17,10 @@ export const getTechnologiesController = async (
 }
 
 export const getTechnologiesByProjectIdController = async (req: Request, res: Response) => {
-  const { projectId } = req.params;
-  const technologies = await technologyServices.getTechnologiesByProjectId(projectId);
+  const { projectId } = req.params
+  const technologies = await technologyServices.getTechnologiesByProjectId(projectId)
   return res.status(200).json({
     message: TECHNOLOGIES_MESSAGE.GET_TECHNOLOGIES_BY_PROJECT_SUCCESSFULLY,
     result: technologies
-  });
-};
+  })
+}

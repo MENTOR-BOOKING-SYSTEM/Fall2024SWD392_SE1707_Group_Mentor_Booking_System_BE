@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response } from "express"
-import { USERS_MESSAGES } from "~/constants/messages"
-import mediasService from "~/services/medias.services"
+import { NextFunction, Request, Response } from 'express'
+import { USERS_MESSAGES } from '~/constants/messages'
+import mediasService from '~/services/medias.services'
 
 export const uploadImageController = async (req: Request, res: Response, next: NextFunction) => {
   const url = await mediasService.uploadImage(req)

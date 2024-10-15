@@ -1,6 +1,6 @@
-import { checkSchema } from 'express-validator';
-import { GROUPS_MESSAGES, POSTS_MESSAGES, TECHNOLOGIES_MESSAGE } from '~/constants/messages';
-import { validate } from '~/utils/validation';
+import { checkSchema } from 'express-validator'
+import { GROUPS_MESSAGES, POSTS_MESSAGES, TECHNOLOGIES_MESSAGE } from '~/constants/messages'
+import { validate } from '~/utils/validation'
 
 export const createPostValidator = validate(
   checkSchema(
@@ -48,4 +48,4 @@ export const createPostValidator = validate(
     },
     ['body']
   )
-);
+)
