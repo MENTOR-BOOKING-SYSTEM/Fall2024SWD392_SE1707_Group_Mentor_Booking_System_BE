@@ -16,11 +16,16 @@ export interface LoginReqBody {
 export interface GetUserListQuery {
   nonGroup?: string
 }
-
+export interface RefreshTokenReqBody {
+  refreshToken: string
+}
 export interface ForgotPasswordReqBody {
   email: string
 }
 
 export interface VerifyForgotPasswordTokenReqQuery {
   code?: string
+}
+export interface JoinGroupReqBody {
+  groupId: number
 }

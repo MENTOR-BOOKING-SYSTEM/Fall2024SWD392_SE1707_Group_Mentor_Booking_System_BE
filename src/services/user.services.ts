@@ -63,10 +63,35 @@ class UserService {
     })
   }
 
-  private signAccessAndRefreshToken({ user_id, role }: { user_id: string; role: string[] }) {
-    return Promise.all([this.signAccessToken({ user_id, role }), this.signRefreshToken({ user_id, role })])
+  private signAccessAndRefreshToken({ user_id, role, exp }: { user_id: string; role: string[]; exp?: number }) {
+    return Promise.all([this.signAccessToken({ user_id, role }), this.signRefreshToken({ user_id, role, exp })])
   }
-
+  async refreshToken({
+    user_id,
+    refreshToken,
+    role,
+    exp
+  }: {
+    user_id: string
+    refreshToken: string
+    role: string[]
+    exp: number
+  }) {
+    const [token] = await Promise.all([
+      this.signAccessAndRefreshToken({ user_id, role, exp }),
+      databaseService.query(`DELETE FROM ${DatabaseTable.Refresh_Token} WHERE token = ?;`, [refreshToken])
+    ])
+    const [access_token, new_refresh_token] = token
+    const { iat } = await this.decodeRefreshToken(new_refresh_token)
+    await databaseService.query(
+      `Insert into ${DatabaseTable.Refresh_Token}(_id,token,created_at,userID,iat,exp) values(?,?,?,?,?,?)`,
+      handleSpreadObjectToArray(new RefreshToken({ token: new_refresh_token, userID: user_id, exp, iat }))
+    )
+    return {
+      access_token,
+      refresh_token: new_refresh_token
+    }
+  }
   private decodeRefreshToken(refresh_token: string) {
     return verifyToken({
       token: refresh_token,
@@ -224,6 +249,11 @@ class UserService {
       )
       return info
     }
+  }
+
+  async joinGroup({ userID, groupID }: { userID: number, groupID: number }) {
+    const result = await databaseService.query(`Insert into ${DatabaseTable.User_Group}(userID,groupID,position) values (?,?,?)`, [userID, groupID, "Proposal"])
+    return result
   }
 }
 

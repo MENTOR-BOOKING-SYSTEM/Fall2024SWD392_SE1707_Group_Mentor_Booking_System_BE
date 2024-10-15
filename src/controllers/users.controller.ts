@@ -7,7 +7,9 @@ import { EMAIL_MESSAGES, USERS_MESSAGES } from '~/constants/messages'
 import {
   ForgotPasswordReqBody,
   GetUserListQuery,
+  JoinGroupReqBody,
   LoginReqBody,
+  RefreshTokenReqBody,
   TokenPayload,
   VerifyForgotPasswordTokenReqQuery
 } from '~/models/Request/User.request'
@@ -46,7 +48,19 @@ export const forgotPasswordController = async (
     message: USERS_MESSAGES.CHECK_EMAIL_TO_RESET_PASSWORD
   })
 }
+export const refreshTokenController = async (
+  req: Request<ParamsDictionary, any, RefreshTokenReqBody>,
+  res: Response
+) => {
+  const { refreshToken } = req.body
 
+  const { user_id, exp, role } = req.decoded_refresh_token as TokenPayload
+  const result = await userService.refreshToken({ user_id, refreshToken, role, exp })
+  return res.json({
+    message: USERS_MESSAGES.REFRESH_TOKEN_SUCCESS,
+    result
+  })
+}
 export const verifyForgotPasswordTokenController = async (
   req: Request<ParamsDictionary, any, any, VerifyForgotPasswordTokenReqQuery>,
   res: Response
@@ -124,5 +138,14 @@ export const getStudentsInSameGroupController = async (req: Request, res: Respon
   return res.json({
     message: USERS_MESSAGES.GET_STUDENTS_IN_SAME_GROUP_SUCCESS,
     result: students
+  })
+}
+export const joinGroupController = async (req: Request<ParamsDictionary, any, JoinGroupReqBody>, res: Response) => {
+  const { groupId } = req.body
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const result = await userService.joinGroup({ groupID: groupId, userID: Number(user_id) })
+  return res.json({
+    message: USERS_MESSAGES.JOIN_GROUP_SUCCESSFULLY,
+    result
   })
 }

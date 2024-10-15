@@ -36,5 +36,6 @@ export enum DatabaseTable {
   User_Guide = 'User_Guide_Project',
   User_Own_Project = 'User_Own_Project',
   User_Review_Project = 'User_Review_Project',
-  User_Role = 'User_Role'
+  User_Role = 'User_Role',
+  Refresh_Token = 'Refresh_Tokens'
 }

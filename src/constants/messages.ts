@@ -55,7 +55,8 @@ export const USERS_MESSAGES = {
   VERIFY_FORGOT_PASSWORD_TOKEN_SUCCESSFULLY: 'Verify forgot password token successfully',
   UPLOAD_SUCCESS: 'Upload image successfully',
   GET_STUDENTS_IN_SAME_GROUP_SUCCESS: 'Get students in same group successfully',
-  SUCCESS: 'Success'
+  SUCCESS: 'Success',
+  JOIN_GROUP_SUCCESSFULLY: "Join group successfully"
 } as const
 
 export const POSTS_MESSAGES = {
@@ -80,7 +81,9 @@ export const GROUPS_MESSAGES = {
   PROJECT_ID_IS_REQUIRED: 'Project id is required',
   PROJECT_IS_NOT_FOUND: 'Project is not found',
   CREATE_GROUP_SUCCESSFULLY: 'Create group successfully',
-  GROUP_NAME_ALREADY_EXIST: 'Group name already exist'
+  GROUP_NAME_ALREADY_EXIST: 'Group name already exist',
+  GROUP_NOT_FOUND: "Group is not found",
+  GET_REQUEST_PENDING_SUCCESSFULLY: "Get request pending successfully"
 } as const
 
 export const SEMESTERS_MESSAGES = {

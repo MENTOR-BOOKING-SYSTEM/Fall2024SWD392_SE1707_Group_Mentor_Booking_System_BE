@@ -38,6 +38,10 @@ class GroupServices {
 
     return { ...group, usersID }
   }
+  async getRequestPending(groupID: number) {
+    const result = await databaseService.query(`select * from ${DatabaseTable.User_Group} ug JOIN \`${DatabaseTable.Group}\` g on ug.groupID = g.groupID WHERE ug.groupID= ? and ug.position = ? `, [groupID, "Proposal"])
+    return result
+  }
 }
 const groupServices = new GroupServices()
 export default groupServices
