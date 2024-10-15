@@ -199,7 +199,7 @@ export const joinGroupValidator = validate(
             `select groupID from  \`${DatabaseTable.Group}\`  where groupID = ?`,
             [value]
           )
-          if (isExist.length < 0) {
+          if (!(isExist.length < 0)) {
             throw new ErrorWithStatus({
               message: GROUPS_MESSAGES.GROUP_NOT_FOUND,
               status: HTTP_STATUS.NOT_FOUND
