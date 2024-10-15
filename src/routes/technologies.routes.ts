@@ -8,5 +8,5 @@ import { getTechnologiesByProjectIdController } from '~/controllers/technologies
 
 const technologyRouter = Router()
 technologyRouter.get('/', accessTokenValidator, paginationValidator, wrapReqHandler(getTechnologiesController))
-technologyRouter.get('/project/:projectId', wrapReqHandler(getTechnologiesByProjectIdController))
+technologyRouter.get('/project/:projectId', accessTokenValidator, wrapReqHandler(getTechnologiesByProjectIdController))
 export default technologyRouter

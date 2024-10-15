@@ -7,6 +7,7 @@ import { EMAIL_MESSAGES, USERS_MESSAGES } from '~/constants/messages'
 import {
   ForgotPasswordReqBody,
   GetUserListQuery,
+  JoinGroupReqBody,
   LoginReqBody,
   RefreshTokenReqBody,
   TokenPayload,
@@ -141,5 +142,14 @@ export const getStudentsInSameGroupController = async (req: Request, res: Respon
   return res.json({
     message: USERS_MESSAGES.GET_STUDENTS_IN_SAME_GROUP_SUCCESS,
     result: students
+  })
+}
+export const joinGroupController = async (req: Request<ParamsDictionary, any, JoinGroupReqBody>, res: Response) => {
+  const { groupId } = req.body
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const result = await userService.joinGroup({ groupID: groupId, userID: Number(user_id) })
+  return res.json({
+    message: USERS_MESSAGES.JOIN_GROUP_SUCCESSFULLY,
+    result
   })
 }

@@ -54,7 +54,8 @@ export const USERS_MESSAGES = {
   GET_USER_LIST_SUCCESSFULLY: 'Get user list successfully',
   VERIFY_FORGOT_PASSWORD_TOKEN_SUCCESSFULLY: 'Verify forgot password token successfully',
   UPLOAD_SUCCESS: 'Upload image successfully',
-  GET_STUDENTS_IN_SAME_GROUP_SUCCESS: 'Get students in same group successfully'
+  GET_STUDENTS_IN_SAME_GROUP_SUCCESS: 'Get students in same group successfully',
+  JOIN_GROUP_SUCCESSFULLY: "Join group successfully"
 } as const
 
 export const POSTS_MESSAGES = {
@@ -79,7 +80,9 @@ export const GROUPS_MESSAGES = {
   PROJECT_ID_IS_REQUIRED: 'Project id is required',
   PROJECT_IS_NOT_FOUND: 'Project is not found',
   CREATE_GROUP_SUCCESSFULLY: 'Create group successfully',
-  GROUP_NAME_ALREADY_EXIST: 'Group name already exist'
+  GROUP_NAME_ALREADY_EXIST: 'Group name already exist',
+  GROUP_NOT_FOUND: "Group is not found",
+  GET_REQUEST_PENDING_SUCCESSFULLY: "Get request pending successfully"
 } as const
 
 export const SEMESTERS_MESSAGES = {
@@ -139,5 +142,5 @@ export const CRITERIA_MESSAGES = {
   CRITERIA_NAME_ALREADY_EXISTS: 'Criteria name already exists',
   CRITERIA_NOT_FOUND: 'Criteria not found',
   SEMESTER_ID_IS_REQUIRED: 'Semester ID is required',
-  GET_CRITERIA_BY_SEMESTER_SUCCESSFULLY: 'Get criteria by semester successfully',
-} as const;
+  GET_CRITERIA_BY_SEMESTER_SUCCESSFULLY: 'Get criteria by semester successfully'
+} as const

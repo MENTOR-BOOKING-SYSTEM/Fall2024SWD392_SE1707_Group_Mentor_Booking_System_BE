@@ -1,6 +1,6 @@
-import { checkSchema } from 'express-validator';
-import { CRITERIA_MESSAGES } from '~/constants/messages';
-import { validate } from '~/utils/validation';
+import { checkSchema } from 'express-validator'
+import { CRITERIA_MESSAGES } from '~/constants/messages'
+import { validate } from '~/utils/validation'
 
 export const createCriteriaValidator = validate(
   checkSchema(
@@ -33,5 +33,4 @@ export const createCriteriaValidator = validate(
     },
     ['body']
   )
-);
-
+)
