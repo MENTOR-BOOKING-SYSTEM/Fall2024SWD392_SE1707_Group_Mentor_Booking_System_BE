@@ -140,3 +140,12 @@ export const joinGroupController = async (req: Request<ParamsDictionary, any, Jo
     result
   })
 }
+
+export const logoutController = async (req: Request, res: Response) => {
+  const { refresh_token } = req.body
+  const { user_id } = req.decoded_authorization as TokenPayload
+  await userService.logout(user_id, refresh_token)
+  return res.json({
+    message: USERS_MESSAGES.LOGOUT_SUCCESS
+  })
+}

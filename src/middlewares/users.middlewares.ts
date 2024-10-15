@@ -37,31 +37,28 @@ export const accessTokenValidator = validate(
 export const refreshTokenValidator = validate(
   checkSchema(
     {
-      refreshToken: {
-        trim: true,
+      refresh_token: {
+        notEmpty: {
+          errorMessage: USERS_MESSAGES.REFRESH_TOKEN_IS_REQUIRED
+        },
         custom: {
           options: async (value, { req }) => {
-            if (!value) {
-              throw new ErrorWithStatus({
-                message: USERS_MESSAGES.REFRESH_TOKEN_IS_REQUIRED,
-                status: HTTP_STATUS.UNAUTHORIZED
-              })
-            }
             try {
-              const [decoded_refresh_token, refresh_token] = await Promise.all([
-                verifyToken({ token: value, secretOrPublicKey: envConfig.jwtSecretRefreshToken as string }),
-                databaseService.query<{ token: string }>(
-                  `Select token from ${DatabaseTable.Refresh_Token} where token = ?`,
-                  [value]
-                )
-              ])
-              if (refresh_token === null) {
+              const decoded_refresh_token = await verifyToken({
+                token: value,
+                secretOrPublicKey: envConfig.jwtSecretRefreshToken as string
+              })
+              const refresh_token = await databaseService.query<{ token: string }>(
+                `SELECT token FROM ${DatabaseTable.Refresh_Token} WHERE token = ? AND userID = ?`,
+                [value, decoded_refresh_token.user_id]
+              )
+              if (!refresh_token) {
                 throw new ErrorWithStatus({
                   message: USERS_MESSAGES.USED_REFRESH_TOKEN_OR_NOT_EXIST,
                   status: HTTP_STATUS.UNAUTHORIZED
                 })
               }
-              ; (req as Request).decoded_refresh_token = decoded_refresh_token
+              req.decoded_refresh_token = decoded_refresh_token
             } catch (error) {
               if (error instanceof JsonWebTokenError) {
                 throw new ErrorWithStatus({

@@ -217,6 +217,10 @@ class UserService {
     const result = await databaseService.query(`Insert into ${DatabaseTable.User_Group}(userID,groupID,position) values (?,?,?)`, [userID, groupID, "Proposal"])
     return result
   }
+
+  async logout(user_id: string, refresh_token: string) {
+    await databaseService.query(`DELETE FROM ${DatabaseTable.Refresh_Token} WHERE userID = ? AND token = ?`, [user_id, refresh_token])
+  }
 }
 
 const userService = new UserService()

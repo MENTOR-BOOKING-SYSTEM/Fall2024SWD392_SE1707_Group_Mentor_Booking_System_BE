@@ -10,7 +10,8 @@ import {
   getProfileController,
   getStudentsInSameGroupController,
   refreshTokenController,
-  joinGroupController
+  joinGroupController,
+  logoutController
 } from '~/controllers/users.controller'
 import { paginationValidator } from '~/middlewares/pagination.middlewares'
 import {
@@ -44,5 +45,7 @@ usersRouter.post('/refresh-token', refreshTokenValidator, wrapReqHandler(refresh
 usersRouter.get('/profile', accessTokenValidator, wrapReqHandler(getProfileController))
 
 usersRouter.get('/same-group-students', accessTokenValidator, wrapReqHandler(getStudentsInSameGroupController))
+
+usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapReqHandler(logoutController))
 
 export default usersRouter
