@@ -1,3 +1,4 @@
+
 import { TokenRole, TokenType } from '~/constants/enums'
 import { JwtPayload } from 'jsonwebtoken'
 export interface TokenPayload extends JwtPayload {
@@ -16,7 +17,9 @@ export interface LoginReqBody {
 export interface GetUserListQuery {
   nonGroup?: string
 }
-
+export interface RefreshTokenReqBody {
+  refreshToken: string
+}
 export interface ForgotPasswordReqBody {
   email: string
 }
