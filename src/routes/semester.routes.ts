@@ -8,6 +8,8 @@ import { wrapReqHandler } from '~/utils/handler'
 
 const semesterRouter = Router()
 
+semesterRouter.use(accessTokenValidator)
+
 semesterRouter.get('/all', getAllSemestersController)
 semesterRouter.get('/:semesterID', semesterIdValidator, getSemesterByIdController)
 semesterRouter.post('/create', accessTokenValidator, createSemesterValidator, wrapReqHandler(createSemesterController))
