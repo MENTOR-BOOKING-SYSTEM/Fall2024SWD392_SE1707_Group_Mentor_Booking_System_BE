@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { GROUPS_MESSAGES, USERS_MESSAGES } from '~/constants/messages'
-import { CreateGroupReqBody } from '~/models/Request/Group.requests'
+import { CreateGroupParams, CreateGroupReqBody } from '~/models/Request/Group.requests'
 import groupServices from '~/services/group.services'
 
 import userService from '~/services/user.services'
@@ -12,6 +12,14 @@ export const createGroupController = async (req: Request<ParamsDictionary, any, 
 
   return res.json({
     message: GROUPS_MESSAGES.CREATE_GROUP_SUCCESSFULLY,
+    result
+  })
+}
+export const getRequestPendingController = async (req: Request<CreateGroupParams>, res: Response) => {
+  const groupID = Number(req.params.groupID)
+  const result = await groupServices.getRequestPending(groupID)
+  return res.json({
+    message: GROUPS_MESSAGES.GET_REQUEST_PENDING_SUCCESSFULLY,
     result
   })
 }
