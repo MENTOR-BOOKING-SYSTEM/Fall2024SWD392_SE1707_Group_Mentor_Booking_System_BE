@@ -8,6 +8,8 @@ export const paginationValidator = validate(
         isNumeric: true,
         custom: {
           options: async (value, { req }) => {
+            console.log(value);
+
             const num = Number(value)
             if (num > 100 || num < 1) {
               throw new Error('1 <= limit <= 100')
@@ -20,6 +22,7 @@ export const paginationValidator = validate(
         isNumeric: true,
         custom: {
           options: async (value, { req }) => {
+            console.log(value || "ka");
             const num = Number(value)
             if (num < 1) {
               throw new Error('page >= 1')

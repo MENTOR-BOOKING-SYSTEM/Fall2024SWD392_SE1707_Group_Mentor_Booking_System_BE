@@ -23,6 +23,7 @@ export const accessTokenValidator = validate(
           options: async (value: string, { req }) => {
             const access_token = (value || '').split(' ')[1]
             const decoded_access_token = await verifyTokenByType(access_token, 'access_token', req as Request)
+
             if (decoded_access_token) {
               return true
             }
