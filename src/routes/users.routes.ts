@@ -9,7 +9,8 @@ import {
   getMeController,
   getProfileController,
   getUsersByRolesController,
-  getStudentsInSameGroupController
+  getStudentsInSameGroupController,
+  refreshTokenController
 } from '~/controllers/users.controller'
 import { paginationValidator } from '~/middlewares/pagination.middlewares'
 import {
@@ -19,7 +20,8 @@ import {
   resetPasswordValidator,
   verifyForgotPasswordTokenValidator,
   editProfileValidator,
-  getUsersByRolesValidator
+  getUsersByRolesValidator,
+  refreshTokenValidator
 } from '~/middlewares/users.middlewares'
 import { wrapReqHandler } from '~/utils/handler'
 
@@ -38,7 +40,7 @@ usersRouter.post('/reset-password', resetPasswordValidator, wrapReqHandler(reset
 usersRouter.patch('/edit-profile', accessTokenValidator, editProfileValidator, wrapReqHandler(editProfileController))
 
 usersRouter.get('/me', accessTokenValidator, wrapReqHandler(getMeController))
-
+usersRouter.post('/refresh-token', refreshTokenValidator, wrapReqHandler(refreshTokenController))
 usersRouter.get('/profile', accessTokenValidator, wrapReqHandler(getProfileController))
 
 usersRouter.get('/role', accessTokenValidator, getUsersByRolesValidator, wrapReqHandler(getUsersByRolesController))

@@ -8,6 +8,7 @@ import {
   ForgotPasswordReqBody,
   GetUserListQuery,
   LoginReqBody,
+  RefreshTokenReqBody,
   TokenPayload,
   VerifyForgotPasswordTokenReqQuery
 } from '~/models/Request/User.request'
@@ -46,7 +47,19 @@ export const forgotPasswordController = async (
     message: USERS_MESSAGES.CHECK_EMAIL_TO_RESET_PASSWORD
   })
 }
+export const refreshTokenController = async (
+  req: Request<ParamsDictionary, any, RefreshTokenReqBody>,
+  res: Response
+) => {
+  const { refreshToken } = req.body
 
+  const { user_id, exp, role } = req.decoded_refresh_token as TokenPayload
+  const result = await userService.refreshToken({ user_id, refreshToken, role, exp })
+  return res.json({
+    message: USERS_MESSAGES.REFRESH_TOKEN_SUCCESS,
+    result
+  })
+}
 export const verifyForgotPasswordTokenController = async (
   req: Request<ParamsDictionary, any, any, VerifyForgotPasswordTokenReqQuery>,
   res: Response
