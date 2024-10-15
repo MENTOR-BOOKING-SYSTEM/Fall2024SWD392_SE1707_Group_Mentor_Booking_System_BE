@@ -8,7 +8,8 @@ import {
   editProfileController,
   getMeController,
   getProfileController,
-  getStudentsInSameGroupController
+  getStudentsInSameGroupController,
+  getCurrentUserInfoController
 } from '~/controllers/users.controller'
 import { paginationValidator } from '~/middlewares/pagination.middlewares'
 import {
@@ -36,6 +37,8 @@ usersRouter.post('/reset-password', resetPasswordValidator, wrapReqHandler(reset
 usersRouter.patch('/edit-profile', accessTokenValidator, editProfileValidator, wrapReqHandler(editProfileController))
 
 usersRouter.get('/me', accessTokenValidator, wrapReqHandler(getMeController))
+
+usersRouter.get('/info', accessTokenValidator, wrapReqHandler(getCurrentUserInfoController))
 
 usersRouter.get('/profile', accessTokenValidator, wrapReqHandler(getProfileController))
 

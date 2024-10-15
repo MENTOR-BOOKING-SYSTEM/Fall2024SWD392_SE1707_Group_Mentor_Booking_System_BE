@@ -54,7 +54,8 @@ export const USERS_MESSAGES = {
   GET_USER_LIST_SUCCESSFULLY: 'Get user list successfully',
   VERIFY_FORGOT_PASSWORD_TOKEN_SUCCESSFULLY: 'Verify forgot password token successfully',
   UPLOAD_SUCCESS: 'Upload image successfully',
-  GET_STUDENTS_IN_SAME_GROUP_SUCCESS: 'Get students in same group successfully'
+  GET_STUDENTS_IN_SAME_GROUP_SUCCESS: 'Get students in same group successfully',
+  SUCCESS: 'Success'
 } as const
 
 export const POSTS_MESSAGES = {

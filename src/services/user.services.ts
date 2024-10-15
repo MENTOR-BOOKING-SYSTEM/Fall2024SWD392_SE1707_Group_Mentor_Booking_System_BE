@@ -182,8 +182,25 @@ class UserService {
       JOIN User_Group ug2 ON ug1.groupID = ug2.groupID
       WHERE ug2.userID = ? AND u.userID != ?
     `
-    const students = await databaseService.query<{ userID: string; avatarUrl: string; email: string }[]>(query, [user_id, user_id])
+    const students = await databaseService.query<{ userID: string; avatarUrl: string; email: string }[]>(query, [
+      user_id,
+      user_id
+    ])
     return students
+  }
+
+  async getInfo(user_id: string) {
+    const [info] = await databaseService.query<User[]>(
+      `
+      SELECT u.email, u.firstName, u.lastName, u.avatarUrl, g.groupID, g.projectID, ug.position
+      FROM ${DatabaseTable.User} AS u
+      LEFT JOIN ${DatabaseTable.User_Group} AS ug ON u.userID = ug.userID 
+      LEFT JOIN \`${DatabaseTable.Group}\` AS \`g\` ON ug.groupID = \`g\`.groupID
+      WHERE u.userID = ?
+      `,
+      [user_id]
+    )
+    return info
   }
 }
 
