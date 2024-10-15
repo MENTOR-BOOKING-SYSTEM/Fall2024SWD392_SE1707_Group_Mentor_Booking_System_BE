@@ -16,8 +16,8 @@ class TechnologyServices {
        JOIN ${DatabaseTable.Project_Technology} pt ON t.techID = pt.techID
        WHERE pt.projectID = ?`,
       [projectId]
-    );
-    return technologies;
+    )
+    return technologies
   }
 }
 
