@@ -55,6 +55,7 @@ export const USERS_MESSAGES = {
   VERIFY_FORGOT_PASSWORD_TOKEN_SUCCESSFULLY: 'Verify forgot password token successfully',
   UPLOAD_SUCCESS: 'Upload image successfully',
   GET_STUDENTS_IN_SAME_GROUP_SUCCESS: 'Get students in same group successfully',
+  SUCCESS: 'Success',
   JOIN_GROUP_SUCCESSFULLY: "Join group successfully"
 } as const
 
@@ -93,7 +94,9 @@ export const SEMESTERS_MESSAGES = {
   INVALID_PERIOD: 'A semester must last for 16 weeks',
   SEMESTERS_OVERLAP: 'Semesters overlap',
   SEMESTER_CREATED_SUCCESSFULLY: 'Semester created successfully',
-  SEMESTER_NOT_FOUND: 'Semester not found'
+  SEMESTER_NOT_FOUND: 'Semester not found',
+  GET_CURRENT_PHASE_SUCCESSFULLY: 'Get current phase successfully',
+  TIMESTAMP_NOT_FOUND: 'Timestamp not found'
 }
 
 export const TECHNOLOGIES_MESSAGE = {

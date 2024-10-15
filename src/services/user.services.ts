@@ -213,6 +213,44 @@ class UserService {
     ])
     return students
   }
+
+  async getInfo(user_id: string, role: string[]) {
+    if (role.includes(TokenRole.Student)) {
+      const [info] = await databaseService.query<User[]>(
+        `
+        SELECT u.email, u.firstName, u.lastName, u.avatarUrl, g.groupID, g.projectID, ug.position
+        FROM ${DatabaseTable.User} AS u
+        LEFT JOIN ${DatabaseTable.User_Group} AS ug ON u.userID = ug.userID 
+        LEFT JOIN \`${DatabaseTable.Group}\` AS \`g\` ON ug.groupID = \`g\`.groupID
+        WHERE u.userID = ?
+        `,
+        [user_id]
+      )
+      return info
+    } else if (!role.includes(TokenRole.Admin)) {
+      const [info] = await databaseService.query<User[]>(
+        `
+        SELECT u.email, u.firstName, u.lastName, u.avatarUrl, ugp.projectID
+        FROM ${DatabaseTable.User} AS u
+        LEFT JOIN ${DatabaseTable.User_Guide} AS ugp ON u.userID = ugp.userID 
+        WHERE u.userID = ?
+        `,
+        [user_id]
+      )
+      return info
+    } else {
+      const [info] = await databaseService.query<User[]>(
+        `
+        SELECT u.email, u.firstName, u.lastName, u.avatarUrl
+        FROM ${DatabaseTable.User} AS u
+        WHERE u.userID = ?
+        `,
+        [user_id]
+      )
+      return info
+    }
+  }
+
   async joinGroup({ userID, groupID }: { userID: number, groupID: number }) {
     const result = await databaseService.query(`Insert into ${DatabaseTable.User_Group}(userID,groupID,position) values (?,?,?)`, [userID, groupID, "Proposal"])
     return result
