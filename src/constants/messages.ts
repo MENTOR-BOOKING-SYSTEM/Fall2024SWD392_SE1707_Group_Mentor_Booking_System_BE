@@ -91,7 +91,8 @@ export const SEMESTERS_MESSAGES = {
   INVALID_PERIOD: 'A semester must last for 16 weeks',
   SEMESTERS_OVERLAP: 'Semesters overlap',
   SEMESTER_CREATED_SUCCESSFULLY: 'Semester created successfully',
-  SEMESTER_NOT_FOUND: 'Semester not found'
+  SEMESTER_NOT_FOUND: 'Semester not found',
+  GET_SEMESTERS_SUCCESSFULLY: 'Get semesters successfully'
 }
 
 export const TECHNOLOGIES_MESSAGE = {

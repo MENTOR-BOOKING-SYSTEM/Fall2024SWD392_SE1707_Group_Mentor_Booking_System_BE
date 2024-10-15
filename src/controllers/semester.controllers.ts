@@ -15,3 +15,13 @@ export const createSemesterController = async (
     message: SEMESTERS_MESSAGES.SEMESTER_CREATED_SUCCESSFULLY
   })
 }
+
+export const getAllSemestersController = async (req: Request, res: Response) => {
+  const semesters = await semesterService.getAllSemesters()
+  res.json({
+    message: SEMESTERS_MESSAGES.GET_SEMESTERS_SUCCESSFULLY,
+    data: {
+      semesters
+    }
+  })
+}
