@@ -14,6 +14,7 @@ import technologyRouter from './routes/technologies.routes'
 import projectRouter from './routes/projects.routes'
 import mediasRouter from './routes/medias.routes'
 import oauthRouter from './routes/oauth.routes'
+import semesterRouter from './routes/semester.routes'
 import { initFolder } from './utils/file'
 import criteriaRouter from './routes/criteria.routes'
 config()
@@ -33,6 +34,7 @@ app.use('/technologies', technologyRouter)
 app.use('/projects', projectRouter)
 app.use('/medias', mediasRouter)
 app.use('/oauth', oauthRouter)
+app.use('/semesters', semesterRouter)
 app.use('/criteria', criteriaRouter)
 
 app.use(defaultErrorHandler)
