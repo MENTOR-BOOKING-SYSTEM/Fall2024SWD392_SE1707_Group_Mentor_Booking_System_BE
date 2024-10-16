@@ -42,3 +42,18 @@ export const getCurrentPhaseController = async (req: Request, res: Response) => 
     result: currentPhase
   })
 }
+
+export const editSemesterController = async (
+  req: Request<ParamsDictionary, any, Partial<CreateSemesterReqBody>>,
+  res: Response
+) => {
+  const { semesterID } = req.params
+  const updateData = req.body
+
+  const updatedSemester = await semesterService.editSemester(semesterID, updateData)
+
+  res.json({
+    message: SEMESTERS_MESSAGES.SEMESTER_UPDATED_SUCCESSFULLY,
+    result: updatedSemester
+  })
+}
