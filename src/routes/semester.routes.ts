@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { getAllSemestersController, getSemesterByIdController, createSemesterController } from '~/controllers/semester.controller'
-import { semesterIdValidator } from '~/middlewares/semester.middlewares'
+import { getAllSemestersController, getSemesterByIdController, createSemesterController, getCurrentPhaseController } from '~/controllers/semester.controller'
+import { getCurrentPhase, getCurrentSemester, semesterIdValidator } from '~/middlewares/semester.middlewares'
 import { createSemesterValidator } from '~/middlewares/semester.middlewares'
 import { accessTokenValidator } from '~/middlewares/users.middlewares'
 import { wrapReqHandler } from '~/utils/handler'
@@ -20,5 +20,6 @@ semesterRouter.get(
   getCurrentPhase,
   wrapReqHandler(getCurrentPhaseController)
 )
+
 
 export default semesterRouter
