@@ -123,6 +123,15 @@ export const getProfileController = async (req: Request, res: Response) => {
   })
 }
 
+export const getCurrentUserInfoController = async (req: Request, res: Response) => {
+  const { user_id, role } = req.decoded_authorization as TokenPayload
+  const info = await userService.getInfo(user_id, role)
+  return res.json({
+    message: USERS_MESSAGES.SUCCESS,
+    result: info
+  })
+}
+
 export const getStudentsInSameGroupController = async (req: Request, res: Response) => {
   const { user_id } = req.decoded_authorization as TokenPayload
   const students = await userService.getStudentsInSameGroup(user_id)

@@ -13,4 +13,12 @@ semesterRouter.get('/all', getAllSemestersController)
 semesterRouter.get('/:semesterID', semesterIdValidator, getSemesterByIdController)
 semesterRouter.post('/create', accessTokenValidator, createSemesterValidator, wrapReqHandler(createSemesterController))
 
+semesterRouter.get(
+  '/current-phase',
+  accessTokenValidator,
+  getCurrentSemester,
+  getCurrentPhase,
+  wrapReqHandler(getCurrentPhaseController)
+)
+
 export default semesterRouter
