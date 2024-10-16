@@ -134,6 +134,7 @@ export const getUsersByRolesController = async (req: Request, res: Response) => 
     message: USERS_MESSAGES.GET_USER_LIST_SUCCESSFULLY,
     result: users
   });
+}
 export const getCurrentUserInfoController = async (req: Request, res: Response) => {
   const { user_id, role } = req.decoded_authorization as TokenPayload
   const info = await userService.getInfo(user_id, role)
