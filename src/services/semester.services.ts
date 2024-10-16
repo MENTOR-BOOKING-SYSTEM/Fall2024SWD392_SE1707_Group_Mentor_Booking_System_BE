@@ -109,6 +109,14 @@ class SemesterService {
       await this.setUpTimestamp(updatedSemester)
     }
   }
+
+  async assignCriteriaToSemester(semesterID: string, criteriaIDs: string[]) {
+    const values = criteriaIDs.map(criteriaID => [semesterID, criteriaID]);
+    await databaseService.query(
+      `INSERT INTO ${DatabaseTable.Semester_Criteria} (semesterID, criteriaID) VALUES ?`,
+      [values]
+    );
+  }
 }
 
 const semesterService = new SemesterService()
