@@ -1,17 +1,18 @@
 import Semester from '~/models/schemas/Semester.schema'
 import databaseService from '~/services/database.services'
-import { checkSchema } from 'express-validator'
+import { checkSchema, ParamSchema } from 'express-validator'
 import { SEMESTERS_MESSAGES } from '~/constants/messages'
 import { validate } from '~/utils/validation'
 import { ConflictError, NotFoundError } from '~/models/Errors'
 import { differenceInWeeks, parseISO } from 'date-fns'
 import { NextFunction, Request, Response } from 'express'
+import { DatabaseTable } from '~/constants/databaseTable'
 
-export const getCurrentSemesterID = async (req: Request, res: Response, next: NextFunction) => {
+export const getCurrentSemester = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const currentTime = new Date()
     const [semester] = await databaseService.query<Semester[]>(
-      'SELECT semesterID FROM Semester WHERE startDate <= ? AND endDate >= ?',
+      'SELECT semesterID, startDate, endDate FROM Semester WHERE startDate <= ? AND endDate >= ?',
       [currentTime, currentTime]
     )
 
@@ -19,7 +20,7 @@ export const getCurrentSemesterID = async (req: Request, res: Response, next: Ne
       throw new NotFoundError({ message: SEMESTERS_MESSAGES.SEMESTER_NOT_FOUND })
     }
 
-    req.currentSemesterID = semester.semesterID as string
+    req.currentSemester = semester
     next()
   } catch (error) {
     next(error)
@@ -93,3 +94,50 @@ export const createSemesterValidator = validate(
     ['body']
   )
 )
+
+const semesterIdSchema: ParamSchema = {
+  notEmpty: {
+    errorMessage: 'Mã học kỳ không được để trống'
+  },
+  isString: {
+    errorMessage: 'Mã học kỳ phải là chuỗi'
+  },
+  trim: true
+}
+
+export const semesterIdValidator = validate(
+  checkSchema(
+    {
+      semesterID: semesterIdSchema
+    },
+    ['params']
+  )
+)
+export const getCurrentPhase = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const currentSemester = req.currentSemester
+    if (currentSemester) {
+      const currentTime = new Date()
+      const [timestamp] = await databaseService.query<{ code: string }[]>(
+        `SELECT t.code FROM ${DatabaseTable.Timestamp} AS t JOIN ${DatabaseTable.Semester_Timestamp} AS st ON t.timestampID = st.timestampID
+        WHERE st.semesterID = ?
+        AND ? BETWEEN st.startDate AND st.endDate`,
+        [currentSemester?.semesterID, '2024-07-12 00:00:00']
+        // [currentSemester?.semesterID, currentTime]
+      )
+
+      if (!timestamp) {
+        if (currentSemester?.startDate <= currentTime && currentSemester?.endDate >= currentTime) {
+          req.currentPhase = 'IS'
+        } else {
+          req.currentPhase = 'BS'
+        }
+      } else {
+        req.currentPhase = timestamp.code
+      }
+      next()
+    }
+  } catch (error) {
+    next(error)
+  }
+}

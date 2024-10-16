@@ -10,6 +10,7 @@ import {
   getProfileController,
   getUsersByRolesController,
   getStudentsInSameGroupController,
+  getCurrentUserInfoController,
   refreshTokenController,
   joinGroupController
 } from '~/controllers/users.controller'
@@ -42,7 +43,11 @@ usersRouter.post('/reset-password', resetPasswordValidator, wrapReqHandler(reset
 usersRouter.patch('/edit-profile', accessTokenValidator, editProfileValidator, wrapReqHandler(editProfileController))
 
 usersRouter.get('/me', accessTokenValidator, wrapReqHandler(getMeController))
+
+usersRouter.get('/info', accessTokenValidator, wrapReqHandler(getCurrentUserInfoController))
+
 usersRouter.post('/refresh-token', refreshTokenValidator, wrapReqHandler(refreshTokenController))
+
 usersRouter.get('/profile', accessTokenValidator, wrapReqHandler(getProfileController))
 
 usersRouter.get('/role', accessTokenValidator, getUsersByRolesValidator, wrapReqHandler(getUsersByRolesController))

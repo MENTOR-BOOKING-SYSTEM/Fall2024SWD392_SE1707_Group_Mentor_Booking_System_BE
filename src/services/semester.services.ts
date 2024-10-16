@@ -1,9 +1,23 @@
-import Semester from '~/models/schemas/Semester.schema'
+import { SemesterType } from '~/models/schemas/Semester.schema'
 import databaseService from './database.services'
 import { DatabaseTable } from '~/constants/databaseTable'
+import Semester from '~/models/schemas/Semester.schema'
 import { addWeeks, endOfWeek, startOfWeek, subMilliseconds, subWeeks } from 'date-fns'
 
 class SemesterService {
+  async getAllSemesters() {
+    const semesters = await databaseService.query<SemesterType[]>(`SELECT * FROM ${DatabaseTable.Semester}`)
+    return semesters
+  }
+
+  async getSemesterById(semesterID: string) {
+    const [semester] = await databaseService.query<SemesterType[]>(
+      `SELECT * FROM ${DatabaseTable.Semester} WHERE semesterID = ?`,
+      [semesterID]
+    )
+    return semester
+  }
+
   async create(semester: Semester) {
     const { semesterName, startDate, endDate, description } = semester
     await databaseService.query<Semester[]>(
