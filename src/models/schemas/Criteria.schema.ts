@@ -1,4 +1,4 @@
-export interface Criteria {
+export interface ApprovalCriteria {
   criteriaID: string
   name: string
   description?: string
@@ -7,4 +7,4 @@ export interface Criteria {
   updatedAt: Date
 }
 
-export default Criteria
+export default ApprovalCriteria
