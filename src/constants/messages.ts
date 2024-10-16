@@ -96,6 +96,7 @@ export const SEMESTERS_MESSAGES = {
   SEMESTERS_OVERLAP: 'Semesters overlap',
   SEMESTER_CREATED_SUCCESSFULLY: 'Semester created successfully',
   SEMESTER_NOT_FOUND: 'Semester not found',
+  GET_SEMESTERS_SUCCESSFULLY: 'Get semesters successfully',
   GET_CURRENT_PHASE_SUCCESSFULLY: 'Get current phase successfully',
   TIMESTAMP_NOT_FOUND: 'Timestamp not found'
 }

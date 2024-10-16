@@ -1,6 +1,6 @@
 import Semester from '~/models/schemas/Semester.schema'
 import databaseService from '~/services/database.services'
-import { checkSchema } from 'express-validator'
+import { checkSchema, ParamSchema } from 'express-validator'
 import { SEMESTERS_MESSAGES } from '~/constants/messages'
 import { validate } from '~/utils/validation'
 import { ConflictError, NotFoundError } from '~/models/Errors'
@@ -95,6 +95,24 @@ export const createSemesterValidator = validate(
   )
 )
 
+const semesterIdSchema: ParamSchema = {
+  notEmpty: {
+    errorMessage: 'Mã học kỳ không được để trống'
+  },
+  isString: {
+    errorMessage: 'Mã học kỳ phải là chuỗi'
+  },
+  trim: true
+}
+
+export const semesterIdValidator = validate(
+  checkSchema(
+    {
+      semesterID: semesterIdSchema
+    },
+    ['params']
+  )
+)
 export const getCurrentPhase = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const currentSemester = req.currentSemester
