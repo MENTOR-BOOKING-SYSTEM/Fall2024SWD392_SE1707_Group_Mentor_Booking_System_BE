@@ -251,8 +251,11 @@ class UserService {
     }
   }
 
-  async joinGroup({ userID, groupID }: { userID: number, groupID: number }) {
-    const result = await databaseService.query(`Insert into ${DatabaseTable.User_Group}(userID,groupID,position) values (?,?,?)`, [userID, groupID, "Proposal"])
+  async joinGroup({ userID, groupID }: { userID: number; groupID: number }) {
+    const result = await databaseService.query(
+      `Insert into ${DatabaseTable.User_Group}(userID,groupID,position) values (?,?,?)`,
+      [userID, groupID, 'Proposal']
+    )
     return result
   }
 }
