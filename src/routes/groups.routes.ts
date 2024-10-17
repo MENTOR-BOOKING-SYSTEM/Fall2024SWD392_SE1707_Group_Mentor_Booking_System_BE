@@ -1,11 +1,13 @@
 import { Request, Response, Router } from 'express'
 import {
+  addUserToGroup,
   createGroupController,
   getRequestPendingController,
   removeGroupMemberController
 } from '~/controllers/groups.controller'
 import { loginController } from '~/controllers/users.controller'
 import {
+  addGroupMemberValidator,
   createGroupValidator,
   getRequestPendingValidator,
   removeGroupMemberValidator
@@ -27,4 +29,5 @@ groupsRouter.delete(
   removeGroupMemberValidator,
   wrapReqHandler(removeGroupMemberController)
 )
+groupsRouter.post('/add-member', accessTokenValidator, addGroupMemberValidator, wrapReqHandler(addUserToGroup))
 export default groupsRouter

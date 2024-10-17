@@ -1,7 +1,12 @@
 import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { GROUPS_MESSAGES, USERS_MESSAGES } from '~/constants/messages'
-import { CreateGroupParams, CreateGroupReqBody, RemoveGroupMemberReqBody } from '~/models/Request/Group.requests'
+import {
+  AddGroupMemberReqBody,
+  CreateGroupParams,
+  CreateGroupReqBody,
+  RemoveGroupMemberReqBody
+} from '~/models/Request/Group.requests'
 import groupServices from '~/services/group.services'
 
 import userService from '~/services/user.services'
@@ -31,6 +36,14 @@ export const removeGroupMemberController = async (
   const result = await groupServices.removeGroupMember(groupID, userID)
   return res.json({
     message: GROUPS_MESSAGES.REMOVE_GROUP_MEMBER_SUCCESSFULLY,
+    result
+  })
+}
+export const addUserToGroup = async (req: Request<ParamsDictionary, any, AddGroupMemberReqBody>, res: Response) => {
+  const { groupID, userID } = req.body
+  const result = await groupServices.addMemberToGroup(groupID, userID)
+  return res.json({
+    message: GROUPS_MESSAGES.ADD_MEMBER_SUCCESSFULLY,
     result
   })
 }

@@ -16,14 +16,16 @@ export const getAllSemestersController = wrapReqHandler(async (req: Request, res
   })
 })
 
-export const getSemesterByIdController = wrapReqHandler(async (req: Request<ParamsDictionary, any, any, any>, res: Response) => {
-  const { semesterID } = req.params
-  const result = await semesterService.getSemesterById(semesterID)
-  res.json({
-    message: 'Get semester information successfully',
-    result
-  })
-})
+export const getSemesterByIdController = wrapReqHandler(
+  async (req: Request<ParamsDictionary, any, any, any>, res: Response) => {
+    const { semesterID } = req.params
+    const result = await semesterService.getSemesterById(semesterID)
+    res.json({
+      message: 'Get semester information successfully',
+      result
+    })
+  }
+)
 
 export const createSemesterController = async (
   req: Request<ParamsDictionary, any, CreateSemesterReqBody>,
@@ -52,5 +54,20 @@ export const assignCriteriaToSemesterController = async (
   await semesterService.assignCriteriaToSemester(semesterID, criteria)
   res.send({
     message: SEMESTERS_MESSAGES.ASSIGN_CRITERIA_SUCCESSFULLY
+  })
+}
+
+export const editSemesterController = async (
+  req: Request<ParamsDictionary, any, Partial<CreateSemesterReqBody>>,
+  res: Response
+) => {
+  const { semesterID } = req.params
+  const updateData = req.body
+
+  const updatedSemester = await semesterService.editSemester(semesterID, updateData)
+
+  res.json({
+    message: SEMESTERS_MESSAGES.SEMESTER_UPDATED_SUCCESSFULLY,
+    result: updatedSemester
   })
 }

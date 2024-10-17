@@ -8,12 +8,15 @@ import {
   editProfileController,
   getMeController,
   getProfileController,
+  getUsersByRolesController,
   getStudentsInSameGroupController,
   getCurrentUserInfoController,
   refreshTokenController,
-  joinGroupController
+  joinGroupController,
+  logoutController
 } from '~/controllers/users.controller'
 import { paginationValidator } from '~/middlewares/pagination.middlewares'
+import { getCurrentSemester } from '~/middlewares/semester.middlewares'
 import {
   accessTokenValidator,
   forgotPasswordValidator,
@@ -21,6 +24,7 @@ import {
   resetPasswordValidator,
   verifyForgotPasswordTokenValidator,
   editProfileValidator,
+  getUsersByRolesValidator,
   refreshTokenValidator,
   joinGroupValidator
 } from '~/middlewares/users.middlewares'
@@ -31,7 +35,7 @@ const usersRouter = Router()
 usersRouter.post('/login', loginValidator, wrapReqHandler(loginController))
 usersRouter.post('/join', accessTokenValidator, joinGroupValidator, wrapReqHandler(joinGroupController))
 usersRouter.get('/', paginationValidator, accessTokenValidator, wrapReqHandler(getListUsersController))
-
+usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapReqHandler(logoutController))
 usersRouter.post('/forgot-password', forgotPasswordValidator, wrapReqHandler(forgotPasswordController))
 
 usersRouter.get('/verify-code', verifyForgotPasswordTokenValidator, wrapReqHandler(verifyForgotPasswordTokenController))
@@ -48,6 +52,13 @@ usersRouter.post('/refresh-token', refreshTokenValidator, wrapReqHandler(refresh
 
 usersRouter.get('/profile', accessTokenValidator, wrapReqHandler(getProfileController))
 
+usersRouter.get('/role', accessTokenValidator, getUsersByRolesValidator, wrapReqHandler(getUsersByRolesController))
 usersRouter.get('/same-group-students', accessTokenValidator, wrapReqHandler(getStudentsInSameGroupController))
+usersRouter.get(
+  '/same-group-students',
+  accessTokenValidator,
+  getCurrentSemester,
+  wrapReqHandler(getStudentsInSameGroupController)
+)
 
 export default usersRouter

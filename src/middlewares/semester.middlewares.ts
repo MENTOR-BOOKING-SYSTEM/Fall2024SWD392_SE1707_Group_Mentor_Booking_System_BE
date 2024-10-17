@@ -179,3 +179,94 @@ export const assignCriteriaValidator = validate(
     ['body']
   )
 )
+
+export const editSemesterValidator = validate(
+  checkSchema(
+    {
+      semesterName: {
+        optional: true,
+        isString: {
+          errorMessage: SEMESTERS_MESSAGES.SEMESTER_NAME_TYPE_INVALID
+        },
+        custom: {
+          options: async (value: string, { req }) => {
+            if (value && req.params && 'semesterID' in req.params) {
+              const [semester] = await databaseService.query<Semester[]>(
+                'SELECT semesterName FROM Semester WHERE semesterName = ? AND semesterID != ?',
+                [value, req.params.semesterID]
+              )
+              if (semester) {
+                throw new ConflictError({ message: SEMESTERS_MESSAGES.SEMESTER_NAME_ALREADY_EXISTS })
+              }
+            }
+            return true
+          }
+        }
+      },
+      description: {
+        optional: true,
+        isString: {
+          errorMessage: SEMESTERS_MESSAGES.DESCRIPTION_TYPE_INVALID
+        }
+      },
+      startDate: {
+        optional: true,
+        isISO8601: {
+          errorMessage: SEMESTERS_MESSAGES.DATE_TYPE_INVALID
+        },
+        custom: {
+          options: async (value, { req }) => {
+            if (value && req.params && 'semesterID' in req.params) {
+              const startDate = parseISO(value)
+              const endDate = req.body.endDate ? parseISO(req.body.endDate) : undefined
+              const [currentSemester] = await databaseService.query<Semester[]>(
+                'SELECT startDate, endDate FROM Semester WHERE semesterID = ?',
+                [req.params.semesterID]
+              )
+              if (endDate && startDate >= endDate) {
+                throw new Error(SEMESTERS_MESSAGES.START_DATE_BEFORE_END_DATE)
+              }
+              if (endDate && differenceInWeeks(endDate, startDate) !== 16) {
+                throw new Error(SEMESTERS_MESSAGES.INVALID_PERIOD)
+              }
+              const [latestSemester] = await databaseService.query<Semester[]>(
+                'SELECT endDate FROM Semester WHERE semesterID != ? ORDER BY endDate DESC LIMIT 1',
+                [req.params.semesterID]
+              )
+              if (latestSemester && startDate <= latestSemester.endDate) {
+                throw new Error(SEMESTERS_MESSAGES.SEMESTERS_OVERLAP)
+              }
+            }
+            return true
+          }
+        }
+      },
+      endDate: {
+        optional: true,
+        isISO8601: {
+          errorMessage: SEMESTERS_MESSAGES.DATE_TYPE_INVALID
+        },
+        custom: {
+          options: async (value, { req }) => {
+            if (value && req.params && 'semesterID' in req.params) {
+              const endDate = parseISO(value)
+              const startDate = req.body.startDate ? parseISO(req.body.startDate) : undefined
+              const [currentSemester] = await databaseService.query<Semester[]>(
+                'SELECT startDate, endDate FROM Semester WHERE semesterID = ?',
+                [req.params.semesterID]
+              )
+              if (startDate && startDate >= endDate) {
+                throw new Error(SEMESTERS_MESSAGES.START_DATE_BEFORE_END_DATE)
+              }
+              if (startDate && differenceInWeeks(endDate, startDate) !== 16) {
+                throw new Error(SEMESTERS_MESSAGES.INVALID_PERIOD)
+              }
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)

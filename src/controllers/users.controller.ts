@@ -9,6 +9,7 @@ import {
   GetUserListQuery,
   JoinGroupReqBody,
   LoginReqBody,
+  LogoutReqBody,
   RefreshTokenReqBody,
   TokenPayload,
   VerifyForgotPasswordTokenReqQuery
@@ -123,6 +124,18 @@ export const getProfileController = async (req: Request, res: Response) => {
   })
 }
 
+export const getUsersByRolesController = async (req: Request, res: Response) => {
+  const rolesJson = req.query.role as string;
+  const roles = JSON.parse(rolesJson);
+  const roleNames = roles.map((role: string | number) => 
+    typeof role === 'number' ? Object.values(TokenRole)[role - 1] : role
+  );
+  const users = await userService.getUsersByRoles(roleNames);
+  return res.json({
+    message: USERS_MESSAGES.GET_USER_LIST_SUCCESSFULLY,
+    result: users
+  });
+}
 export const getCurrentUserInfoController = async (req: Request, res: Response) => {
   const { user_id, role } = req.decoded_authorization as TokenPayload
   const info = await userService.getInfo(user_id, role)
@@ -134,7 +147,8 @@ export const getCurrentUserInfoController = async (req: Request, res: Response) 
 
 export const getStudentsInSameGroupController = async (req: Request, res: Response) => {
   const { user_id } = req.decoded_authorization as TokenPayload
-  const students = await userService.getStudentsInSameGroup(user_id)
+  const semesterID = req.currentSemester?.semesterID as string
+  const students = await userService.getStudentsInSameGroup(user_id, semesterID)
   return res.json({
     message: USERS_MESSAGES.GET_STUDENTS_IN_SAME_GROUP_SUCCESS,
     result: students
@@ -148,4 +162,9 @@ export const joinGroupController = async (req: Request<ParamsDictionary, any, Jo
     message: USERS_MESSAGES.JOIN_GROUP_SUCCESSFULLY,
     result
   })
+}
+export const logoutController = async (req: Request<ParamsDictionary, any, LogoutReqBody>, res: Response) => {
+  const { refreshToken } = req.body
+  const result = await userService.logout(refreshToken)
+  return res.json(result)
 }

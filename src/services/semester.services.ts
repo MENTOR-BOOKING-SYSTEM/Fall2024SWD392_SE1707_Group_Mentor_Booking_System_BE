@@ -3,6 +3,7 @@ import databaseService from './database.services'
 import { DatabaseTable } from '~/constants/databaseTable'
 import Semester from '~/models/schemas/Semester.schema'
 import { addWeeks, endOfWeek, startOfWeek, subMilliseconds, subWeeks } from 'date-fns'
+import { CreateSemesterReqBody } from '~/models/Request/Semester.request'
 
 class SemesterService {
   async getAllSemesters() {
@@ -116,6 +117,45 @@ class SemesterService {
       `INSERT INTO ${DatabaseTable.Semester_Criteria} (semesterID, criteriaID) VALUES ?`,
       [values]
     );
+  }
+
+  async editSemester(semesterID: string, updateData: Partial<CreateSemesterReqBody>) {
+    const { semesterName, startDate, endDate, description } = updateData
+    
+    let updateFields = ''
+    const updateValues = []
+
+    if (semesterName !== undefined) {
+      updateFields += 'semesterName = ?, '
+      updateValues.push(semesterName)
+    }
+    if (startDate !== undefined) {
+      updateFields += 'startDate = ?, '
+      updateValues.push(startDate)
+    }
+    if (endDate !== undefined) {
+      updateFields += 'endDate = ?, '
+      updateValues.push(endDate)
+    }
+    if (description !== undefined) {
+      updateFields += 'description = ?, '
+      updateValues.push(description)
+    }
+
+    // Xóa dấu phẩy cuối cùng
+    updateFields = updateFields.slice(0, -2)
+
+    await databaseService.query(
+      `UPDATE ${DatabaseTable.Semester} SET ${updateFields} WHERE semesterID = ?`,
+      [...updateValues, semesterID]
+    )
+
+    const [updatedSemester] = await databaseService.query<SemesterType[]>(
+      `SELECT * FROM ${DatabaseTable.Semester} WHERE semesterID = ?`,
+      [semesterID]
+    )
+
+    return updatedSemester
   }
 }
 
