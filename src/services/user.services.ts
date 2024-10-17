@@ -198,6 +198,20 @@ class UserService {
     return user
   }
 
+  async getUsersByRoles(roles: string[]) {
+    const placeholders = roles.map(() => '?').join(',');
+    const query = `
+      SELECT DISTINCT u.userID, u.email, u.username, u.firstName, u.lastName, u.avatarUrl 
+      FROM ${DatabaseTable.User} u
+      JOIN ${DatabaseTable.User_Role} ur ON u.userID = ur.userID
+      JOIN ${DatabaseTable.Role} r ON ur.roleID = r.roleID
+      WHERE r.roleName IN (${placeholders})
+    `;
+    const users = await databaseService.query<User[]>(query, roles);
+    return users;
+  }
+
+  
   async getStudentsInSameGroup(user_id: string, semesterID: string) {
     const query = `
       SELECT u.userID, u.email, u.username, u.avatarUrl FROM ${DatabaseTable.User} AS u 

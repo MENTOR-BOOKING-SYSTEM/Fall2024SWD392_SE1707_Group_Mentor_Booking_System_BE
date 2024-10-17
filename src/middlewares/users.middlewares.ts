@@ -8,6 +8,7 @@ import { confirmPasswordSchema, forgotPasswordSchema, passwordSchema } from '~/m
 import { verifyTokenByType } from '~/utils/commons'
 import { validate } from '~/utils/validation'
 import { hashPassword } from '~/utils/crypto'
+import { TokenRole } from '~/constants/enums'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { verifyToken } from '~/utils/jwt'
 import { DatabaseTable } from '~/constants/databaseTable'
@@ -188,6 +189,39 @@ export const editProfileValidator = validate(
     ['body']
   )
 )
+
+export const getUsersByRolesValidator = validate(
+  checkSchema(
+    {
+      role: {
+        in: ['query'],
+        isString: {
+          errorMessage: 'Role must be a valid JSON string'
+        },
+        custom: {
+          options: (value) => {
+            try {
+              const roles = JSON.parse(value);
+              if (!Array.isArray(roles)) {
+                throw new Error('Role must be an array');
+              }
+              const validRoles = Object.values(TokenRole);
+              return roles.every((role: string | number) => 
+                typeof role === 'string' ? validRoles.includes(role as TokenRole) : 
+                (typeof role === 'number' && role > 0 && role <= validRoles.length)
+              );
+            } catch (error) {
+              throw new Error('Invalid role');
+            }
+          },
+          errorMessage: 'Invalid role'
+        }
+      }
+    },
+    ['query']
+  )
+)
+
 export const joinGroupValidator = validate(
   checkSchema({
     groupId: {

@@ -124,6 +124,18 @@ export const getProfileController = async (req: Request, res: Response) => {
   })
 }
 
+export const getUsersByRolesController = async (req: Request, res: Response) => {
+  const rolesJson = req.query.role as string;
+  const roles = JSON.parse(rolesJson);
+  const roleNames = roles.map((role: string | number) => 
+    typeof role === 'number' ? Object.values(TokenRole)[role - 1] : role
+  );
+  const users = await userService.getUsersByRoles(roleNames);
+  return res.json({
+    message: USERS_MESSAGES.GET_USER_LIST_SUCCESSFULLY,
+    result: users
+  });
+}
 export const getCurrentUserInfoController = async (req: Request, res: Response) => {
   const { user_id, role } = req.decoded_authorization as TokenPayload
   const info = await userService.getInfo(user_id, role)
