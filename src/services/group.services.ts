@@ -39,7 +39,17 @@ class GroupServices {
     return { ...group, usersID }
   }
   async getRequestPending(groupID: number) {
-    const result = await databaseService.query(`select * from ${DatabaseTable.User_Group} ug JOIN \`${DatabaseTable.Group}\` g on ug.groupID = g.groupID WHERE ug.groupID= ? and ug.position = ? `, [groupID, "Proposal"])
+    const result = await databaseService.query(
+      `select * from ${DatabaseTable.User_Group} ug JOIN \`${DatabaseTable.Group}\` g on ug.groupID = g.groupID WHERE ug.groupID= ? and ug.position = ? `,
+      [groupID, 'Proposal']
+    )
+    return result
+  }
+  async removeGroupMember(groupID: number, userID: number) {
+    const result = await databaseService.query(
+      `DELETE FROM ${DatabaseTable.User_Group} where userID = ? AND groupID = ?`,
+      [userID, groupID]
+    )
     return result
   }
 }
