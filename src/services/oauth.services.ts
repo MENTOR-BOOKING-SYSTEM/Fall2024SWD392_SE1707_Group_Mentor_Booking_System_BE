@@ -47,7 +47,7 @@ class OAuthService {
     }
   }
 
-  async oauthGoogle(code: string) {
+  async oauthGoogle(code: string, semesterID: number) {
     const { access_token, id_token } = await this.getGoogleToken(code)
     const userInfo = await this.getGoogleUser(access_token, id_token)
 
@@ -56,7 +56,7 @@ class OAuthService {
     }
     const [user] = await databaseService.query<User[]>(`SELECT userID FROM User WHERE email = ?`, [userInfo.email])
     if (user) {
-      return await userService.login({ user_id: user.userID })
+      return await userService.login({ user_id: user.userID, semesterID })
     }
     // else {
     //   const newUser = new User({

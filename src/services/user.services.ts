@@ -99,10 +99,10 @@ class UserService {
     })
   }
 
-  async login({ user_id }: { user_id: string }) {
+  async login({ user_id, semesterID }: { user_id: string, semesterID: number }) {
     const roleUser = await databaseService.query<{ roleName: string }[]>(
-      `SELECT r.roleName FROM User u JOIN User_Role ur ON u.userID = ur.userID JOIN Role r ON ur.roleID = r.roleID where u.userID = ? `,
-      [user_id]
+      `SELECT r.roleName FROM User u JOIN User_Role ur ON u.userID = ur.userID JOIN Role r ON ur.roleID = r.roleID where u.userID = ? and ur.semesterID =? `,
+      [user_id, semesterID]
     )
     const role = (roleUser as { roleName: string }[]).map((item) => item.roleName)
 
