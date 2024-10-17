@@ -14,3 +14,7 @@ export interface AddGroupMemberReqBody {
   groupID: number
   userID: number[]
 }
+export interface AssignGroupLeaderReqBody {
+  groupID: number
+  userID: number
+}

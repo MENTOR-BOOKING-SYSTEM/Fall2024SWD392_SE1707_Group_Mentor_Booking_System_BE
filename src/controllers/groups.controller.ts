@@ -3,10 +3,12 @@ import { ParamsDictionary } from 'express-serve-static-core'
 import { GROUPS_MESSAGES, USERS_MESSAGES } from '~/constants/messages'
 import {
   AddGroupMemberReqBody,
+  AssignGroupLeaderReqBody,
   CreateGroupParams,
   CreateGroupReqBody,
   RemoveGroupMemberReqBody
 } from '~/models/Request/Group.requests'
+import { TokenPayload } from '~/models/Request/User.request'
 import groupServices from '~/services/group.services'
 
 import userService from '~/services/user.services'
@@ -46,4 +48,14 @@ export const addUserToGroup = async (req: Request<ParamsDictionary, any, AddGrou
     message: GROUPS_MESSAGES.ADD_MEMBER_SUCCESSFULLY,
     result
   })
+}
+export const assignLeaderController = async (req: Request<ParamsDictionary, any, AssignGroupLeaderReqBody>, res: Response) => {
+  const { groupID, userID } = req.body
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const result = await groupServices.assignLeader(groupID, userID, Number(user_id))
+  return res.json({
+    message: GROUPS_MESSAGES.ASSIGN_NEW_LEADER_SUCCESSFULLY,
+    result
+  })
+
 }
