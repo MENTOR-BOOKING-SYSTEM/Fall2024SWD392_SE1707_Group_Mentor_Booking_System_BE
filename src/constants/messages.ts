@@ -87,6 +87,7 @@ export const GROUPS_MESSAGES = {
   USER_NOT_EXIST_IN_GROUP: 'User not exist in group',
   ONLY_LEADER_CAN_BE_REMOVE_THE_MEMBER: 'Only leader can be remove the member',
   ONLY_LEADER_CAN_BE_ADD_THE_MEMBER: 'Only leader can be add the member',
+  ONLY_LEADER_CAN_PERFORM_THIS_ACTION: 'Only leader can perform this action',
   REMOVE_GROUP_MEMBER_SUCCESSFULLY: 'Remove group member successfully',
   ADD_MEMBER_SUCCESSFULLY: 'Add member successfully',
   USER_ALREADY_EXIST_IN_THIS_GROUP: 'User already exist in this group'

@@ -1,13 +1,15 @@
 import { isSameSecond } from 'date-fns'
+import { NextFunction, Request, Response } from 'express'
 import { checkSchema } from 'express-validator'
 import { forEach } from 'lodash'
 import { DatabaseTable } from '~/constants/databaseTable'
 import { TokenRole } from '~/constants/enums'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { GROUPS_MESSAGES } from '~/constants/messages'
-import { ErrorWithStatus } from '~/models/Errors'
+import { AuthError, ErrorWithStatus } from '~/models/Errors'
 import { TokenPayload } from '~/models/Request/User.request'
 import Group from '~/models/schemas/Group.schema'
+import User from '~/models/schemas/User.schema'
 import databaseService from '~/services/database.services'
 import { validate } from '~/utils/validation'
 export const createGroupValidator = validate(
@@ -230,3 +232,25 @@ export const addGroupMemberValidator = validate(
     }
   })
 )
+
+export const isGroupLeader = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { user_id } = req.decoded_authorization as TokenPayload
+    const semesterID = req.currentSemester?.semesterID as string
+    const [user] = await databaseService.query<User[]>(
+      `
+      SELECT u.userID FROM ${DatabaseTable.User} AS u 
+      JOIN ${DatabaseTable.User_Group} AS ug ON u.userID = ug.userID 
+      JOIN \`${DatabaseTable.Group}\` AS \`g\` ON ug.groupID = \`g\`.groupID 
+      WHERE \`g\`.semesterID = ? AND ug.position = '${TokenRole.Leader}' AND u.userID = ?
+      `,
+      [semesterID, user_id]
+    )
+    if (!user) {
+      throw new AuthError({ message: GROUPS_MESSAGES.ONLY_LEADER_CAN_PERFORM_THIS_ACTION })
+    }
+    next()
+  } catch (error) {
+    next(error)
+  }
+}
