@@ -52,6 +52,39 @@ class GroupServices {
     )
     return result
   }
+  async addMemberToGroup(groupID: number, userID: number[]) {
+    const alreadyInGroup = userID.map((item) =>
+      databaseService.query<{ userID: number; position: string }[]>(
+        `select userID,position from ${DatabaseTable.User_Group} where userID= ? and groupID =?`,
+        [item, groupID]
+      )
+    )
+    const promiseCheckPosition = await Promise.all(alreadyInGroup)
+    console.log(promiseCheckPosition)
+
+    const newUserArray = userID.filter((id) => promiseCheckPosition.flat().some((item) => id !== item.userID))
+
+    const proposal = promiseCheckPosition.flat().reduce((result: number[], item) => {
+      if (item.position === 'Proposal') {
+        result.push(item.userID)
+      }
+      return result
+    }, [])
+    const proposalInGroup = proposal
+    const insertNewMember = newUserArray.map((item) =>
+      databaseService.query(`Insert into ${DatabaseTable.User_Group}(userID,groupID,position) values (?,?,?)`, [
+        item,
+        groupID,
+        'Member'
+      ])
+    )
+    const acceptMember = proposalInGroup.map((item) =>
+      databaseService.query(`UPDATE ${DatabaseTable.User_Group} SET position = ? where userID =?`, ['Member', item])
+    )
+    const allQueries = [...insertNewMember, ...acceptMember]
+    const result = await Promise.all(allQueries)
+    return result
+  }
 }
 const groupServices = new GroupServices()
 export default groupServices
