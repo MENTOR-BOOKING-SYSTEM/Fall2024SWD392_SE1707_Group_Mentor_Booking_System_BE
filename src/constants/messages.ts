@@ -85,8 +85,11 @@ export const GROUPS_MESSAGES = {
   GROUP_NOT_FOUND: 'Group is not found',
   GET_REQUEST_PENDING_SUCCESSFULLY: 'Get request pending successfully',
   USER_NOT_EXIST_IN_GROUP: 'User not exist in group',
-  ONLY_LEADER_CAN_BE_REMOVE_THE_MEMBER: 'Only leader can be revove the member',
-  REMOVE_GROUP_MEMBER_SUCCESSFULLY: 'Remove group member successfully'
+  ONLY_LEADER_CAN_BE_REMOVE_THE_MEMBER: 'Only leader can be remove the member',
+  ONLY_LEADER_CAN_BE_ADD_THE_MEMBER: 'Only leader can be add the member',
+  REMOVE_GROUP_MEMBER_SUCCESSFULLY: 'Remove group member successfully',
+  ADD_MEMBER_SUCCESSFULLY: 'Add member successfully',
+  USER_ALREADY_EXIST_IN_THIS_GROUP: 'User already exist in this group'
 } as const
 
 export const SEMESTERS_MESSAGES = {

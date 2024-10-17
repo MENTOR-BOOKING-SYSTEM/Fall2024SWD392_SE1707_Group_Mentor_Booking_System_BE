@@ -10,3 +10,7 @@ export interface RemoveGroupMemberReqBody {
   groupID: number
   userID: number
 }
+export interface AddGroupMemberReqBody {
+  groupID: number
+  userID: number[]
+}
