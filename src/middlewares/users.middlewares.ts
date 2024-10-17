@@ -196,14 +196,14 @@ export const getUsersByRolesValidator = validate(
       role: {
         in: ['query'],
         isString: {
-          errorMessage: 'Vai trò phải là một chuỗi JSON hợp lệ'
+          errorMessage: 'Role must be a valid JSON string'
         },
         custom: {
           options: (value) => {
             try {
               const roles = JSON.parse(value);
               if (!Array.isArray(roles)) {
-                throw new Error('Vai trò phải là một mảng');
+                throw new Error('Role must be an array');
               }
               const validRoles = Object.values(TokenRole);
               return roles.every((role: string | number) => 
@@ -211,10 +211,10 @@ export const getUsersByRolesValidator = validate(
                 (typeof role === 'number' && role > 0 && role <= validRoles.length)
               );
             } catch (error) {
-              throw new Error('Vai trò không hợp lệ');
+              throw new Error('Invalid role');
             }
           },
-          errorMessage: 'Vai trò không hợp lệ'
+          errorMessage: 'Invalid role'
         }
       }
     },
