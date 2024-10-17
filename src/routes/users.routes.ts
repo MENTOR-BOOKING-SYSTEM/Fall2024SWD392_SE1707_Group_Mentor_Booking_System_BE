@@ -11,7 +11,8 @@ import {
   getStudentsInSameGroupController,
   getCurrentUserInfoController,
   refreshTokenController,
-  joinGroupController
+  joinGroupController,
+  logoutController
 } from '~/controllers/users.controller'
 import { paginationValidator } from '~/middlewares/pagination.middlewares'
 import { getCurrentSemester } from '~/middlewares/semester.middlewares'
@@ -32,7 +33,7 @@ const usersRouter = Router()
 usersRouter.post('/login', loginValidator, wrapReqHandler(loginController))
 usersRouter.post('/join', accessTokenValidator, joinGroupValidator, wrapReqHandler(joinGroupController))
 usersRouter.get('/', paginationValidator, accessTokenValidator, wrapReqHandler(getListUsersController))
-
+usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapReqHandler(logoutController))
 usersRouter.post('/forgot-password', forgotPasswordValidator, wrapReqHandler(forgotPasswordController))
 
 usersRouter.get('/verify-code', verifyForgotPasswordTokenValidator, wrapReqHandler(verifyForgotPasswordTokenController))

@@ -29,3 +29,6 @@ export interface VerifyForgotPasswordTokenReqQuery {
 export interface JoinGroupReqBody {
   groupId: number
 }
+export interface LogoutReqBody {
+  refreshToken: string
+}

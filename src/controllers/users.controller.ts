@@ -9,6 +9,7 @@ import {
   GetUserListQuery,
   JoinGroupReqBody,
   LoginReqBody,
+  LogoutReqBody,
   RefreshTokenReqBody,
   TokenPayload,
   VerifyForgotPasswordTokenReqQuery
@@ -149,4 +150,9 @@ export const joinGroupController = async (req: Request<ParamsDictionary, any, Jo
     message: USERS_MESSAGES.JOIN_GROUP_SUCCESSFULLY,
     result
   })
+}
+export const logoutController = async (req: Request<ParamsDictionary, any, LogoutReqBody>, res: Response) => {
+  const { refreshToken } = req.body
+  const result = await userService.logout(refreshToken)
+  return res.json(result)
 }
