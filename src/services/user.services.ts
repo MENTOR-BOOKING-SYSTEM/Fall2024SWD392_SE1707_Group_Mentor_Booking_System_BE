@@ -105,7 +105,6 @@ class UserService {
       [user_id]
     )
     const role = (roleUser as { roleName: string }[]).map((item) => item.roleName)
-    console.log(roleUser)
 
     const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
       user_id,
@@ -212,17 +211,21 @@ class UserService {
     return users;
   }
 
-  async getStudentsInSameGroup(user_id: string) {
+  
+  async getStudentsInSameGroup(user_id: string, semesterID: string) {
     const query = `
-      SELECT u.userID, u.avatarUrl, u.email
-      FROM User u
-      JOIN User_Group ug1 ON u.userID = ug1.userID
-      JOIN User_Group ug2 ON ug1.groupID = ug2.groupID
-      WHERE ug2.userID = ? AND u.userID != ?
+      SELECT u.userID, u.email, u.username, u.avatarUrl FROM ${DatabaseTable.User} AS u 
+      JOIN ${DatabaseTable.User_Group} AS ug ON u.userID = ug.userID
+      JOIN \`${DatabaseTable.Group}\` AS \`g\` ON ug.groupID = \`g\`.groupID
+      WHERE \`g\`.groupID IN (
+        SELECT \`g2\`.groupID FROM \`${DatabaseTable.Group}\` \`g2\`
+        JOIN ${DatabaseTable.User_Group} ug2 ON \`g2\`.groupID = ug2.groupID 
+        WHERE ug2.userID = ? AND \`g2\`.semesterID = ?
+      )
     `
     const students = await databaseService.query<{ userID: string; avatarUrl: string; email: string }[]>(query, [
       user_id,
-      user_id
+      semesterID
     ])
     return students
   }
@@ -264,8 +267,11 @@ class UserService {
     }
   }
 
-  async joinGroup({ userID, groupID }: { userID: number, groupID: number }) {
-    const result = await databaseService.query(`Insert into ${DatabaseTable.User_Group}(userID,groupID,position) values (?,?,?)`, [userID, groupID, "Proposal"])
+  async joinGroup({ userID, groupID }: { userID: number; groupID: number }) {
+    const result = await databaseService.query(
+      `Insert into ${DatabaseTable.User_Group}(userID,groupID,position) values (?,?,?)`,
+      [userID, groupID, 'Proposal']
+    )
     return result
   }
 }

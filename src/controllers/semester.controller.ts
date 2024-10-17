@@ -15,14 +15,16 @@ export const getAllSemestersController = wrapReqHandler(async (req: Request, res
   })
 })
 
-export const getSemesterByIdController = wrapReqHandler(async (req: Request<ParamsDictionary, any, any, any>, res: Response) => {
-  const { semesterID } = req.params
-  const result = await semesterService.getSemesterById(semesterID)
-  res.json({
-    message: 'Get semester information successfully',
-    result
-  })
-})
+export const getSemesterByIdController = wrapReqHandler(
+  async (req: Request<ParamsDictionary, any, any, any>, res: Response) => {
+    const { semesterID } = req.params
+    const result = await semesterService.getSemesterById(semesterID)
+    res.json({
+      message: 'Get semester information successfully',
+      result
+    })
+  }
+)
 
 export const createSemesterController = async (
   req: Request<ParamsDictionary, any, CreateSemesterReqBody>,

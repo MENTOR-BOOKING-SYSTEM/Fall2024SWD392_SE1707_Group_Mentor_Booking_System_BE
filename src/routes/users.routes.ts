@@ -15,6 +15,7 @@ import {
   joinGroupController
 } from '~/controllers/users.controller'
 import { paginationValidator } from '~/middlewares/pagination.middlewares'
+import { getCurrentSemester } from '~/middlewares/semester.middlewares'
 import {
   accessTokenValidator,
   forgotPasswordValidator,
@@ -52,5 +53,11 @@ usersRouter.get('/profile', accessTokenValidator, wrapReqHandler(getProfileContr
 
 usersRouter.get('/role', accessTokenValidator, getUsersByRolesValidator, wrapReqHandler(getUsersByRolesController))
 usersRouter.get('/same-group-students', accessTokenValidator, wrapReqHandler(getStudentsInSameGroupController))
+usersRouter.get(
+  '/same-group-students',
+  accessTokenValidator,
+  getCurrentSemester,
+  wrapReqHandler(getStudentsInSameGroupController)
+)
 
 export default usersRouter

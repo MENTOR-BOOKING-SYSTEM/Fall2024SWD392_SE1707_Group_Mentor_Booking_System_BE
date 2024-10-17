@@ -39,7 +39,50 @@ class GroupServices {
     return { ...group, usersID }
   }
   async getRequestPending(groupID: number) {
-    const result = await databaseService.query(`select * from ${DatabaseTable.User_Group} ug JOIN \`${DatabaseTable.Group}\` g on ug.groupID = g.groupID WHERE ug.groupID= ? and ug.position = ? `, [groupID, "Proposal"])
+    const result = await databaseService.query(
+      `select * from ${DatabaseTable.User_Group} ug JOIN \`${DatabaseTable.Group}\` g on ug.groupID = g.groupID WHERE ug.groupID= ? and ug.position = ? `,
+      [groupID, 'Proposal']
+    )
+    return result
+  }
+  async removeGroupMember(groupID: number, userID: number) {
+    const result = await databaseService.query(
+      `DELETE FROM ${DatabaseTable.User_Group} where userID = ? AND groupID = ?`,
+      [userID, groupID]
+    )
+    return result
+  }
+  async addMemberToGroup(groupID: number, userID: number[]) {
+    const alreadyInGroup = userID.map((item) =>
+      databaseService.query<{ userID: number; position: string }[]>(
+        `select userID,position from ${DatabaseTable.User_Group} where userID= ? and groupID =?`,
+        [item, groupID]
+      )
+    )
+    const promiseCheckPosition = await Promise.all(alreadyInGroup)
+    console.log(promiseCheckPosition)
+
+    const newUserArray = userID.filter((id) => promiseCheckPosition.flat().some((item) => id !== item.userID))
+
+    const proposal = promiseCheckPosition.flat().reduce((result: number[], item) => {
+      if (item.position === 'Proposal') {
+        result.push(item.userID)
+      }
+      return result
+    }, [])
+    const proposalInGroup = proposal
+    const insertNewMember = newUserArray.map((item) =>
+      databaseService.query(`Insert into ${DatabaseTable.User_Group}(userID,groupID,position) values (?,?,?)`, [
+        item,
+        groupID,
+        'Member'
+      ])
+    )
+    const acceptMember = proposalInGroup.map((item) =>
+      databaseService.query(`UPDATE ${DatabaseTable.User_Group} SET position = ? where userID =?`, ['Member', item])
+    )
+    const allQueries = [...insertNewMember, ...acceptMember]
+    const result = await Promise.all(allQueries)
     return result
   }
 }
