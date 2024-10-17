@@ -111,6 +111,14 @@ class SemesterService {
     }
   }
 
+  async assignCriteriaToSemester(semesterID: string, criteriaIDs: string[]) {
+    const values = criteriaIDs.map(criteriaID => [semesterID, criteriaID]);
+    await databaseService.query(
+      `INSERT INTO ${DatabaseTable.Semester_Criteria} (semesterID, criteriaID) VALUES ?`,
+      [values]
+    );
+  }
+
   async editSemester(semesterID: string, updateData: Partial<CreateSemesterReqBody>) {
     const { semesterName, startDate, endDate, description } = updateData
     

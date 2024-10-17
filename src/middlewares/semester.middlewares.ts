@@ -1,12 +1,14 @@
 import Semester from '~/models/schemas/Semester.schema'
 import databaseService from '~/services/database.services'
 import { checkSchema, ParamSchema } from 'express-validator'
-import { SEMESTERS_MESSAGES } from '~/constants/messages'
+import { CRITERIA_MESSAGES, SEMESTERS_MESSAGES } from '~/constants/messages'
 import { validate } from '~/utils/validation'
 import { ConflictError, NotFoundError } from '~/models/Errors'
 import { differenceInWeeks, parseISO } from 'date-fns'
 import { NextFunction, Request, Response } from 'express'
 import { DatabaseTable } from '~/constants/databaseTable'
+import criteriaService from '~/services/criteria.services'
+import semesterService from '~/services/semester.services'
 
 export const getCurrentSemester = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -141,6 +143,42 @@ export const getCurrentPhase = async (req: Request, res: Response, next: NextFun
     next(error)
   }
 }
+
+export const assignCriteriaValidator = validate(
+  checkSchema(
+    {
+      semesterID: {
+        ...semesterIdSchema,
+        custom: {
+          options: async (value) => {
+            const semester = await semesterService.getSemesterById(value)
+            if (!semester) {
+              throw new Error(SEMESTERS_MESSAGES.SEMESTER_NOT_FOUND)
+            }
+            return true
+          }
+        }
+      },
+      criteria: {
+        isArray: {
+          errorMessage: SEMESTERS_MESSAGES.CRITERIA_MUST_BE_AN_ARRAY
+        },
+        custom: {
+          options: async (value) => {
+            for (const criteriaID of value) {
+              const criteria = await criteriaService.getCriteriaById(criteriaID)
+              if (!criteria) {
+                throw new Error(CRITERIA_MESSAGES.CRITERIA_NOT_FOUND)
+              }
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
 
 export const editSemesterValidator = validate(
   checkSchema(

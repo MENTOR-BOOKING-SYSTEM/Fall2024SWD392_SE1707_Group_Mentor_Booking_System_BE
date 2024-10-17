@@ -4,3 +4,8 @@ export interface CreateSemesterReqBody {
   endDate: Date
   description?: string | null
 }
+
+export interface AssignCriteriaReqBody {
+  semesterID: string
+  criteria: string[]
+}

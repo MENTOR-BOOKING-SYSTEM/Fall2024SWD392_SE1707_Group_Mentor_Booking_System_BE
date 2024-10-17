@@ -106,6 +106,8 @@ export const SEMESTERS_MESSAGES = {
   GET_SEMESTERS_SUCCESSFULLY: 'Get semesters successfully',
   GET_CURRENT_PHASE_SUCCESSFULLY: 'Get current phase successfully',
   TIMESTAMP_NOT_FOUND: 'Timestamp not found',
+  ASSIGN_CRITERIA_SUCCESSFULLY: 'Assign criteria to semester successfully',
+  CRITERIA_MUST_BE_AN_ARRAY: 'Criteria must be an array',
   SEMESTER_UPDATED_SUCCESSFULLY: 'Semester updated successfully'
 }
 
