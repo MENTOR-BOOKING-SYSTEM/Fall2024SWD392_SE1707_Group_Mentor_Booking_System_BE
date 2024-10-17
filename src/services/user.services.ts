@@ -252,7 +252,10 @@ class UserService {
       return info
     }
   }
-
+  async logout(refresh_token: string) {
+    await databaseService.query(`DELETE FROM ${DatabaseTable.Refresh_Token} where token = ?`, [refresh_token])
+    return { message: USERS_MESSAGES.LOGOUT_SUCCESS }
+  }
   async joinGroup({ userID, groupID }: { userID: number; groupID: number }) {
     const result = await databaseService.query(
       `Insert into ${DatabaseTable.User_Group}(userID,groupID,position) values (?,?,?)`,
