@@ -32,7 +32,7 @@ import { wrapReqHandler } from '~/utils/handler'
 
 const usersRouter = Router()
 
-usersRouter.post('/login', loginValidator, wrapReqHandler(loginController))
+usersRouter.post('/login', getCurrentSemester, loginValidator, wrapReqHandler(loginController))
 usersRouter.post('/join', accessTokenValidator, joinGroupValidator, wrapReqHandler(joinGroupController))
 usersRouter.get('/', paginationValidator, accessTokenValidator, wrapReqHandler(getListUsersController))
 usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapReqHandler(logoutController))
