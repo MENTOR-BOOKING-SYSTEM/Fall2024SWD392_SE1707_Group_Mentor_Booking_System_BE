@@ -134,7 +134,8 @@ export const getCurrentUserInfoController = async (req: Request, res: Response) 
 
 export const getStudentsInSameGroupController = async (req: Request, res: Response) => {
   const { user_id } = req.decoded_authorization as TokenPayload
-  const students = await userService.getStudentsInSameGroup(user_id)
+  const semesterID = req.currentSemester?.semesterID as string
+  const students = await userService.getStudentsInSameGroup(user_id, semesterID)
   return res.json({
     message: USERS_MESSAGES.GET_STUDENTS_IN_SAME_GROUP_SUCCESS,
     result: students
