@@ -56,7 +56,7 @@ export const USERS_MESSAGES = {
   UPLOAD_SUCCESS: 'Upload image successfully',
   GET_STUDENTS_IN_SAME_GROUP_SUCCESS: 'Get students in same group successfully',
   SUCCESS: 'Success',
-  JOIN_GROUP_SUCCESSFULLY: "Join group successfully"
+  JOIN_GROUP_SUCCESSFULLY: 'Join group successfully'
 } as const
 
 export const POSTS_MESSAGES = {
@@ -82,8 +82,11 @@ export const GROUPS_MESSAGES = {
   PROJECT_IS_NOT_FOUND: 'Project is not found',
   CREATE_GROUP_SUCCESSFULLY: 'Create group successfully',
   GROUP_NAME_ALREADY_EXIST: 'Group name already exist',
-  GROUP_NOT_FOUND: "Group is not found",
-  GET_REQUEST_PENDING_SUCCESSFULLY: "Get request pending successfully"
+  GROUP_NOT_FOUND: 'Group is not found',
+  GET_REQUEST_PENDING_SUCCESSFULLY: 'Get request pending successfully',
+  USER_NOT_EXIST_IN_GROUP: 'User not exist in group',
+  ONLY_LEADER_CAN_BE_REMOVE_THE_MEMBER: 'Only leader can be revove the member',
+  REMOVE_GROUP_MEMBER_SUCCESSFULLY: 'Remove group member successfully'
 } as const
 
 export const SEMESTERS_MESSAGES = {

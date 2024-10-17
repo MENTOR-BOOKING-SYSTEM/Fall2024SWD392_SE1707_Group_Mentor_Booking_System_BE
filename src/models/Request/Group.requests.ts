@@ -6,3 +6,7 @@ export interface CreateGroupReqBody {
 export interface CreateGroupParams extends ParamsDictionary {
   groupID: string
 }
+export interface RemoveGroupMemberReqBody {
+  groupID: number
+  userID: number
+}
