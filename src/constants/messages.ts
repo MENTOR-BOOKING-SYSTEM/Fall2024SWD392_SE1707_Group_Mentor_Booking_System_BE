@@ -105,7 +105,8 @@ export const SEMESTERS_MESSAGES = {
   SEMESTER_NOT_FOUND: 'Semester not found',
   GET_SEMESTERS_SUCCESSFULLY: 'Get semesters successfully',
   GET_CURRENT_PHASE_SUCCESSFULLY: 'Get current phase successfully',
-  TIMESTAMP_NOT_FOUND: 'Timestamp not found'
+  TIMESTAMP_NOT_FOUND: 'Timestamp not found',
+  SEMESTER_UPDATED_SUCCESSFULLY: 'Semester updated successfully'
 }
 
 export const TECHNOLOGIES_MESSAGE = {
