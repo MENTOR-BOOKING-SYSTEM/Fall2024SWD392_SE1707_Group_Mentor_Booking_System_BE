@@ -111,9 +111,17 @@ class SemesterService {
     }
   }
 
+  async assignCriteriaToSemester(semesterID: string, criteriaIDs: string[]) {
+    const values = criteriaIDs.map(criteriaID => [semesterID, criteriaID]);
+    await databaseService.query(
+      `INSERT INTO ${DatabaseTable.Semester_Criteria} (semesterID, criteriaID) VALUES ?`,
+      [values]
+    );
+  }
+
   async editSemester(semesterID: string, updateData: Partial<CreateSemesterReqBody>) {
     const { semesterName, startDate, endDate, description } = updateData
-    
+
     let updateFields = ''
     const updateValues = []
 
@@ -137,10 +145,10 @@ class SemesterService {
     // Xóa dấu phẩy cuối cùng
     updateFields = updateFields.slice(0, -2)
 
-    await databaseService.query(
-      `UPDATE ${DatabaseTable.Semester} SET ${updateFields} WHERE semesterID = ?`,
-      [...updateValues, semesterID]
-    )
+    await databaseService.query(`UPDATE ${DatabaseTable.Semester} SET ${updateFields} WHERE semesterID = ?`, [
+      ...updateValues,
+      semesterID
+    ])
 
     const [updatedSemester] = await databaseService.query<SemesterType[]>(
       `SELECT * FROM ${DatabaseTable.Semester} WHERE semesterID = ?`,

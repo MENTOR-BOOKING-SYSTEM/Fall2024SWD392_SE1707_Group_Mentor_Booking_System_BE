@@ -6,6 +6,7 @@ import { wrapReqHandler } from '~/utils/handler'
 import Semester from '~/models/schemas/Semester.schema'
 import { CreateSemesterReqBody } from '~/models/Request/Semester.request'
 import { SEMESTERS_MESSAGES } from '~/constants/messages'
+import { AssignCriteriaReqBody } from '~/models/Request/Semester.request'
 
 export const getAllSemestersController = wrapReqHandler(async (req: Request, res: Response) => {
   const result = await semesterService.getAllSemesters()
@@ -42,6 +43,17 @@ export const getCurrentPhaseController = async (req: Request, res: Response) => 
   res.send({
     message: SEMESTERS_MESSAGES.GET_CURRENT_PHASE_SUCCESSFULLY,
     result: currentPhase
+  })
+}
+
+export const assignCriteriaToSemesterController = async (
+  req: Request<ParamsDictionary, any, AssignCriteriaReqBody>,
+  res: Response
+) => {
+  const { semesterID, criteria } = req.body
+  await semesterService.assignCriteriaToSemester(semesterID, criteria)
+  res.send({
+    message: SEMESTERS_MESSAGES.ASSIGN_CRITERIA_SUCCESSFULLY
   })
 }
 

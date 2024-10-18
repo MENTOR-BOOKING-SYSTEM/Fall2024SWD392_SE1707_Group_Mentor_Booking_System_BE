@@ -32,7 +32,7 @@ import { wrapReqHandler } from '~/utils/handler'
 
 const usersRouter = Router()
 
-usersRouter.post('/login', loginValidator, wrapReqHandler(loginController))
+usersRouter.post('/login', getCurrentSemester, loginValidator, wrapReqHandler(loginController))
 usersRouter.post('/join', accessTokenValidator, joinGroupValidator, wrapReqHandler(joinGroupController))
 usersRouter.get('/', paginationValidator, accessTokenValidator, wrapReqHandler(getListUsersController))
 usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapReqHandler(logoutController))
@@ -53,7 +53,6 @@ usersRouter.post('/refresh-token', refreshTokenValidator, wrapReqHandler(refresh
 usersRouter.get('/profile', accessTokenValidator, wrapReqHandler(getProfileController))
 
 usersRouter.get('/role', accessTokenValidator, getCurrentSemester, getUsersByRolesValidator, wrapReqHandler(getUsersByRolesController))
-usersRouter.get('/same-group-students', accessTokenValidator, wrapReqHandler(getStudentsInSameGroupController))
 usersRouter.get(
   '/same-group-students',
   accessTokenValidator,

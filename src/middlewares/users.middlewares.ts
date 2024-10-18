@@ -207,7 +207,7 @@ export const getUsersByRolesValidator = validate(
               }
               return roles.every((role) => typeof role === 'number' && role > 0);
             } catch (error) {
-              throw new Error('Invalid role');
+              throw new Error('Invalid role')
             }
           },
           errorMessage: 'Invalid role'

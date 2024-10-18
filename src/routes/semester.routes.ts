@@ -4,10 +4,17 @@ import {
   getSemesterByIdController,
   createSemesterController,
   getCurrentPhaseController,
-  editSemesterController
+  editSemesterController,
+  assignCriteriaToSemesterController
 } from '~/controllers/semester.controller'
-import { getCurrentPhase, getCurrentSemester, semesterIdValidator } from '~/middlewares/semester.middlewares'
-import { createSemesterValidator, editSemesterValidator } from '~/middlewares/semester.middlewares'
+import {
+  getCurrentPhase,
+  getCurrentSemester,
+  semesterIdValidator,
+  assignCriteriaValidator,
+  editSemesterValidator,
+  createSemesterValidator
+} from '~/middlewares/semester.middlewares'
 import { accessTokenValidator } from '~/middlewares/users.middlewares'
 import { wrapReqHandler } from '~/utils/handler'
 
@@ -16,16 +23,6 @@ const semesterRouter = Router()
 semesterRouter.use(accessTokenValidator)
 
 semesterRouter.get('/all', getAllSemestersController)
-semesterRouter.get('/:semesterID', semesterIdValidator, getSemesterByIdController)
-semesterRouter.post('/create', accessTokenValidator, createSemesterValidator, wrapReqHandler(createSemesterController))
-semesterRouter.patch(
-  '/:semesterID',
-  accessTokenValidator,
-  semesterIdValidator,
-  editSemesterValidator,
-  wrapReqHandler(editSemesterController)
-)
-
 semesterRouter.get(
   '/current-phase',
   accessTokenValidator,
@@ -35,5 +32,19 @@ semesterRouter.get(
 )
 semesterRouter.get('/:semesterID', semesterIdValidator, getSemesterByIdController)
 semesterRouter.post('/create', accessTokenValidator, createSemesterValidator, wrapReqHandler(createSemesterController))
+
+semesterRouter.post(
+  '/assign-criteria',
+  accessTokenValidator,
+  assignCriteriaValidator,
+  wrapReqHandler(assignCriteriaToSemesterController)
+)
+semesterRouter.patch(
+  '/:semesterID',
+  accessTokenValidator,
+  semesterIdValidator,
+  editSemesterValidator,
+  wrapReqHandler(editSemesterController)
+)
 
 export default semesterRouter

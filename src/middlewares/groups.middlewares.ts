@@ -254,3 +254,66 @@ export const isGroupLeader = async (req: Request, res: Response, next: NextFunct
     next(error)
   }
 }
+export const assignLeaderValidator = validate(
+  checkSchema({
+    groupID: {
+      isNumeric: true,
+      notEmpty: true,
+      custom: {
+        options: async (value, { req }) => {
+          const isExist = await databaseService.query<{ groupID: number }[]>(
+            `select groupID from \`${DatabaseTable.Group}\`where groupID = ?`,
+            [value]
+          )
+          console.log(isExist);
+
+          if (!(isExist.length > 0)) {
+            throw new ErrorWithStatus({
+              message: GROUPS_MESSAGES.GROUP_NOT_FOUND,
+              status: HTTP_STATUS.NOT_FOUND
+            })
+          }
+        }
+      }
+    },
+    userID: {
+      isNumeric: true,
+      notEmpty: true,
+      custom: {
+        options: async (value, { req }) => {
+          const { user_id } = req.decoded_authorization as TokenPayload
+          const leaderInGroup = await databaseService.query<{ userID: number; position: string }[]>(
+            `select userID,position from ${DatabaseTable.User_Group} where userID =? and groupID =?`,
+            [user_id, req.body.groupID]
+          )
+          const notALeader = leaderInGroup.filter(((item) => item.position !== 'Leader'))
+          if (notALeader.length > 0) {
+            throw new ErrorWithStatus({
+              message: GROUPS_MESSAGES.ONLY_LEADER_CAN_BE_ASSIGN,
+              status: HTTP_STATUS.FORBIDDEN
+            })
+
+          }
+
+          const userInGroup = await databaseService.query<{ userID: number; position: string }[]>(
+            `select userID,position from ${DatabaseTable.User_Group} where userID =? AND groupID =?`,
+            [value, req.body.groupID]
+          )
+          if (userInGroup.length === 0) {
+            throw new ErrorWithStatus({
+              message: GROUPS_MESSAGES.USER_NOT_EXIST_IN_GROUP,
+              status: HTTP_STATUS.NOT_FOUND
+            })
+          }
+          const alreadyLeader = userInGroup.filter((item) => item.position === 'Leader')
+          if (alreadyLeader.length > 0) {
+            throw new ErrorWithStatus({
+              message: GROUPS_MESSAGES.YOU_ALREADY_IS_A_LEADER,
+              status: HTTP_STATUS.BAD_REQUEST
+            })
+          }
+        }
+      }
+    }
+  })
+)

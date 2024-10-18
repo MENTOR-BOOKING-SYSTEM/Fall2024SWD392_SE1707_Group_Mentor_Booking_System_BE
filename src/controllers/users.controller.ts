@@ -14,14 +14,16 @@ import {
   TokenPayload,
   VerifyForgotPasswordTokenReqQuery
 } from '~/models/Request/User.request'
+import Semester from '~/models/schemas/Semester.schema'
 
 import User from '~/models/schemas/User.schema'
 import emailService from '~/services/email.services'
 import userService from '~/services/user.services'
 
 export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
+  const semester = req.currentSemester as Semester
   const user = req.user as User & { role: TokenRole }
-  const result = await userService.login({ user_id: user.userID })
+  const result = await userService.login({ user_id: user.userID, semesterID: Number(semester.semesterID as string) })
 
   return res.json({
     message: USERS_MESSAGES.LOGIN_SUCCESS,
@@ -132,7 +134,7 @@ export const getUsersByRolesController = async (req: Request, res: Response) => 
   return res.json({
     message: USERS_MESSAGES.GET_USER_LIST_SUCCESSFULLY,
     result: users
-  });
+  })
 }
 
 export const getCurrentUserInfoController = async (req: Request, res: Response) => {

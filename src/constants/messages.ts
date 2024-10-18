@@ -90,7 +90,10 @@ export const GROUPS_MESSAGES = {
   ONLY_LEADER_CAN_PERFORM_THIS_ACTION: 'Only leader can perform this action',
   REMOVE_GROUP_MEMBER_SUCCESSFULLY: 'Remove group member successfully',
   ADD_MEMBER_SUCCESSFULLY: 'Add member successfully',
-  USER_ALREADY_EXIST_IN_THIS_GROUP: 'User already exist in this group'
+  USER_ALREADY_EXIST_IN_THIS_GROUP: 'User already exist in this group',
+  YOU_ALREADY_IS_A_LEADER: 'You already is a leader',
+  ONLY_LEADER_CAN_BE_ASSIGN: "Only the leader can transfer authority to others",
+  ASSIGN_NEW_LEADER_SUCCESSFULLY: "Assign new leader successfully"
 } as const
 
 export const SEMESTERS_MESSAGES = {
@@ -106,6 +109,8 @@ export const SEMESTERS_MESSAGES = {
   GET_SEMESTERS_SUCCESSFULLY: 'Get semesters successfully',
   GET_CURRENT_PHASE_SUCCESSFULLY: 'Get current phase successfully',
   TIMESTAMP_NOT_FOUND: 'Timestamp not found',
+  ASSIGN_CRITERIA_SUCCESSFULLY: 'Assign criteria to semester successfully',
+  CRITERIA_MUST_BE_AN_ARRAY: 'Criteria must be an array',
   SEMESTER_UPDATED_SUCCESSFULLY: 'Semester updated successfully'
 }
 
