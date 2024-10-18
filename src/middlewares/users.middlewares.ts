@@ -202,14 +202,10 @@ export const getUsersByRolesValidator = validate(
           options: (value) => {
             try {
               const roles = JSON.parse(value);
-              if (!Array.isArray(roles)) {
+              if (!Array.isArray(roles) || roles.length === 0) {
                 throw new Error('Role must be an array');
               }
-              const validRoles = Object.values(TokenRole);
-              return roles.every((role: string | number) => 
-                typeof role === 'string' ? validRoles.includes(role as TokenRole) : 
-                (typeof role === 'number' && role > 0 && role <= validRoles.length)
-              );
+              return roles.every((role) => typeof role === 'number' && role > 0);
             } catch (error) {
               throw new Error('Invalid role');
             }

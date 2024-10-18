@@ -198,17 +198,23 @@ class UserService {
     return user
   }
 
-  async getUsersByRoles(roles: string[]) {
+  async getUsersByRoles(roles: number[], semesterID: string) {
     const placeholders = roles.map(() => '?').join(',');
     const query = `
-      SELECT DISTINCT u.userID, u.email, u.username, u.firstName, u.lastName, u.avatarUrl 
+      SELECT DISTINCT u.userID, u.email, u.username, u.firstName, u.lastName, u.avatarUrl, 
+             GROUP_CONCAT(DISTINCT r.roleName) as roles
       FROM ${DatabaseTable.User} u
       JOIN ${DatabaseTable.User_Role} ur ON u.userID = ur.userID
       JOIN ${DatabaseTable.Role} r ON ur.roleID = r.roleID
-      WHERE r.roleName IN (${placeholders})
+      WHERE ur.roleID IN (${placeholders})
+      AND ur.semesterID = ?
+      GROUP BY u.userID
     `;
-    const users = await databaseService.query<User[]>(query, roles);
-    return users;
+    const users = await databaseService.query<(User & { roles: string })[]>(query, [...roles, semesterID]);
+    return users.map(user => ({
+      ...user,
+      roles: user.roles.split(',')
+    }));
   }
 
   
