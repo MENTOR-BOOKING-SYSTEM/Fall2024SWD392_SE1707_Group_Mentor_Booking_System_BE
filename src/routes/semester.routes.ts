@@ -5,7 +5,8 @@ import {
   createSemesterController,
   getCurrentPhaseController,
   editSemesterController,
-  assignCriteriaToSemesterController
+  assignCriteriaToSemesterController,
+  getSemesterTimestampController
 } from '~/controllers/semester.controller'
 import {
   getCurrentPhase,
@@ -30,6 +31,7 @@ semesterRouter.get(
   getCurrentPhase,
   wrapReqHandler(getCurrentPhaseController)
 )
+semesterRouter.get('/:semesterID/timestamp', semesterIdValidator, wrapReqHandler(getSemesterTimestampController))
 semesterRouter.get('/:semesterID', semesterIdValidator, getSemesterByIdController)
 semesterRouter.post('/create', accessTokenValidator, createSemesterValidator, wrapReqHandler(createSemesterController))
 

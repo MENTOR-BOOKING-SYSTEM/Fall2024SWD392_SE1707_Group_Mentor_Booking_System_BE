@@ -92,8 +92,8 @@ export const GROUPS_MESSAGES = {
   ADD_MEMBER_SUCCESSFULLY: 'Add member successfully',
   USER_ALREADY_EXIST_IN_THIS_GROUP: 'User already exist in this group',
   YOU_ALREADY_IS_A_LEADER: 'You already is a leader',
-  ONLY_LEADER_CAN_BE_ASSIGN: "Only the leader can transfer authority to others",
-  ASSIGN_NEW_LEADER_SUCCESSFULLY: "Assign new leader successfully"
+  ONLY_LEADER_CAN_BE_ASSIGN: 'Only the leader can transfer authority to others',
+  ASSIGN_NEW_LEADER_SUCCESSFULLY: 'Assign new leader successfully'
 } as const
 
 export const SEMESTERS_MESSAGES = {
@@ -111,7 +111,8 @@ export const SEMESTERS_MESSAGES = {
   TIMESTAMP_NOT_FOUND: 'Timestamp not found',
   ASSIGN_CRITERIA_SUCCESSFULLY: 'Assign criteria to semester successfully',
   CRITERIA_MUST_BE_AN_ARRAY: 'Criteria must be an array',
-  SEMESTER_UPDATED_SUCCESSFULLY: 'Semester updated successfully'
+  SEMESTER_UPDATED_SUCCESSFULLY: 'Semester updated successfully',
+  GET_SEMESTER_TIMESTAMP_SUCCESSFULLY: 'Get semester timestamp successfully'
 }
 
 export const TECHNOLOGIES_MESSAGE = {
