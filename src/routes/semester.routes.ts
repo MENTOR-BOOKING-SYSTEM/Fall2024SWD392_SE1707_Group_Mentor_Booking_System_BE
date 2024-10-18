@@ -23,9 +23,15 @@ const semesterRouter = Router()
 semesterRouter.use(accessTokenValidator)
 
 semesterRouter.get('/all', getAllSemestersController)
+semesterRouter.get(
+  '/current-phase',
+  accessTokenValidator,
+  getCurrentSemester,
+  getCurrentPhase,
+  wrapReqHandler(getCurrentPhaseController)
+)
 semesterRouter.get('/:semesterID', semesterIdValidator, getSemesterByIdController)
 semesterRouter.post('/create', accessTokenValidator, createSemesterValidator, wrapReqHandler(createSemesterController))
-
 
 semesterRouter.post(
   '/assign-criteria',
@@ -40,16 +46,5 @@ semesterRouter.patch(
   editSemesterValidator,
   wrapReqHandler(editSemesterController)
 )
-
-semesterRouter.get(
-  '/current-phase',
-  accessTokenValidator,
-  getCurrentSemester,
-  getCurrentPhase,
-  wrapReqHandler(getCurrentPhaseController)
-)
-
-semesterRouter.get('/:semesterID', semesterIdValidator, getSemesterByIdController)
-semesterRouter.post('/create', accessTokenValidator, createSemesterValidator, wrapReqHandler(createSemesterController))
 
 export default semesterRouter
