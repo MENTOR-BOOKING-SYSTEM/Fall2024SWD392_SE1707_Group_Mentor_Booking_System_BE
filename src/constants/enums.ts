@@ -10,7 +10,8 @@ export enum TokenRole {
   Mentor = 'Mentor',
   Admin = 'Admin',
   Reviewer = 'Reviewer',
-  Leader = 'Leader'
+  Leader = 'Leader',
+  Manager = 'Manager'
 }
 export enum MediaQuery {
   Image = 'image',
