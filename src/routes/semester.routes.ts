@@ -24,6 +24,9 @@ const semesterRouter = Router()
 semesterRouter.use(accessTokenValidator)
 
 semesterRouter.get('/all', getAllSemestersController)
+
+semesterRouter.get('/:semesterID/timestamp', semesterIdValidator, wrapReqHandler(getSemesterTimestampController))
+
 semesterRouter.get(
   '/current-phase',
   accessTokenValidator,
@@ -31,8 +34,9 @@ semesterRouter.get(
   getCurrentPhase,
   wrapReqHandler(getCurrentPhaseController)
 )
-semesterRouter.get('/:semesterID/timestamp', semesterIdValidator, wrapReqHandler(getSemesterTimestampController))
+
 semesterRouter.get('/:semesterID', semesterIdValidator, getSemesterByIdController)
+
 semesterRouter.post('/create', accessTokenValidator, createSemesterValidator, wrapReqHandler(createSemesterController))
 
 semesterRouter.post(
@@ -41,6 +45,7 @@ semesterRouter.post(
   assignCriteriaValidator,
   wrapReqHandler(assignCriteriaToSemesterController)
 )
+
 semesterRouter.patch(
   '/:semesterID',
   accessTokenValidator,

@@ -160,5 +160,6 @@ export const CRITERIA_MESSAGES = {
   CRITERIA_NAME_ALREADY_EXISTS: 'Criteria name already exists',
   CRITERIA_NOT_FOUND: 'Criteria not found',
   SEMESTER_ID_IS_REQUIRED: 'Semester ID is required',
-  GET_CRITERIA_BY_SEMESTER_SUCCESSFULLY: 'Get criteria by semester successfully'
+  GET_CRITERIA_BY_SEMESTER_SUCCESSFULLY: 'Get criteria by semester successfully',
+  GET_CRITERIA_TYPES_SUCCESSFULLY: 'Get criteria types successfully'
 } as const
