@@ -66,10 +66,11 @@ export const submitProjectValidator = validate(
       isString: true
     },
     technologies: {
-      isArray: {
-        options: { min: 1 },
-        errorMessage: PROJECTS_MESSAGE.TECHNOLOGY_MUST_BE_AN_ARRAY_WITH_AT_LEAST_1_ELEMENT
-      },
+      isArray: true,
+      // isArray: {
+      //   options: { min: 1 },
+      //   errorMessage: PROJECTS_MESSAGE.TECHNOLOGY_MUST_BE_AN_ARRAY_WITH_AT_LEAST_1_ELEMENT
+      // },
       custom: {
         options: async (value, { req }) => {
           const notExist = await databaseCheck(DatabaseTable.Technology, ColumnID.Technology, value)
