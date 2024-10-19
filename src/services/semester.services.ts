@@ -114,9 +114,15 @@ class SemesterService {
 
   async assignCriteriaToSemester(semesterID: string, criteriaIDs: string[]) {
     const values = criteriaIDs.map((criteriaID) => [semesterID, criteriaID])
-    await databaseService.query(`INSERT INTO ${DatabaseTable.Semester_Criteria} (semesterID, criteriaID) VALUES ?`, [
-      values
-    ])
+    await databaseService.query(
+      `DELETE FROM ${DatabaseTable.Semester_Criteria} WHERE semesterID = ? AND criteriaID NOT IN (?)`,
+      [semesterID, criteriaIDs]
+    )
+    await databaseService.query(
+      `INSERT INTO ${DatabaseTable.Semester_Criteria} (semesterID, criteriaID) VALUES ? 
+       ON DUPLICATE KEY UPDATE criteriaID = VALUES(criteriaID)`,
+      [values]
+    )
   }
 
   async editSemester(semesterID: string, updateData: Partial<CreateSemesterReqBody>) {
