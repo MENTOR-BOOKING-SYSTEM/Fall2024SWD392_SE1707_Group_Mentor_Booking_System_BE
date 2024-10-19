@@ -33,7 +33,7 @@ class CriteriaService {
 
   async getCriteriaBySemesterId(semesterID: string): Promise<ApprovalCriteria[]> {
     const criteria = await databaseService.query<ApprovalCriteria[]>(
-      'SELECT c.* FROM Approval_Criteria c JOIN SemesterCriteria sc ON c.criteriaID = sc.criteriaID WHERE sc.semesterID = ?',
+      `SELECT c.* FROM ${DatabaseTable.Approval_Criteria} c JOIN ${DatabaseTable.Semester_Criteria} sc ON c.criteriaID = sc.criteriaID WHERE sc.semesterID = ?`,
       [semesterID]
     )
     return criteria

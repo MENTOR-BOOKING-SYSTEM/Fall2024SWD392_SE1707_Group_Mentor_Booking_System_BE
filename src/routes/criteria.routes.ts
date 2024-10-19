@@ -4,7 +4,6 @@ import {
   editCriteriaController,
   getAllCriteriaController,
   getCriteriaByIdController,
-  getCriteriaBySemesterIdController,
   getCriteriaTypesController
 } from '~/controllers/criteria.controller'
 import { criteriaValidator } from '~/middlewares/criteria.middlewares'
@@ -21,6 +20,5 @@ criteriaRouter.patch('/:criteriaID', criteriaValidator, wrapReqHandler(editCrite
 criteriaRouter.get('/all', wrapReqHandler(getAllCriteriaController))
 criteriaRouter.get('/types', wrapReqHandler(getCriteriaTypesController))
 criteriaRouter.get('/:criteriaID', wrapReqHandler(getCriteriaByIdController))
-criteriaRouter.get('/semester/:semesterID', wrapReqHandler(getCriteriaBySemesterIdController))
 
 export default criteriaRouter

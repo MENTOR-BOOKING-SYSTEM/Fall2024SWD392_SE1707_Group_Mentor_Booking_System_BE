@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { getCriteriaBySemesterIdController } from '~/controllers/criteria.controller'
 import {
   getAllSemestersController,
   getSemesterByIdController,
@@ -53,5 +54,7 @@ semesterRouter.patch(
   editSemesterValidator,
   wrapReqHandler(editSemesterController)
 )
+
+semesterRouter.get('/:semesterID/criteria', wrapReqHandler(getCriteriaBySemesterIdController))
 
 export default semesterRouter
