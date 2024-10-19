@@ -17,6 +17,7 @@ import oauthRouter from './routes/oauth.routes'
 import semesterRouter from './routes/semester.routes'
 import { initFolder } from './utils/file'
 import criteriaRouter from './routes/criteria.routes'
+import timestampRouter from './routes/timestamp.routes'
 config()
 initFolder()
 databaseService.connect()
@@ -36,6 +37,7 @@ app.use('/medias', mediasRouter)
 app.use('/oauth', oauthRouter)
 app.use('/semesters', semesterRouter)
 app.use('/criteria', criteriaRouter)
+app.use('/timestamps', timestampRouter)
 
 app.use(defaultErrorHandler)
 app.listen(port, () => {

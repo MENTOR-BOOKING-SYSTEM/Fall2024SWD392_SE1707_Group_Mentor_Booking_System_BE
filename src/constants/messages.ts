@@ -164,3 +164,7 @@ export const CRITERIA_MESSAGES = {
   GET_CRITERIA_TYPES_SUCCESSFULLY: 'Get criteria types successfully',
   EDIT_CRITERIA_SUCCESSFULLY: 'Edit criteria successfully'
 } as const
+
+export const TIMESTAMP_MESSAGES = {
+  GET_ALL_TIMESTAMPS_SUCCESSFULLY: 'Get all timestamps successfully'
+}
