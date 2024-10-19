@@ -46,6 +46,13 @@ class CriteriaService {
 
     return criteriaTypes
   }
+
+  async editCriteria(criteriaID: string, name: string, type: string, description: string) {
+    await databaseService.query<ApprovalCriteria[]>(
+      `UPDATE ${DatabaseTable.Approval_Criteria} SET criteriaName = ?, description = ?, type = ? WHERE criteriaID = ?`,
+      [name, description, type, criteriaID]
+    )
+  }
 }
 
 const criteriaService = new CriteriaService()
