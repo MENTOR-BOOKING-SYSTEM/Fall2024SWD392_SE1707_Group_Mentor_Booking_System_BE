@@ -31,10 +31,6 @@ groupsRouter.delete(
   removeGroupMemberValidator,
   wrapReqHandler(removeGroupMemberController)
 )
-<<<<<<< HEAD
 groupsRouter.post('/add-member', accessTokenValidator, addGroupMemberValidator, wrapReqHandler(addUserToGroup))
 groupsRouter.patch('/assign-leader', accessTokenValidator, assignLeaderValidator, wrapReqHandler(assignLeaderController))
-=======
-groupsRouter.post("/review-member", accessTokenValidator,)
->>>>>>> 47-api---remove-member
 export default groupsRouter
