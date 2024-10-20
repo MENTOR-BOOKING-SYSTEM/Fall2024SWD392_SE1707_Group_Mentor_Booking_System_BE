@@ -120,22 +120,23 @@ export const getCurrentPhase = async (req: Request, res: Response, next: NextFun
     const currentSemester = req.currentSemester
     if (currentSemester) {
       const currentTime = new Date()
-      const [timestamp] = await databaseService.query<{ code: string }[]>(
+      const timestamps = await databaseService.query<{ code: string }[]>(
         `SELECT t.code FROM ${DatabaseTable.Timestamp} AS t JOIN ${DatabaseTable.Semester_Timestamp} AS st ON t.timestampID = st.timestampID
         WHERE st.semesterID = ?
         AND ? BETWEEN st.startDate AND st.endDate`,
-        [currentSemester?.semesterID, '2024-07-12 00:00:00']
+        // [currentSemester?.semesterID, '2024-07-12 00:00:00'] // 5th week before semeseter
+        [currentSemester?.semesterID, '2024-07-28 00:00:00'] // 3th week before semeseter
         // [currentSemester?.semesterID, currentTime]
       )
 
-      if (!timestamp) {
+      if (!timestamps) {
         if (currentSemester?.startDate <= currentTime && currentSemester?.endDate >= currentTime) {
-          req.currentPhase = 'IS'
+          req.currentPhase = ['IS']
         } else {
-          req.currentPhase = 'BS'
+          req.currentPhase = ['BS']
         }
       } else {
-        req.currentPhase = timestamp.code
+        req.currentPhase = timestamps.map((timestamp) => timestamp.code)
       }
       next()
     }
