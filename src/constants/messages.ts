@@ -150,3 +150,9 @@ export const CRITERIA_MESSAGES = {
   SEMESTER_ID_IS_REQUIRED: 'Semester ID is required',
   GET_CRITERIA_BY_SEMESTER_SUCCESSFULLY: 'Get criteria by semester successfully'
 } as const
+export const REVIEW_MESSAGES = {
+  USER_DIFFERENT_GROUP: "Other groups cannot be evaluated.",
+  RATE_MUST_BE_LESS_THAN_5_AND_MORE_THAN_1: "Rate must be less than 5 and more than 1",
+  REVIEW_MEMBER_SUCCESSFULLY: "Review member successfully",
+  YOU_CAN_NOT_REVIEW_YOURSELF: "You can not review yourself"
+}

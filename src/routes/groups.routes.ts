@@ -27,4 +27,5 @@ groupsRouter.delete(
   removeGroupMemberValidator,
   wrapReqHandler(removeGroupMemberController)
 )
+groupsRouter.post("/review-member", accessTokenValidator,)
 export default groupsRouter
