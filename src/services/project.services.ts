@@ -27,7 +27,7 @@ class ProjectServices {
     }
   }
   async createProject(body: submitProjectBody, user_id: string, roles: string[]) {
-    const { technologies, collaborators, mentorID, ...project } = body
+    const { technologies, collaborators, type, mentorID, ...project } = body
     const { projectID, ...rest } = new Project(project)
 
     const role = roles.some((item) => item === TokenRole.Mentor) ? TokenRole.Reviewer : TokenRole.Mentor
@@ -49,8 +49,8 @@ class ProjectServices {
       if (technologies && technologies.length > 0) {
         const userOwnProjectPromises = collaborators.map((item) =>
           databaseService.query<{ userID: string; projectID: string }>(
-            `Insert into ${DatabaseTable.User_Own_Project}(userID,projectID) VALUES (?,?)`,
-            [item, result.insertId]
+            `Insert into ${DatabaseTable.User_Own_Project}(userID,projectID,type) VALUES (?,?,?)`,
+            [item, result.insertId, type]
           )
         )
         const projectTechnology = technologies.map((item) =>
@@ -70,8 +70,8 @@ class ProjectServices {
       } else {
         const userOwnProjectPromises = collaborators.map((item) =>
           databaseService.query<{ userID: string; projectID: string }>(
-            `Insert into ${DatabaseTable.User_Own_Project}(userID,projectID) VALUES (?,?)`,
-            [item, result.insertId]
+            `Insert into ${DatabaseTable.User_Own_Project}(userID,projectID,type) VALUES (?,?,?)`,
+            [item, result.insertId, type]
           )
         )
         await Promise.all([
@@ -93,8 +93,8 @@ class ProjectServices {
 
         await Promise.all([
           databaseService.query<{ userID: string; projectID: string }>(
-            `Insert into ${DatabaseTable.User_Own_Project}(userID,projectID) VALUES (?,?)`,
-            [user_id, result.insertId]
+            `Insert into ${DatabaseTable.User_Own_Project}(userID,projectID,type) VALUES (?,?,?)`,
+            [user_id, result.insertId, type]
           ),
           databaseService.query(
             `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
@@ -105,8 +105,8 @@ class ProjectServices {
       } else {
         await Promise.all([
           databaseService.query<{ userID: string; projectID: string }>(
-            `Insert into ${DatabaseTable.User_Own_Project}(userID,projectID) VALUES (?,?)`,
-            [user_id, result.insertId]
+            `Insert into ${DatabaseTable.User_Own_Project}(userID,projectID,type) VALUES (?,?,?)`,
+            [user_id, result.insertId, type]
           ),
 
           databaseService.query(

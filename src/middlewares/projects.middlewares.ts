@@ -97,14 +97,19 @@ export const submitProjectValidator = validate(
         }
       }
     },
-    mentorID: {
+    type: {
       isString: true,
+      notEmpty: true
+    },
+    mentorID: {
+      isArray: true,
+      notEmpty: true,
       custom: {
         options: async (value, { req }) => {
           const user = (req as Request).user as User
           const role = (req as Request).decoded_authorization as TokenPayload
           if (
-            !value &&
+            value.length < 1 &&
             [TokenRole.Student, TokenRole.Business].some((tokenRole) =>
               role.role.some((userRole) => tokenRole === userRole)
             )
