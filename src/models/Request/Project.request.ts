@@ -8,5 +8,6 @@ export interface submitProjectBody {
   problems?: string
   technologies?: string[]
   collaborators?: string[]
-  mentorID: string
+  mentorID: string[],
+  type: string
 }
