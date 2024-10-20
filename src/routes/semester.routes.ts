@@ -7,7 +7,8 @@ import {
   getCurrentPhaseController,
   editSemesterController,
   assignCriteriaToSemesterController,
-  getSemesterTimestampController
+  getSemesterTimestampController,
+  getCurrentSemesterController
 } from '~/controllers/semester.controller'
 import {
   getCurrentPhase,
@@ -25,6 +26,8 @@ const semesterRouter = Router()
 semesterRouter.use(accessTokenValidator)
 
 semesterRouter.get('/all', getAllSemestersController)
+
+semesterRouter.get('/current', getCurrentSemester, wrapReqHandler(getCurrentSemesterController))
 
 semesterRouter.get('/:semesterID/timestamp', semesterIdValidator, wrapReqHandler(getSemesterTimestampController))
 

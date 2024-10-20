@@ -112,6 +112,7 @@ export const SEMESTERS_MESSAGES = {
   ASSIGN_CRITERIA_SUCCESSFULLY: 'Assign criteria to semester successfully',
   CRITERIA_MUST_BE_AN_ARRAY: 'Criteria must be an array',
   SEMESTER_UPDATED_SUCCESSFULLY: 'Semester updated successfully',
+  GET_CURRENT_SEMESTER_SUCCESSFULLY: 'Get current semester successfully',
   GET_SEMESTER_TIMESTAMP_SUCCESSFULLY: 'Get semester timestamp successfully'
 }
 

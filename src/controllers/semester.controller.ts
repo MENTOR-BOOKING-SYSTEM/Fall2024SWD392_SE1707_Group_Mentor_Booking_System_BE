@@ -16,6 +16,14 @@ export const getAllSemestersController = wrapReqHandler(async (req: Request, res
   })
 })
 
+export const getCurrentSemesterController = async (req: Request, res: Response) => {
+  const currentSemester = req.currentSemester
+  res.send({
+    message: SEMESTERS_MESSAGES.GET_CURRENT_SEMESTER_SUCCESSFULLY,
+    result: currentSemester
+  })
+}
+
 export const getSemesterByIdController = wrapReqHandler(
   async (req: Request<ParamsDictionary, any, any, any>, res: Response) => {
     const { semesterID } = req.params
