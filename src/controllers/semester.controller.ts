@@ -4,7 +4,7 @@ import { SemesterType } from '~/models/schemas/Semester.schema'
 import semesterService from '~/services/semester.services'
 import { wrapReqHandler } from '~/utils/handler'
 import Semester from '~/models/schemas/Semester.schema'
-import { CreateSemesterReqBody } from '~/models/Request/Semester.request'
+import { CreateSemesterReqBody, GetSemesterTimestampParams } from '~/models/Request/Semester.request'
 import { SEMESTERS_MESSAGES } from '~/constants/messages'
 import { AssignCriteriaReqBody } from '~/models/Request/Semester.request'
 
@@ -69,5 +69,15 @@ export const editSemesterController = async (
   res.json({
     message: SEMESTERS_MESSAGES.SEMESTER_UPDATED_SUCCESSFULLY,
     result: updatedSemester
+  })
+}
+
+export const getSemesterTimestampController = async (req: Request<GetSemesterTimestampParams>, res: Response) => {
+  const { semesterID } = req.params
+  const result = await semesterService.getSemesterTimestamp(semesterID as string)
+
+  res.json({
+    message: SEMESTERS_MESSAGES.GET_SEMESTER_TIMESTAMP_SUCCESSFULLY,
+    result
   })
 }

@@ -7,4 +7,7 @@ export interface ApprovalCriteria {
   updatedAt: Date
 }
 
-export default ApprovalCriteria
+export interface ApprovalCriteriaType {
+  criteriaTypeID: string
+  type: string
+}

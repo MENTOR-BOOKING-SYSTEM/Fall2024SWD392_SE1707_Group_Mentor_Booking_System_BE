@@ -9,3 +9,7 @@ export interface AssignCriteriaReqBody {
   semesterID: string
   criteria: string[]
 }
+
+export interface GetSemesterTimestampParams {
+  semesterID?: string
+}

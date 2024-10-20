@@ -4,6 +4,7 @@ import { DatabaseTable } from '~/constants/databaseTable'
 import Semester from '~/models/schemas/Semester.schema'
 import { addWeeks, endOfWeek, startOfWeek, subMilliseconds, subWeeks } from 'date-fns'
 import { CreateSemesterReqBody } from '~/models/Request/Semester.request'
+import { Timestamp } from '~/models/schemas/Timestamp.schema'
 
 class SemesterService {
   async getAllSemesters() {
@@ -112,11 +113,16 @@ class SemesterService {
   }
 
   async assignCriteriaToSemester(semesterID: string, criteriaIDs: string[]) {
-    const values = criteriaIDs.map(criteriaID => [semesterID, criteriaID]);
+    const values = criteriaIDs.map((criteriaID) => [semesterID, criteriaID])
     await databaseService.query(
-      `INSERT INTO ${DatabaseTable.Semester_Criteria} (semesterID, criteriaID) VALUES ?`,
+      `DELETE FROM ${DatabaseTable.Semester_Criteria} WHERE semesterID = ? AND criteriaID NOT IN (?)`,
+      [semesterID, criteriaIDs]
+    )
+    await databaseService.query(
+      `INSERT INTO ${DatabaseTable.Semester_Criteria} (semesterID, criteriaID) VALUES ? 
+       ON DUPLICATE KEY UPDATE criteriaID = VALUES(criteriaID)`,
       [values]
-    );
+    )
   }
 
   async editSemester(semesterID: string, updateData: Partial<CreateSemesterReqBody>) {
@@ -156,6 +162,21 @@ class SemesterService {
     )
 
     return updatedSemester
+  }
+
+  async getSemesterTimestamp(semesterID: string) {
+    const timestamps = await databaseService.query<Timestamp[]>(
+      `
+      SELECT st.timestampID, t.timestampName, st.startDate, st.endDate, t.phase
+      FROM ${DatabaseTable.Semester_Timestamp} AS st
+      JOIN ${DatabaseTable.Timestamp} AS t ON st.timestampID = t.timestampID
+      WHERE st.semesterID = ?
+      `,
+      [semesterID]
+    )
+    if (!timestamps.length) return []
+
+    return timestamps.sort((a, b) => a.startDate.getTime() - b.startDate.getTime())
   }
 }
 

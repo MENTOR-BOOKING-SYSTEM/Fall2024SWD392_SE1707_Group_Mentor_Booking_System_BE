@@ -92,8 +92,8 @@ export const GROUPS_MESSAGES = {
   ADD_MEMBER_SUCCESSFULLY: 'Add member successfully',
   USER_ALREADY_EXIST_IN_THIS_GROUP: 'User already exist in this group',
   YOU_ALREADY_IS_A_LEADER: 'You already is a leader',
-  ONLY_LEADER_CAN_BE_ASSIGN: "Only the leader can transfer authority to others",
-  ASSIGN_NEW_LEADER_SUCCESSFULLY: "Assign new leader successfully"
+  ONLY_LEADER_CAN_BE_ASSIGN: 'Only the leader can transfer authority to others',
+  ASSIGN_NEW_LEADER_SUCCESSFULLY: 'Assign new leader successfully'
 } as const
 
 export const SEMESTERS_MESSAGES = {
@@ -111,7 +111,8 @@ export const SEMESTERS_MESSAGES = {
   TIMESTAMP_NOT_FOUND: 'Timestamp not found',
   ASSIGN_CRITERIA_SUCCESSFULLY: 'Assign criteria to semester successfully',
   CRITERIA_MUST_BE_AN_ARRAY: 'Criteria must be an array',
-  SEMESTER_UPDATED_SUCCESSFULLY: 'Semester updated successfully'
+  SEMESTER_UPDATED_SUCCESSFULLY: 'Semester updated successfully',
+  GET_SEMESTER_TIMESTAMP_SUCCESSFULLY: 'Get semester timestamp successfully'
 }
 
 export const TECHNOLOGIES_MESSAGE = {
@@ -159,11 +160,20 @@ export const CRITERIA_MESSAGES = {
   CRITERIA_NAME_ALREADY_EXISTS: 'Criteria name already exists',
   CRITERIA_NOT_FOUND: 'Criteria not found',
   SEMESTER_ID_IS_REQUIRED: 'Semester ID is required',
-  GET_CRITERIA_BY_SEMESTER_SUCCESSFULLY: 'Get criteria by semester successfully'
+  GET_CRITERIA_BY_SEMESTER_SUCCESSFULLY: 'Get criteria by semester successfully',
+  GET_CRITERIA_TYPES_SUCCESSFULLY: 'Get criteria types successfully',
+  EDIT_CRITERIA_SUCCESSFULLY: 'Edit criteria successfully'
 } as const
+
 export const REVIEW_MESSAGES = {
   USER_DIFFERENT_GROUP: "Other groups cannot be evaluated.",
   RATE_MUST_BE_LESS_THAN_5_AND_MORE_THAN_1: "Rate must be less than 5 and more than 1",
   REVIEW_MEMBER_SUCCESSFULLY: "Review member successfully",
   YOU_CAN_NOT_REVIEW_YOURSELF: "You can not review yourself"
 }
+
+
+export const TIMESTAMP_MESSAGES = {
+  GET_ALL_TIMESTAMPS_SUCCESSFULLY: 'Get all timestamps successfully'
+}
+

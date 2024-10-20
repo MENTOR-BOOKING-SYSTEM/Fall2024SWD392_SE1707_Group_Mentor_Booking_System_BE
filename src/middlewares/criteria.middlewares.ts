@@ -2,7 +2,7 @@ import { checkSchema } from 'express-validator'
 import { CRITERIA_MESSAGES } from '~/constants/messages'
 import { validate } from '~/utils/validation'
 
-export const createCriteriaValidator = validate(
+export const criteriaValidator = validate(
   checkSchema(
     {
       name: {

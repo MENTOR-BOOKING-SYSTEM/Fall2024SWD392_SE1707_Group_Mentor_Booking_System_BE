@@ -1,20 +1,15 @@
-import { Request, Response } from 'express'
 import criteriaService from '~/services/criteria.services'
+import { Request, Response } from 'express'
+import { ParamsDictionary } from 'express-serve-static-core'
 import { CRITERIA_MESSAGES } from '~/constants/messages'
-import { ConflictError, NotFoundError, BadRequestError, ForbiddenError } from '~/models/Errors'
-import { TokenRole } from '~/constants/enums'
+import { ConflictError, NotFoundError, BadRequestError } from '~/models/Errors'
+import { CriteriaReqBody } from '~/models/Request/Criteria.request'
 
-export const createCriteriaController = async (req: Request, res: Response) => {
-  const { role } = req.decoded_authorization as { role: TokenRole }
-
-  // Kiểm tra quyền: chỉ Admin mới có thể tạo tiêu chí
-  if (role !== TokenRole.Admin) {
-    throw new ForbiddenError({ message: 'You do not have permission to create criteria' })
-  }
-
+export const createCriteriaController = async (req: Request<ParamsDictionary, any, CriteriaReqBody>, res: Response) => {
   const { name, type, description } = req.body
 
   const existingCriteria = await criteriaService.getCriteriaByName(name)
+
   if (existingCriteria) {
     throw new ConflictError({ message: CRITERIA_MESSAGES.CRITERIA_NAME_ALREADY_EXISTS })
   }
@@ -24,6 +19,27 @@ export const createCriteriaController = async (req: Request, res: Response) => {
   return res.status(201).json({
     message: CRITERIA_MESSAGES.CREATE_CRITERIA_SUCCESSFULLY,
     result: criteria
+  })
+}
+
+export const editCriteriaController = async (req: Request<ParamsDictionary, any, CriteriaReqBody>, res: Response) => {
+  const { criteriaID } = req.params
+  const { name, type, description } = req.body
+
+  const criteria = await criteriaService.getCriteriaById(criteriaID)
+  if (!criteria) {
+    throw new NotFoundError({ message: CRITERIA_MESSAGES.CRITERIA_NOT_FOUND })
+  }
+
+  const existingCriteria = await criteriaService.getCriteriaByName(name)
+  if (existingCriteria && String(existingCriteria.criteriaID) !== criteriaID) {
+    throw new ConflictError({ message: CRITERIA_MESSAGES.CRITERIA_NAME_ALREADY_EXISTS })
+  }
+
+  await criteriaService.editCriteria(criteriaID, name, type, description)
+
+  return res.json({
+    message: CRITERIA_MESSAGES.EDIT_CRITERIA_SUCCESSFULLY
   })
 }
 
@@ -62,5 +78,14 @@ export const getCriteriaBySemesterIdController = async (req: Request, res: Respo
   return res.status(200).json({
     message: CRITERIA_MESSAGES.GET_CRITERIA_BY_SEMESTER_SUCCESSFULLY,
     result: criteria
+  })
+}
+
+export const getCriteriaTypesController = async (req: Request, res: Response) => {
+  const result = await criteriaService.getCriteriaTypes()
+
+  return res.json({
+    message: CRITERIA_MESSAGES.GET_CRITERIA_TYPES_SUCCESSFULLY,
+    result
   })
 }

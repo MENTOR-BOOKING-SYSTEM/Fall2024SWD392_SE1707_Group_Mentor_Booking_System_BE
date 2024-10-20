@@ -1,9 +1,9 @@
 import User from '~/models/schemas/User.schema'
 import databaseService from '~/services/database.services'
-import { Request } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { checkSchema } from 'express-validator'
 import { ERROR_MESSAGES, GROUPS_MESSAGES, USERS_MESSAGES } from '~/constants/messages'
-import { ErrorWithStatus, NotFoundError } from '~/models/Errors'
+import { ErrorWithStatus, ForbiddenError, NotFoundError } from '~/models/Errors'
 import { confirmPasswordSchema, forgotPasswordSchema, passwordSchema } from '~/models/Form'
 import { verifyTokenByType } from '~/utils/commons'
 import { validate } from '~/utils/validation'
@@ -15,6 +15,7 @@ import { DatabaseTable } from '~/constants/databaseTable'
 import { envConfig } from '~/constants/config'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import { capitalize } from 'lodash'
+import { TokenPayload } from '~/models/Request/User.request'
 
 export const accessTokenValidator = validate(
   checkSchema(
@@ -201,16 +202,11 @@ export const getUsersByRolesValidator = validate(
         custom: {
           options: (value) => {
             try {
-              const roles = JSON.parse(value)
-              if (!Array.isArray(roles)) {
-                throw new Error('Role must be an array')
+              const roles = JSON.parse(value);
+              if (!Array.isArray(roles) || roles.length === 0) {
+                throw new Error('Role must be an array');
               }
-              const validRoles = Object.values(TokenRole)
-              return roles.every((role: string | number) =>
-                typeof role === 'string'
-                  ? validRoles.includes(role as TokenRole)
-                  : typeof role === 'number' && role > 0 && role <= validRoles.length
-              )
+              return roles.every((role) => typeof role === 'number' && role > 0);
             } catch (error) {
               throw new Error('Invalid role')
             }
@@ -246,3 +242,19 @@ export const joinGroupValidator = validate(
     }
   })
 )
+
+export const allowRoles = (allowedRoles: string[]) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { role } = req.decoded_authorization as TokenPayload
+
+      if (!role.some((role) => allowedRoles.includes(role))) {
+        throw new ForbiddenError({ message: ERROR_MESSAGES.FORBIDDEN })
+      }
+
+      next()
+    } catch (error) {
+      next(error)
+    }
+  }
+}

@@ -1,11 +1,13 @@
 import { Router } from 'express'
+import { getCriteriaBySemesterIdController } from '~/controllers/criteria.controller'
 import {
   getAllSemestersController,
   getSemesterByIdController,
   createSemesterController,
   getCurrentPhaseController,
   editSemesterController,
-  assignCriteriaToSemesterController
+  assignCriteriaToSemesterController,
+  getSemesterTimestampController
 } from '~/controllers/semester.controller'
 import {
   getCurrentPhase,
@@ -23,23 +25,8 @@ const semesterRouter = Router()
 semesterRouter.use(accessTokenValidator)
 
 semesterRouter.get('/all', getAllSemestersController)
-semesterRouter.get('/:semesterID', semesterIdValidator, getSemesterByIdController)
-semesterRouter.post('/create', accessTokenValidator, createSemesterValidator, wrapReqHandler(createSemesterController))
 
-
-semesterRouter.post(
-  '/assign-criteria',
-  accessTokenValidator,
-  assignCriteriaValidator,
-  wrapReqHandler(assignCriteriaToSemesterController)
-)
-semesterRouter.patch(
-  '/:semesterID',
-  accessTokenValidator,
-  semesterIdValidator,
-  editSemesterValidator,
-  wrapReqHandler(editSemesterController)
-)
+semesterRouter.get('/:semesterID/timestamp', semesterIdValidator, wrapReqHandler(getSemesterTimestampController))
 
 semesterRouter.get(
   '/current-phase',
@@ -50,6 +37,24 @@ semesterRouter.get(
 )
 
 semesterRouter.get('/:semesterID', semesterIdValidator, getSemesterByIdController)
+
 semesterRouter.post('/create', accessTokenValidator, createSemesterValidator, wrapReqHandler(createSemesterController))
+
+semesterRouter.post(
+  '/assign-criteria',
+  accessTokenValidator,
+  assignCriteriaValidator,
+  wrapReqHandler(assignCriteriaToSemesterController)
+)
+
+semesterRouter.patch(
+  '/:semesterID',
+  accessTokenValidator,
+  semesterIdValidator,
+  editSemesterValidator,
+  wrapReqHandler(editSemesterController)
+)
+
+semesterRouter.get('/:semesterID/criteria', wrapReqHandler(getCriteriaBySemesterIdController))
 
 export default semesterRouter
