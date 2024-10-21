@@ -86,8 +86,18 @@ class GroupServices {
     return result
   }
   async assignLeader(groupID: number, userID: number, oldLeader: number) {
-    const result = await Promise.all([databaseService.query(`UPDATE ${DatabaseTable.User_Group} set position = ? where userID =? and groupID =?`, ["Leader", userID, groupID]),
-    databaseService.query(`UPDATE ${DatabaseTable.User_Group} set position = ? where userID =? and groupID =?`, ["Member", oldLeader, groupID])])
+    const result = await Promise.all([
+      databaseService.query(`UPDATE ${DatabaseTable.User_Group} set position = ? where userID =? and groupID =?`, [
+        'Leader',
+        userID,
+        groupID
+      ]),
+      databaseService.query(`UPDATE ${DatabaseTable.User_Group} set position = ? where userID =? and groupID =?`, [
+        'Member',
+        oldLeader,
+        groupID
+      ])
+    ])
     return result
   }
 }

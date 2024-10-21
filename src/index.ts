@@ -42,10 +42,9 @@ app.use('/oauth', oauthRouter)
 app.use('/semesters', semesterRouter)
 app.use('/criteria', criteriaRouter)
 
-app.use("/reviews", reviewsRouter)
+app.use('/reviews', reviewsRouter)
 
 app.use('/timestamps', timestampRouter)
-
 
 app.use(defaultErrorHandler)
 app.listen(port, () => {

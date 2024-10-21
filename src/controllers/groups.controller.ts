@@ -49,7 +49,10 @@ export const addUserToGroup = async (req: Request<ParamsDictionary, any, AddGrou
     result
   })
 }
-export const assignLeaderController = async (req: Request<ParamsDictionary, any, AssignGroupLeaderReqBody>, res: Response) => {
+export const assignLeaderController = async (
+  req: Request<ParamsDictionary, any, AssignGroupLeaderReqBody>,
+  res: Response
+) => {
   const { groupID, userID } = req.body
   const { user_id } = req.decoded_authorization as TokenPayload
   const result = await groupServices.assignLeader(groupID, userID, Number(user_id))
@@ -57,5 +60,4 @@ export const assignLeaderController = async (req: Request<ParamsDictionary, any,
     message: GROUPS_MESSAGES.ASSIGN_NEW_LEADER_SUCCESSFULLY,
     result
   })
-
 }

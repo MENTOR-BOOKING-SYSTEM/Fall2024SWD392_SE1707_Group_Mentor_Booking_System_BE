@@ -99,7 +99,7 @@ class UserService {
     })
   }
 
-  async login({ user_id, semesterID }: { user_id: string, semesterID: number }) {
+  async login({ user_id, semesterID }: { user_id: string; semesterID: number }) {
     const roleUser = await databaseService.query<{ roleName: string }[]>(
       `SELECT r.roleName FROM User u JOIN User_Role ur ON u.userID = ur.userID JOIN Role r ON ur.roleID = r.roleID where u.userID = ? and ur.semesterID =? `,
       [user_id, semesterID]
@@ -199,7 +199,7 @@ class UserService {
   }
 
   async getUsersByRoles(roles: number[], semesterID: string) {
-    const placeholders = roles.map(() => '?').join(',');
+    const placeholders = roles.map(() => '?').join(',')
     const query = `
       SELECT DISTINCT u.userID, u.email, u.username, u.firstName, u.lastName, u.avatarUrl, 
              GROUP_CONCAT(DISTINCT r.roleName) as roles
@@ -209,12 +209,12 @@ class UserService {
       WHERE ur.roleID IN (${placeholders})
       AND ur.semesterID = ?
       GROUP BY u.userID
-    `;
-    const users = await databaseService.query<(User & { roles: string })[]>(query, [...roles, semesterID]);
-    return users.map(user => ({
+    `
+    const users = await databaseService.query<(User & { roles: string })[]>(query, [...roles, semesterID])
+    return users.map((user) => ({
       ...user,
       roles: user.roles.split(',')
-    }));
+    }))
   }
 
   async getStudentsInSameGroup(user_id: string, semesterID: string) {
