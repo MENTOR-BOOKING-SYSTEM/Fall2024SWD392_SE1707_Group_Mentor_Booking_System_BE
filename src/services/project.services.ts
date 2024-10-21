@@ -119,10 +119,15 @@ class ProjectServices {
     const submitProjectData = await this.getProjectDetail(result.insertId)
     return submitProjectData
   }
-  async getProject(type: string, limit: number, page: number) {
+  async getProject(type: string, limit: number, page: number, userID: string) {
     if (type === 'all') {
       const result = await databaseService.query(
         `select * from ${DatabaseTable.User_Review_Project} ur join ${DatabaseTable.Project} p on ur.projectID = p.projectID limit ${limit} offset ${limit * (page - 1)}`
+      )
+      return result
+    } else if (type === "get-submit") {
+      const result = await databaseService.query(
+        `select * from ${DatabaseTable.User_Own_Project} uo join ${DatabaseTable.Project} p on uo.projectID = p.projectID  where uo.userID=? limit ${limit} offset ${limit * (page - 1)}`, [userID]
       )
       return result
     }

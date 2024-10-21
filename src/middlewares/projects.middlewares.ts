@@ -138,7 +138,7 @@ export const getProjectValidator = validate(
       notEmpty: true,
       custom: {
         options: async (value, { req }) => {
-          if (value !== 'all' && value !== 'review') {
+          if (value !== 'all' && value !== 'review' && value !== "get-submit") {
             throw new ErrorWithStatus({
               message: PROJECTS_MESSAGE.PARAMS_IN_VALID,
               status: HTTP_STATUS.BAD_REQUEST
@@ -156,8 +156,6 @@ export const getProjectDetailValidator = validate(
       notEmpty: true,
       custom: {
         options: async (value, { req }) => {
-          console.log(Number(value));
-
           if (!Number(value)) {
             throw new ErrorWithStatus({
               message: PROJECTS_MESSAGE.PROJECT_ID_INVALID,
