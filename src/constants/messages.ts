@@ -56,7 +56,8 @@ export const USERS_MESSAGES = {
   UPLOAD_SUCCESS: 'Upload image successfully',
   GET_STUDENTS_IN_SAME_GROUP_SUCCESS: 'Get students in same group successfully',
   SUCCESS: 'Success',
-  JOIN_GROUP_SUCCESSFULLY: 'Join group successfully'
+  JOIN_GROUP_SUCCESSFULLY: 'Join group successfully',
+  FILTER_USERS_SUCCESSFULLY: 'Filter users successfully'
 } as const
 
 export const POSTS_MESSAGES = {

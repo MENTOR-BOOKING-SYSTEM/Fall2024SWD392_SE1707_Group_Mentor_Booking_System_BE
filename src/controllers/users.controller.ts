@@ -12,7 +12,8 @@ import {
   LogoutReqBody,
   RefreshTokenReqBody,
   TokenPayload,
-  VerifyForgotPasswordTokenReqQuery
+  VerifyForgotPasswordTokenReqQuery,
+  FilterUserQuery
 } from '~/models/Request/User.request'
 import Semester from '~/models/schemas/Semester.schema'
 
@@ -168,4 +169,16 @@ export const logoutController = async (req: Request<ParamsDictionary, any, Logou
   const { refreshToken } = req.body
   const result = await userService.logout(refreshToken)
   return res.json(result)
+}
+
+export const filterUsersController = async (
+  req: Request<ParamsDictionary, any, any, FilterUserQuery>,
+  res: Response
+) => {
+  const { role, isExact, email, group } = req.query
+  const users = await userService.filterUsers({ role, isExact, email, group })
+  return res.json({
+    message: USERS_MESSAGES.FILTER_USERS_SUCCESSFULLY,
+    result: users
+  })
 }
