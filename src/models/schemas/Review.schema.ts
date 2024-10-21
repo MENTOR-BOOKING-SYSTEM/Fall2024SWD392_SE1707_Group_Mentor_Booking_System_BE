@@ -21,7 +21,7 @@ export class Review {
   createdAt?: Date
   updatedAt?: Date
   constructor({ reviewID, rate, description, receiverID, createdAt, updatedAt }: ReviewType) {
-    ; (this.reviewID = reviewID || undefined),
+    ;(this.reviewID = reviewID || undefined),
       (this.rate = rate),
       (this.description = description),
       (this.receiverID = receiverID),

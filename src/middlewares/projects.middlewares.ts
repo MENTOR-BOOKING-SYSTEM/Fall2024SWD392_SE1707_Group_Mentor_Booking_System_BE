@@ -11,6 +11,7 @@ import { TokenPayload } from '~/models/Request/User.request'
 import { ColumnID, TokenRole } from '~/constants/enums'
 import User from '~/models/schemas/User.schema'
 import Project from '~/models/schemas/Project.schema'
+import { isNumber } from 'lodash'
 
 export const submitProjectValidator = validate(
   checkSchema({
@@ -123,6 +124,44 @@ export const submitProjectValidator = validate(
             throw new ErrorWithStatus({
               status: HTTP_STATUS.FORBIDDEN,
               message: PROJECTS_MESSAGE.MENTOR_DOES_NOT_NEED_TO_REQUEST_PROJECT_REVIEW_FROM_OTHER_MENTOR
+            })
+          }
+        }
+      }
+    }
+  })
+)
+export const getProjectValidator = validate(
+  checkSchema({
+    type: {
+      isString: true,
+      notEmpty: true,
+      custom: {
+        options: async (value, { req }) => {
+          if (value !== 'all' && value !== 'review') {
+            throw new ErrorWithStatus({
+              message: PROJECTS_MESSAGE.PARAMS_IN_VALID,
+              status: HTTP_STATUS.BAD_REQUEST
+            })
+          }
+        }
+      }
+    }
+  })
+)
+export const getProjectDetailValidator = validate(
+  checkSchema({
+    projectID: {
+      isString: true,
+      notEmpty: true,
+      custom: {
+        options: async (value, { req }) => {
+          console.log(Number(value));
+
+          if (!Number(value)) {
+            throw new ErrorWithStatus({
+              message: PROJECTS_MESSAGE.PROJECT_ID_INVALID,
+              status: HTTP_STATUS.BAD_REQUEST
             })
           }
         }

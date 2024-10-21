@@ -1,3 +1,4 @@
+import { ParamsDictionary } from 'express-serve-static-core'
 export interface submitProjectBody {
   projectName: string
   funcRequirements: string
@@ -8,6 +9,12 @@ export interface submitProjectBody {
   problems?: string
   technologies?: string[]
   collaborators?: string[]
-  mentorID: string[],
+  mentorID: string[]
   type: string
+}
+export interface GetProjectReqParams extends ParamsDictionary {
+  type: string
+}
+export interface GetProjectDetailReqParams extends ParamsDictionary {
+  projectID: string
 }

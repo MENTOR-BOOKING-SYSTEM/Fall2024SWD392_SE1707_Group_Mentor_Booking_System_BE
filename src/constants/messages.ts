@@ -146,7 +146,11 @@ export const PROJECTS_MESSAGE = {
   PROJECT_NAME_ALREADY_EXISTS: 'Project name already exist',
   MENTOR_ID_IS_REQUIRED_FOR_STUDENT_OR_BUSINESS_ROLE: 'Mentor id is required for student or business role',
   CAN_NOT_SEND_MORE_PROJECT: 'No more projects can be submitted because the previous project is being processed',
-  TECHNOLOGY_MUST_BE_AN_ARRAY_WITH_AT_LEAST_1_ELEMENT: 'Technology Must Be An Array With At Least 1 Element'
+  TECHNOLOGY_MUST_BE_AN_ARRAY_WITH_AT_LEAST_1_ELEMENT: 'Technology Must Be An Array With At Least 1 Element',
+  PARAMS_IN_VALID: 'Params must be "all" or "review" or project id  ',
+  GET_PROJECT_SUCCESSFULLY: "Get project successfully",
+  PROJECT_ID_INVALID: 'Project id is invalid  ',
+  GET_PROJECT_DETAIL_SUCCESSFULLY: "Get project detail successfully"
 } as const
 
 export const CRITERIA_MESSAGES = {
@@ -167,14 +171,12 @@ export const CRITERIA_MESSAGES = {
 } as const
 
 export const REVIEW_MESSAGES = {
-  USER_DIFFERENT_GROUP: "Other groups cannot be evaluated.",
-  RATE_MUST_BE_LESS_THAN_5_AND_MORE_THAN_1: "Rate must be less than 5 and more than 1",
-  REVIEW_MEMBER_SUCCESSFULLY: "Review member successfully",
-  YOU_CAN_NOT_REVIEW_YOURSELF: "You can not review yourself"
+  USER_DIFFERENT_GROUP: 'Other groups cannot be evaluated.',
+  RATE_MUST_BE_LESS_THAN_5_AND_MORE_THAN_1: 'Rate must be less than 5 and more than 1',
+  REVIEW_MEMBER_SUCCESSFULLY: 'Review member successfully',
+  YOU_CAN_NOT_REVIEW_YOURSELF: 'You can not review yourself'
 }
-
 
 export const TIMESTAMP_MESSAGES = {
   GET_ALL_TIMESTAMPS_SUCCESSFULLY: 'Get all timestamps successfully'
 }
-

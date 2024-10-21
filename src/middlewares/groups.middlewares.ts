@@ -265,7 +265,7 @@ export const assignLeaderValidator = validate(
             `select groupID from \`${DatabaseTable.Group}\`where groupID = ?`,
             [value]
           )
-          console.log(isExist);
+          console.log(isExist)
 
           if (!(isExist.length > 0)) {
             throw new ErrorWithStatus({
@@ -286,13 +286,12 @@ export const assignLeaderValidator = validate(
             `select userID,position from ${DatabaseTable.User_Group} where userID =? and groupID =?`,
             [user_id, req.body.groupID]
           )
-          const notALeader = leaderInGroup.filter(((item) => item.position !== 'Leader'))
+          const notALeader = leaderInGroup.filter((item) => item.position !== 'Leader')
           if (notALeader.length > 0) {
             throw new ErrorWithStatus({
               message: GROUPS_MESSAGES.ONLY_LEADER_CAN_BE_ASSIGN,
               status: HTTP_STATUS.FORBIDDEN
             })
-
           }
 
           const userInGroup = await databaseService.query<{ userID: number; position: string }[]>(

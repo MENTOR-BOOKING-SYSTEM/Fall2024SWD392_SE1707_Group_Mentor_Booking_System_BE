@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
-import { submitProjectBody } from '~/models/Request/Project.request'
+import { GetProjectDetailReqParams, GetProjectReqParams, submitProjectBody } from '~/models/Request/Project.request'
 import projectServices from '~/services/project.services'
 import Project from '~/models/schemas/Project.schema'
 import databaseService from '~/services/database.services'
@@ -9,6 +9,7 @@ import { ProjectStatus } from '~/constants/enums'
 import { ErrorWithStatus } from '~/models/Errors'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { PROJECTS_MESSAGE } from '~/constants/messages'
+import { Pagination } from '~/models/Request/Pagination.request'
 export const submitProjectController = async (
   req: Request<ParamsDictionary, any, submitProjectBody>,
   res: Response
@@ -29,6 +30,28 @@ export const submitProjectController = async (
 
   return res.json({
     message: PROJECTS_MESSAGE.SUBMIT_PROJECT_SUCESSFULLY,
+    result
+  })
+}
+export const getProjectController = async (
+  req: Request<GetProjectReqParams, any, any, Pagination>,
+  res: Response
+) => {
+  const { type } = req.params
+  const result = await projectServices.getProject(type, Number(req.query.limit), Number(req.query.page))
+  return res.json({
+    message: PROJECTS_MESSAGE.GET_PROJECT_SUCCESSFULLY,
+    result
+  })
+
+}
+export const getProjectDetailController = async (
+  req: Request<GetProjectDetailReqParams>,
+  res: Response
+) => {
+  const result = await projectServices.getProjectDetail(Number(req.params.projectID))
+  return res.json({
+    message: PROJECTS_MESSAGE.GET_PROJECT_DETAIL_SUCCESSFULLY,
     result
   })
 }

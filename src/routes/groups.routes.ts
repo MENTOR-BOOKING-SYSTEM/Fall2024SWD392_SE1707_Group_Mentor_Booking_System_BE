@@ -32,5 +32,10 @@ groupsRouter.delete(
   wrapReqHandler(removeGroupMemberController)
 )
 groupsRouter.post('/add-member', accessTokenValidator, addGroupMemberValidator, wrapReqHandler(addUserToGroup))
-groupsRouter.patch('/assign-leader', accessTokenValidator, assignLeaderValidator, wrapReqHandler(assignLeaderController))
+groupsRouter.patch(
+  '/assign-leader',
+  accessTokenValidator,
+  assignLeaderValidator,
+  wrapReqHandler(assignLeaderController)
+)
 export default groupsRouter
