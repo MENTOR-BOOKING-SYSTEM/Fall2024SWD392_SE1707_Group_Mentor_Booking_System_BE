@@ -10,6 +10,7 @@ import { ErrorWithStatus } from '~/models/Errors'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { PROJECTS_MESSAGE } from '~/constants/messages'
 import { Pagination } from '~/models/Request/Pagination.request'
+import { TokenPayload } from '~/models/Request/User.request'
 export const submitProjectController = async (
   req: Request<ParamsDictionary, any, submitProjectBody>,
   res: Response
@@ -38,7 +39,8 @@ export const getProjectController = async (
   res: Response
 ) => {
   const { type } = req.params
-  const result = await projectServices.getProject(type, Number(req.query.limit), Number(req.query.page))
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const result = await projectServices.getProject(type, Number(req.query.limit), Number(req.query.page), user_id)
   return res.json({
     message: PROJECTS_MESSAGE.GET_PROJECT_SUCCESSFULLY,
     result

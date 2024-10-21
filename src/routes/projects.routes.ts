@@ -10,5 +10,4 @@ const projectRouter = Router()
 projectRouter.get('/detail/:projectID', accessTokenValidator, getProjectDetailValidator, wrapReqHandler(getProjectDetailController))
 projectRouter.post('/submit', accessTokenValidator, submitProjectValidator, wrapReqHandler(submitProjectController))
 projectRouter.get('/:type', accessTokenValidator, paginationValidator, getProjectValidator, wrapReqHandler(getProjectController))
-
 export default projectRouter
