@@ -6,26 +6,74 @@ import { OkPacket } from 'mysql2'
 import { submitProjectBody } from '~/models/Request/Project.request'
 import { TokenRole } from '~/constants/enums'
 import User from '~/models/schemas/User.schema'
+import Post from '~/models/schemas/Post.schema'
+import { Sprint } from '~/models/schemas/Sprint.schema'
+
 class ProjectServices {
   async getProjectDetail(id: number) {
-    const [technologies, collaborators, projects] = await Promise.all([
-      databaseService.query<{ techID: string; techName: string }[]>(
-        `SELECT * FROM ${DatabaseTable.Technology} t WHERE t.techID IN (SELECT pt.techID FROM ${DatabaseTable.Project_Technology} pt WHERE pt.projectID IN (SELECT p.projectID FROM ${DatabaseTable.Project} p  WHERE p.projectID = ?))`,
+    const [project, attachments] = await Promise.all([
+      databaseService.query<Project[]>(`SELECT * FROM ${DatabaseTable.Project} WHERE projectID = ?`, [id]),
+      databaseService.query<{ attachmentID: string, attachmentURL: string }[]>(
+        `SELECT attachmentID, attachmentURL FROM ${DatabaseTable.Attachment} WHERE projectID = ?`,
         [id]
-      ),
-      databaseService.query<User>(
-        `SELECT u.userID,u.email FROM ${DatabaseTable.User} u WHERE u.userID IN (SELECT up.userID FROM ${DatabaseTable.User_Own_Project} up WHERE up.projectID IN (SELECT p.projectID FROM ${DatabaseTable.Project} p where p.projectID = ?)) `,
-        [id]
-      ),
-      await databaseService.query<Project[]>(`select * from ${DatabaseTable.Project} where projectID = ? `, [id])
+      )
     ])
-    const [project] = projects
-    return {
-      project,
-      collaborators,
-      technologies
-    }
+    return { project: project[0], attachments }
   }
+
+  async getProjectTechnologies(id: number) {
+    return databaseService.query<{ techID: string, techName: string }[]>(
+      `SELECT t.techID, t.techName FROM ${DatabaseTable.Technology} t
+       JOIN ${DatabaseTable.Project_Technology} pt ON t.techID = pt.techID
+       WHERE pt.projectID = ?`,
+      [id]
+    )
+  }
+
+  async getProjectPost(id: number) {
+    return databaseService.query<Post[]>(
+      `SELECT * FROM ${DatabaseTable.Post} WHERE projectID = ?`,
+      [id]
+    )
+  }
+
+  async getProjectOwn(id: number) {
+    return databaseService.query<{ userID: string, email: string, avatarUrl: string, username: string, firstName: string, lastName: string }[]>(
+      `SELECT u.userID, u.email, u.avatarUrl, u.username, u.firstName, u.lastName
+       FROM ${DatabaseTable.User} u
+       JOIN ${DatabaseTable.User_Own_Project} uop ON u.userID = uop.userID
+       WHERE uop.projectID = ?`,
+      [id]
+    )
+  }
+
+  async getProjectReview(id: number) {
+    return databaseService.query<{ userID: string, email: string, avatarUrl: string, username: string, firstName: string, lastName: string }[]>(
+      `SELECT u.userID, u.email, u.avatarUrl, u.username, u.firstName, u.lastName
+       FROM ${DatabaseTable.User} u
+       JOIN ${DatabaseTable.User_Review_Project} urp ON u.userID = urp.userID
+       WHERE urp.projectID = ?`,
+      [id]
+    )
+  }
+
+  async getProjectGuide(id: number) {
+    return databaseService.query<{ userID: string, email: string, avatarUrl: string, username: string, firstName: string, lastName: string }[]>(
+      `SELECT u.userID, u.email, u.avatarUrl, u.username, u.firstName, u.lastName
+       FROM ${DatabaseTable.User} u
+       JOIN ${DatabaseTable.User_Guide} ug ON u.userID = ug.userID
+       WHERE ug.projectID = ?`,
+      [id]
+    )
+  }
+
+  async getProjectSprint(id: number) {
+    return databaseService.query<Sprint[]>(
+      `SELECT * FROM ${DatabaseTable.Sprint} WHERE projectID = ?`,
+      [id]
+    )
+  }
+
   async createProject(body: submitProjectBody, user_id: string, roles: string[]) {
     const { technologies, collaborators, type, mentorID, ...project } = body
     const { projectID, ...rest } = new Project(project)
@@ -135,6 +183,7 @@ class ProjectServices {
     const submitProjectData = await this.getProjectDetail(result.insertId)
     return submitProjectData
   }
+
   async getProject(type: string, limit: number, page: number, userID: string) {
     if (type === 'all') {
       const result = await databaseService.query(

@@ -57,3 +57,69 @@ export const getProjectDetailController = async (
     result
   })
 }
+
+export const getProjectTechnologiesController = async (
+  req: Request<GetProjectDetailReqParams>,
+  res: Response
+) => {
+  const result = await projectServices.getProjectTechnologies(Number(req.params.projectID))
+  return res.json({
+    message: PROJECTS_MESSAGE.GET_PROJECT_TECHNOLOGIES_SUCCESSFULLY,
+    result
+  })
+}
+
+export const getProjectPostController = async (
+  req: Request<GetProjectDetailReqParams>,
+  res: Response
+) => {
+  const result = await projectServices.getProjectPost(Number(req.params.projectID))
+  return res.json({
+    message: PROJECTS_MESSAGE.GET_PROJECT_POST_SUCCESSFULLY,
+    result
+  })
+}
+
+export const getProjectOwnController = async (
+  req: Request<GetProjectDetailReqParams>,
+  res: Response
+) => {
+  const result = await projectServices.getProjectOwn(Number(req.params.projectID))
+  return res.json({
+    message: PROJECTS_MESSAGE.GET_PROJECT_OWN_SUCCESSFULLY,
+    result
+  })
+}
+
+export const getProjectReviewController = async (
+  req: Request<GetProjectDetailReqParams>,
+  res: Response
+) => {
+  const result = await projectServices.getProjectReview(Number(req.params.projectID))
+  return res.json({
+    message: PROJECTS_MESSAGE.GET_PROJECT_REVIEW_SUCCESSFULLY,
+    result
+  })
+}
+
+export const getProjectGuideController = async (
+  req: Request<GetProjectDetailReqParams>,
+  res: Response
+) => {
+  const result = await projectServices.getProjectGuide(Number(req.params.projectID))
+  return res.json({
+    message: PROJECTS_MESSAGE.GET_PROJECT_GUIDE_SUCCESSFULLY,
+    result
+  })
+}
+
+export const getProjectSprintController = async (
+  req: Request<GetProjectDetailReqParams>,
+  res: Response
+) => {
+  const result = await projectServices.getProjectSprint(Number(req.params.projectID))
+  return res.json({
+    message: PROJECTS_MESSAGE.GET_PROJECT_SPRINT_SUCCESSFULLY,
+    result
+  })
+}
