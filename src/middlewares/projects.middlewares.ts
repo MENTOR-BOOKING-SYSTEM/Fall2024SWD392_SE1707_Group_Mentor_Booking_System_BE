@@ -1,7 +1,7 @@
 import { checkSchema } from 'express-validator'
 import { DatabaseTable } from '~/constants/databaseTable'
 import HTTP_STATUS from '~/constants/httpStatus'
-import { PROJECTS_MESSAGE, USERS_MESSAGES } from '~/constants/messages'
+import { GROUPS_MESSAGES, PROJECTS_MESSAGE, USERS_MESSAGES } from '~/constants/messages'
 import { ErrorWithStatus } from '~/models/Errors'
 import databaseService from '~/services/database.services'
 import { databaseCheck } from '~/utils/databaseCheck'
@@ -128,6 +128,33 @@ export const submitProjectValidator = validate(
           }
         }
       }
+    },
+    groupID: {
+      isArray: true,
+      custom: {
+        options: async (value, { req }) => {
+          if (!((req as Request).body.type === "Group" && value.length > 0 && value.length < 2)) {
+            console.log(value);
+
+            throw new ErrorWithStatus({
+              message: PROJECTS_MESSAGE.TYPE_GROUP_ONLY_SENT_1_COLLABORATORS,
+              status: HTTP_STATUS.BAD_REQUEST
+            })
+          }
+          const isGroupExist = await databaseService.query<{ groupID: number }[]>(`select groupID from \`${DatabaseTable.Group}\` where groupID =?`, [value])
+          console.log(isGroupExist);
+
+          if (isGroupExist.length < 1) {
+            throw new ErrorWithStatus({
+              message: GROUPS_MESSAGES.GROUP_NOT_FOUND,
+              status: HTTP_STATUS.BAD_REQUEST
+            });
+
+          }
+
+        }
+      }
+
     }
   })
 )

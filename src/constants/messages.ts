@@ -150,7 +150,8 @@ export const PROJECTS_MESSAGE = {
   PARAMS_IN_VALID: 'Params must be "all" or "review" or project id  ',
   GET_PROJECT_SUCCESSFULLY: "Get project successfully",
   PROJECT_ID_INVALID: 'Project id is invalid  ',
-  GET_PROJECT_DETAIL_SUCCESSFULLY: "Get project detail successfully"
+  GET_PROJECT_DETAIL_SUCCESSFULLY: "Get project detail successfully",
+  TYPE_GROUP_ONLY_SENT_1_COLLABORATORS: "With group mode you can only pass on 1 contributor"
 } as const
 
 export const CRITERIA_MESSAGES = {
