@@ -59,12 +59,17 @@ class ProjectServices {
             item
           ])
         )
+        const userReviewProjectPromise = Array.isArray(userIdReviewProject) ? mentorID.map((item) => databaseService.query(
+          `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
+          [item, result.insertId, role]
+        )) : databaseService.query(
+          `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
+          [userIdReviewProject, result.insertId, role]
+        )
         await Promise.all([
           userOwnProjectPromises,
-          databaseService.query(
-            `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
-            [userIdReviewProject, result.insertId, role]
-          ),
+          userReviewProjectPromise
+          ,
           projectTechnology
         ])
       } else {
@@ -74,12 +79,16 @@ class ProjectServices {
             [item, result.insertId, type]
           )
         )
+        const userReviewProjectPromise = Array.isArray(userIdReviewProject) ? mentorID.map((item) => databaseService.query(
+          `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
+          [item, result.insertId, role]
+        )) : databaseService.query(
+          `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
+          [userIdReviewProject, result.insertId, role]
+        )
         await Promise.all([
           userOwnProjectPromises,
-          databaseService.query(
-            `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
-            [userIdReviewProject, result.insertId, role]
-          )
+          userReviewProjectPromise
         ])
       }
     } else {
@@ -90,29 +99,36 @@ class ProjectServices {
             item
           ])
         )
-
+        const userReviewProjectPromise = Array.isArray(userIdReviewProject) ? mentorID.map((item) => databaseService.query(
+          `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
+          [item, result.insertId, role]
+        )) : databaseService.query(
+          `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
+          [userIdReviewProject, result.insertId, role]
+        )
         await Promise.all([
           databaseService.query<{ userID: string; projectID: string }>(
             `Insert into ${DatabaseTable.User_Own_Project}(userID,projectID,type) VALUES (?,?,?)`,
             [user_id, result.insertId, type]
           ),
-          databaseService.query(
-            `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
-            [userIdReviewProject, result.insertId, role]
-          ),
+          userReviewProjectPromise,
           projectTechnology
         ])
       } else {
+        const userReviewProjectPromise = Array.isArray(userIdReviewProject) ? mentorID.map((item) => databaseService.query(
+          `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
+          [item, result.insertId, role]
+        )) : databaseService.query(
+          `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
+          [userIdReviewProject, result.insertId, role]
+        )
         await Promise.all([
           databaseService.query<{ userID: string; projectID: string }>(
             `Insert into ${DatabaseTable.User_Own_Project}(userID,projectID,type) VALUES (?,?,?)`,
             [user_id, result.insertId, type]
           ),
 
-          databaseService.query(
-            `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
-            [userIdReviewProject, result.insertId, role]
-          )
+          userReviewProjectPromise
         ])
       }
     }

@@ -11,6 +11,7 @@ export interface submitProjectBody {
   collaborators?: string[]
   mentorID: string[]
   type: string
+  groupID?: number
 }
 export interface GetProjectReqParams extends ParamsDictionary {
   type: string
