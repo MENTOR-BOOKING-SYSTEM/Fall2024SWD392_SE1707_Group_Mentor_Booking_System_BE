@@ -32,3 +32,10 @@ export interface JoinGroupReqBody {
 export interface LogoutReqBody {
   refreshToken: string
 }
+
+export interface FilterUserQuery {
+  role?: string
+  isExact?: string
+  email?: string
+  group?: string
+}

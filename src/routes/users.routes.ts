@@ -13,7 +13,8 @@ import {
   getCurrentUserInfoController,
   refreshTokenController,
   joinGroupController,
-  logoutController
+  logoutController,
+  filterUsersController
 } from '~/controllers/users.controller'
 import { paginationValidator } from '~/middlewares/pagination.middlewares'
 import { getCurrentSemester } from '~/middlewares/semester.middlewares'
@@ -65,5 +66,7 @@ usersRouter.get(
   getCurrentSemester,
   wrapReqHandler(getStudentsInSameGroupController)
 )
+
+usersRouter.get('/filter', accessTokenValidator, wrapReqHandler(filterUsersController))
 
 export default usersRouter

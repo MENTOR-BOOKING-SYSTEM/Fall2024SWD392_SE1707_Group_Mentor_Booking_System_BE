@@ -5,7 +5,7 @@ import { signToken, verifyToken } from '~/utils/jwt'
 import { envConfig } from '~/constants/config'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { handleSpreadObjectToArray } from '~/utils/spreadObjectToArray'
-import { GetUserListQuery } from '~/models/Request/User.request'
+import { FilterUserQuery, GetUserListQuery } from '~/models/Request/User.request'
 import { DatabaseTable } from '~/constants/databaseTable'
 import { hashPassword } from '~/utils/crypto'
 import { NotFoundError } from '~/models/Errors'
@@ -281,6 +281,61 @@ class UserService {
       [userID, groupID, 'Proposal']
     )
     return result
+  }
+
+  async filterUsers({ role, isExact, email, group }: FilterUserQuery) {
+    let query = `
+      SELECT DISTINCT u.userID, u.email, u.username, u.firstName, u.lastName, u.avatarUrl,
+             GROUP_CONCAT(DISTINCT r.roleName) as roles
+      FROM ${DatabaseTable.User} u
+      LEFT JOIN ${DatabaseTable.User_Role} ur ON u.userID = ur.userID
+      LEFT JOIN ${DatabaseTable.Role} r ON ur.roleID = r.roleID
+      LEFT JOIN ${DatabaseTable.User_Group} ug ON u.userID = ug.userID
+    `
+
+    const conditions = []
+    const params = []
+
+    if (role) {
+      const roles = JSON.parse(role)
+      if (roles.length > 0) {
+        if (isExact === 'true') {
+          conditions.push(`ur.roleID IN (${roles.map(() => '?').join(',')})`)
+          params.push(...roles)
+        } else {
+          conditions.push(`ur.roleID IN (${roles.map(() => '?').join(',')})`)
+          params.push(...roles)
+        }
+      }
+    }
+
+    if (email) {
+      conditions.push('u.email LIKE ?')
+      params.push(`%${email}%`)
+    }
+
+    if (group === 'true') {
+      conditions.push('ug.groupID IS NOT NULL')
+    } else if (group === 'false') {
+      conditions.push('ug.groupID IS NULL')
+    }
+
+    if (conditions.length > 0) {
+      query += ' WHERE ' + conditions.join(' AND ')
+    }
+
+    query += ' GROUP BY u.userID'
+
+    if (isExact === 'true' && role) {
+      const roles = JSON.parse(role)
+      query += ` HAVING COUNT(DISTINCT ur.roleID) = ${roles.length}`
+    }
+
+    const users = await databaseService.query<(User & { roles: string })[]>(query, params)
+    return users.map(user => ({
+      ...user,
+      roles: user.roles ? user.roles.split(',') : []
+    }))
   }
 }
 
