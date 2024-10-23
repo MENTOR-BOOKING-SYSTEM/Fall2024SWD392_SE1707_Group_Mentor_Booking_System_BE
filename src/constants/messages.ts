@@ -149,10 +149,10 @@ export const PROJECTS_MESSAGE = {
   CAN_NOT_SEND_MORE_PROJECT: 'No more projects can be submitted because the previous project is being processed',
   TECHNOLOGY_MUST_BE_AN_ARRAY_WITH_AT_LEAST_1_ELEMENT: 'Technology Must Be An Array With At Least 1 Element',
   PARAMS_IN_VALID: 'Params must be "all" or "review" or project id  ',
-  GET_PROJECT_SUCCESSFULLY: "Get project successfully",
+  GET_PROJECT_SUCCESSFULLY: 'Get project successfully',
   PROJECT_ID_INVALID: 'Project id is invalid  ',
-  GET_PROJECT_DETAIL_SUCCESSFULLY: "Get project detail successfully",
-  TYPE_GROUP_ONLY_SENT_1_COLLABORATORS: "With group mode you can only pass on 1 contributor"
+  GET_PROJECT_DETAIL_SUCCESSFULLY: 'Get project detail successfully',
+  TYPE_GROUP_ONLY_SENT_1_COLLABORATORS: 'With group mode you can only pass on 1 contributor'
 } as const
 
 export const CRITERIA_MESSAGES = {
@@ -181,4 +181,8 @@ export const REVIEW_MESSAGES = {
 
 export const TIMESTAMP_MESSAGES = {
   GET_ALL_TIMESTAMPS_SUCCESSFULLY: 'Get all timestamps successfully'
+}
+
+export const DASHBOARD_MESSAGES = {
+  GET_ACCOUNTS_SUCCESSFULLY: 'Get accounts successfully'
 }

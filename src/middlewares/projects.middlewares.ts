@@ -133,28 +133,25 @@ export const submitProjectValidator = validate(
       isArray: true,
       custom: {
         options: async (value, { req }) => {
-          if (!((req as Request).body.type === "Group" && value.length > 0 && value.length < 2)) {
-            console.log(value);
-
+          if (!((req as Request).body.type === 'Group' && value.length > 0 && value.length < 2)) {
             throw new ErrorWithStatus({
               message: PROJECTS_MESSAGE.TYPE_GROUP_ONLY_SENT_1_COLLABORATORS,
               status: HTTP_STATUS.BAD_REQUEST
             })
           }
-          const isGroupExist = await databaseService.query<{ groupID: number }[]>(`select groupID from \`${DatabaseTable.Group}\` where groupID =?`, [value])
-          console.log(isGroupExist);
+          const isGroupExist = await databaseService.query<{ groupID: number }[]>(
+            `select groupID from \`${DatabaseTable.Group}\` where groupID =?`,
+            [value]
+          )
 
           if (isGroupExist.length < 1) {
             throw new ErrorWithStatus({
               message: GROUPS_MESSAGES.GROUP_NOT_FOUND,
               status: HTTP_STATUS.BAD_REQUEST
-            });
-
+            })
           }
-
         }
       }
-
     }
   })
 )
@@ -165,7 +162,7 @@ export const getProjectValidator = validate(
       notEmpty: true,
       custom: {
         options: async (value, { req }) => {
-          if (value !== 'all' && value !== 'review' && value !== "get-submit") {
+          if (value !== 'all' && value !== 'review' && value !== 'get-submit') {
             throw new ErrorWithStatus({
               message: PROJECTS_MESSAGE.PARAMS_IN_VALID,
               status: HTTP_STATUS.BAD_REQUEST

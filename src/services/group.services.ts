@@ -60,7 +60,6 @@ class GroupServices {
       )
     )
     const promiseCheckPosition = await Promise.all(alreadyInGroup)
-    console.log(promiseCheckPosition)
 
     const newUserArray = userID.filter((id) => promiseCheckPosition.flat().some((item) => id !== item.userID))
 

@@ -83,7 +83,6 @@ export const getRequestPendingValidator = validate(
               `select groupID from \`${DatabaseTable.Group}\` where groupID =? `,
               [value]
             )
-            console.log(isExist)
 
             if (!(isExist.length > 0)) {
               throw new ErrorWithStatus({
@@ -265,7 +264,6 @@ export const assignLeaderValidator = validate(
             `select groupID from \`${DatabaseTable.Group}\`where groupID = ?`,
             [value]
           )
-          console.log(isExist)
 
           if (!(isExist.length > 0)) {
             throw new ErrorWithStatus({

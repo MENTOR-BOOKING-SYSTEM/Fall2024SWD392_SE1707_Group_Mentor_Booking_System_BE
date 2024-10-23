@@ -26,8 +26,6 @@ class MediasService {
           filepath: newPath,
           contentType: mime.getType(newPath) as string
         })
-        console.log(s3)
-        console.log('hi')
 
         await Promise.all([fsPromise.unlink(file.filepath), fsPromise.unlink(newPath)])
         return { url: s3.Location as string, type: MediaType.Image }
