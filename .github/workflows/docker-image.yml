@@ -3,8 +3,6 @@ name: Docker Image CI
 on:
   push:
     branches: ['main']
-  pull_request:
-    branches: ['main']
 
 jobs:
   build:
@@ -35,9 +33,9 @@ jobs:
           password: ${{secrets.HOST_PASSWORD}}
           port: ${{secrets.PORT}}
           script: |
-              docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-              docker pull trantien123/mentorbooking:v0
-              docker stop mentorbooking
-              docker rm mentorbooking
-              docker run -dp 4000:4000 --name mentorbooking trantien123/mentorbooking:v0
-
+            docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+            docker pull trantien123/mentorbooking:v0
+            docker stop mentorbooking
+            docker rm mentorbooking
+            docker rmi $(docker images -f "dangling=true" -q)
+            docker run -dp 4000:4000 --name mentorbooking trantien123/mentorbooking:v0

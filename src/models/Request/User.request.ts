@@ -3,8 +3,9 @@ import { JwtPayload } from 'jsonwebtoken'
 export interface TokenPayload extends JwtPayload {
   user_id: string
   token_type: TokenType
-  email: string
-  role: TokenRole
+
+  role: string[]
+
   exp: number
   iat: number
 }
@@ -15,11 +16,26 @@ export interface LoginReqBody {
 export interface GetUserListQuery {
   nonGroup?: string
 }
-
+export interface RefreshTokenReqBody {
+  refreshToken: string
+}
 export interface ForgotPasswordReqBody {
   email: string
 }
 
 export interface VerifyForgotPasswordTokenReqQuery {
   code?: string
+}
+export interface JoinGroupReqBody {
+  groupId: number
+}
+export interface LogoutReqBody {
+  refreshToken: string
+}
+
+export interface FilterUserQuery {
+  role?: string
+  isExact?: string
+  email?: string
+  group?: string
 }

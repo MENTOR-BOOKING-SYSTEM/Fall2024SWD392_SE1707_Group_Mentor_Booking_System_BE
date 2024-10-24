@@ -44,7 +44,7 @@ export default class Project {
   }: ProjectType) {
     ;(this.projectID = projectID || handleRandomId()),
       (this.projectName = projectName),
-      (this.slug = slug || ''),
+      (this.slug = slug || this.projectName.toLowerCase().replace(/ /g, '-')),
       (this.funcRequirements = funcRequirements),
       (this.nonFuncRequirements = nonFuncRequirements || ''),
       (this.context = context || ''),

@@ -33,8 +33,10 @@ export enum DatabaseTable {
   Timestamp = 'Timestamp',
   User = 'User',
   User_Group = 'User_Group',
-  User_Guide = 'User_Guide',
-  User_Project = 'User_Project',
-  User_Review = 'User_Review',
-  User_Role = 'User_Role'
+  User_Guide = 'User_Guide_Project',
+  User_Own_Project = 'User_Own_Project',
+  User_Review_Project = 'User_Review_Project',
+  User_Role = 'User_Role',
+  Refresh_Token = 'Refresh_Tokens',
+  Semester_Criteria = 'Semester_Criteria'
 }

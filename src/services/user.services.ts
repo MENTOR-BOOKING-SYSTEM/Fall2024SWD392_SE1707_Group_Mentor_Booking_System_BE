@@ -5,12 +5,14 @@ import { signToken, verifyToken } from '~/utils/jwt'
 import { envConfig } from '~/constants/config'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { handleSpreadObjectToArray } from '~/utils/spreadObjectToArray'
-import { GetUserListQuery } from '~/models/Request/User.request'
+import { FilterUserQuery, GetUserListQuery } from '~/models/Request/User.request'
 import { DatabaseTable } from '~/constants/databaseTable'
 import { hashPassword } from '~/utils/crypto'
+import { NotFoundError } from '~/models/Errors'
+import { USERS_MESSAGES } from '~/constants/messages'
 
 class UserService {
-  private signAccessToken({ user_id, role }: { user_id: string; role: TokenRole }) {
+  private signAccessToken({ user_id, role }: { user_id: string; role: string[] }) {
     return signToken({
       payload: {
         user_id,
@@ -23,7 +25,7 @@ class UserService {
       }
     })
   }
-  private signRefreshToken({ user_id, role, exp }: { user_id: string; role: TokenRole; exp?: number }) {
+  private signRefreshToken({ user_id, role, exp }: { user_id: string; role: string[]; exp?: number }) {
     if (exp) {
       return signToken({
         payload: {
@@ -61,10 +63,35 @@ class UserService {
     })
   }
 
-  private signAccessAndRefreshToken({ user_id, role }: { user_id: string; role: TokenRole }) {
-    return Promise.all([this.signAccessToken({ user_id, role }), this.signRefreshToken({ user_id, role })])
+  private signAccessAndRefreshToken({ user_id, role, exp }: { user_id: string; role: string[]; exp?: number }) {
+    return Promise.all([this.signAccessToken({ user_id, role }), this.signRefreshToken({ user_id, role, exp })])
   }
-
+  async refreshToken({
+    user_id,
+    refreshToken,
+    role,
+    exp
+  }: {
+    user_id: string
+    refreshToken: string
+    role: string[]
+    exp: number
+  }) {
+    const [token] = await Promise.all([
+      this.signAccessAndRefreshToken({ user_id, role, exp }),
+      databaseService.query(`DELETE FROM ${DatabaseTable.Refresh_Token} WHERE token = ?;`, [refreshToken])
+    ])
+    const [access_token, new_refresh_token] = token
+    const { iat } = await this.decodeRefreshToken(new_refresh_token)
+    await databaseService.query(
+      `Insert into ${DatabaseTable.Refresh_Token}(_id,token,created_at,userID,iat,exp) values(?,?,?,?,?,?)`,
+      handleSpreadObjectToArray(new RefreshToken({ token: new_refresh_token, userID: user_id, exp, iat }))
+    )
+    return {
+      access_token,
+      refresh_token: new_refresh_token
+    }
+  }
   private decodeRefreshToken(refresh_token: string) {
     return verifyToken({
       token: refresh_token,
@@ -72,7 +99,13 @@ class UserService {
     })
   }
 
-  async login({ user_id, role }: { user_id: string; role: TokenRole }) {
+  async login({ user_id, semesterID }: { user_id: string; semesterID: number }) {
+    const roleUser = await databaseService.query<{ roleName: string }[]>(
+      `SELECT r.roleName FROM User u JOIN User_Role ur ON u.userID = ur.userID JOIN Role r ON ur.roleID = r.roleID where u.userID = ? and ur.semesterID =? `,
+      [user_id, semesterID]
+    )
+    const role = (roleUser as { roleName: string }[]).map((item) => item.roleName)
+
     const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
       user_id,
       role
@@ -113,6 +146,198 @@ class UserService {
       email
     ])
   }
+
+  async updateProfile(user_id: string, payload: { firstName?: string; lastName?: string; avatarUrl?: string }) {
+    const updateFields = Object.entries(payload)
+      .filter(([_, value]) => value !== undefined)
+      .map(([key, value]) => `${key} = ?`)
+      .join(', ')
+
+    const updateValues = Object.values(payload).filter((value) => value !== undefined)
+
+    if (updateFields.length > 0) {
+      const query = `UPDATE ${DatabaseTable.User} SET ${updateFields} WHERE userID = ?`
+      await databaseService.query(query, [...updateValues, user_id])
+    }
+
+    const [updatedUser] = await databaseService.query<User[]>(
+      `SELECT firstName, lastName, avatarUrl FROM ${DatabaseTable.User} WHERE userID = ?`,
+      [user_id]
+    )
+
+    return updatedUser
+  }
+
+  async getMe(user_id: string) {
+    const [user] = await databaseService.query<User[]>(
+      `SELECT userID, email, username, firstName, lastName, avatarUrl 
+       FROM ${DatabaseTable.User} 
+       WHERE userID = ?`,
+      [user_id]
+    )
+
+    if (!user) {
+      throw new NotFoundError({ message: USERS_MESSAGES.USER_NOT_FOUND })
+    }
+
+    return user
+  }
+
+  async getProfile(user_id: string) {
+    const [user] = await databaseService.query<User[]>(
+      `SELECT userID, email, username, firstName, lastName, avatarUrl 
+       FROM ${DatabaseTable.User} 
+       WHERE userID = ?`,
+      [user_id]
+    )
+
+    if (!user) {
+      throw new NotFoundError({ message: USERS_MESSAGES.USER_NOT_FOUND })
+    }
+
+    return user
+  }
+
+  async getUsersByRoles(roles: number[], semesterID: string) {
+    const placeholders = roles.map(() => '?').join(',')
+    const query = `
+      SELECT DISTINCT u.userID, u.email, u.username, u.firstName, u.lastName, u.avatarUrl, 
+             GROUP_CONCAT(DISTINCT r.roleName) as roles
+      FROM ${DatabaseTable.User} u
+      JOIN ${DatabaseTable.User_Role} ur ON u.userID = ur.userID
+      JOIN ${DatabaseTable.Role} r ON ur.roleID = r.roleID
+      WHERE ur.roleID IN (${placeholders})
+      AND ur.semesterID = ?
+      GROUP BY u.userID
+    `
+    const users = await databaseService.query<(User & { roles: string })[]>(query, [...roles, semesterID])
+    return users.map((user) => ({
+      ...user,
+      roles: user.roles.split(',')
+    }))
+  }
+
+  async getStudentsInSameGroup(user_id: string, semesterID: string) {
+    const query = `
+      SELECT u.userID, u.email, u.username, u.avatarUrl FROM ${DatabaseTable.User} AS u 
+      JOIN ${DatabaseTable.User_Group} AS ug ON u.userID = ug.userID
+      JOIN \`${DatabaseTable.Group}\` AS \`g\` ON ug.groupID = \`g\`.groupID
+      WHERE \`g\`.groupID IN (
+        SELECT \`g2\`.groupID FROM \`${DatabaseTable.Group}\` \`g2\`
+        JOIN ${DatabaseTable.User_Group} ug2 ON \`g2\`.groupID = ug2.groupID 
+        WHERE ug2.userID = ? AND \`g2\`.semesterID = ?
+      )
+    `
+    const students = await databaseService.query<{ userID: string; avatarUrl: string; email: string }[]>(query, [
+      user_id,
+      semesterID
+    ])
+    return students
+  }
+
+  async getInfo(user_id: string, role: string[]) {
+    if (role.includes(TokenRole.Student)) {
+      const [info] = await databaseService.query<User[]>(
+        `
+        SELECT u.email, u.firstName, u.lastName, u.avatarUrl, g.groupID, g.projectID, ug.position
+        FROM ${DatabaseTable.User} AS u
+        LEFT JOIN ${DatabaseTable.User_Group} AS ug ON u.userID = ug.userID 
+        LEFT JOIN \`${DatabaseTable.Group}\` AS \`g\` ON ug.groupID = \`g\`.groupID
+        WHERE u.userID = ?
+        `,
+        [user_id]
+      )
+      return info
+    } else if (!role.includes(TokenRole.Admin)) {
+      const [info] = await databaseService.query<User[]>(
+        `
+        SELECT u.email, u.firstName, u.lastName, u.avatarUrl, ugp.projectID
+        FROM ${DatabaseTable.User} AS u
+        LEFT JOIN ${DatabaseTable.User_Guide} AS ugp ON u.userID = ugp.userID 
+        WHERE u.userID = ?
+        `,
+        [user_id]
+      )
+      return info
+    } else {
+      const [info] = await databaseService.query<User[]>(
+        `
+        SELECT u.email, u.firstName, u.lastName, u.avatarUrl
+        FROM ${DatabaseTable.User} AS u
+        WHERE u.userID = ?
+        `,
+        [user_id]
+      )
+      return info
+    }
+  }
+  async logout(refresh_token: string) {
+    await databaseService.query(`DELETE FROM ${DatabaseTable.Refresh_Token} where token = ?`, [refresh_token])
+    return { message: USERS_MESSAGES.LOGOUT_SUCCESS }
+  }
+  async joinGroup({ userID, groupID }: { userID: number; groupID: number }) {
+    const result = await databaseService.query(
+      `Insert into ${DatabaseTable.User_Group}(userID,groupID,position) values (?,?,?)`,
+      [userID, groupID, 'Proposal']
+    )
+    return result
+  }
+
+  async filterUsers({ role, isExact, email, group }: FilterUserQuery) {
+    let query = `
+      SELECT DISTINCT u.userID, u.email, u.username, u.firstName, u.lastName, u.avatarUrl,
+             GROUP_CONCAT(DISTINCT r.roleName) as roles
+      FROM ${DatabaseTable.User} u
+      LEFT JOIN ${DatabaseTable.User_Role} ur ON u.userID = ur.userID
+      LEFT JOIN ${DatabaseTable.Role} r ON ur.roleID = r.roleID
+      LEFT JOIN ${DatabaseTable.User_Group} ug ON u.userID = ug.userID
+    `
+
+    const conditions = []
+    const params = []
+
+    if (role) {
+      const roles = JSON.parse(role)
+      if (roles.length > 0) {
+        if (isExact === 'true') {
+          conditions.push(`ur.roleID IN (${roles.map(() => '?').join(',')})`)
+          params.push(...roles)
+        } else {
+          conditions.push(`ur.roleID IN (${roles.map(() => '?').join(',')})`)
+          params.push(...roles)
+        }
+      }
+    }
+
+    if (email) {
+      conditions.push('u.email LIKE ?')
+      params.push(`%${email}%`)
+    }
+
+    if (group === 'true') {
+      conditions.push('ug.groupID IS NOT NULL')
+    } else if (group === 'false') {
+      conditions.push('ug.groupID IS NULL')
+    }
+
+    if (conditions.length > 0) {
+      query += ' WHERE ' + conditions.join(' AND ')
+    }
+
+    query += ' GROUP BY u.userID'
+
+    if (isExact === 'true' && role) {
+      const roles = JSON.parse(role)
+      query += ` HAVING COUNT(DISTINCT ur.roleID) = ${roles.length}`
+    }
+
+    const users = await databaseService.query<(User & { roles: string })[]>(query, params)
+    return users.map(user => ({
+      ...user,
+      roles: user.roles ? user.roles.split(',') : []
+    }))
+  }
 }
+
 const userService = new UserService()
 export default userService
