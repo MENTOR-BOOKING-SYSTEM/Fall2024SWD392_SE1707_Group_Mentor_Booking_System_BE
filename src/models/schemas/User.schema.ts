@@ -60,3 +60,12 @@ export class Account extends User {
     this.roleName = roleName
   }
 }
+
+export class Role {
+  roleID: number
+  roleName: string
+  constructor({ roleID, roleName }: Role) {
+    this.roleID = roleID
+    this.roleName = roleName
+  }
+}

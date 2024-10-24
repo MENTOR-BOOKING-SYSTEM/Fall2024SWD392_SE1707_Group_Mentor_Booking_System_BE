@@ -1,7 +1,9 @@
 import databaseService from './database.services'
-import { Account } from '~/models/schemas/User.schema'
+import { Account, Role } from '~/models/schemas/User.schema'
 import { DatabaseTable } from '~/constants/databaseTable'
 import { omit } from 'lodash'
+import { CreateAccountReqBody } from '~/models/Request/Dashboard.request'
+import { hashPassword } from '~/utils/crypto'
 
 class DashboardService {
   async getAccounts(limit: string, page: string, semesterID: string) {
@@ -34,7 +36,7 @@ class DashboardService {
       }
     })
 
-    const transformedAccounts = Array.from(accountsMap.values())
+    const transformedAccounts = Array.from(accountsMap.values()).sort((a, b) => a.userID - b.userID)
 
     const total = transformedAccounts.length
     const totalPages = Math.ceil(total / limitNumber)
@@ -46,6 +48,34 @@ class DashboardService {
       pages: totalPages,
       accounts: paginatedAccounts
     }
+  }
+
+  async getRoles() {
+    const roles = await databaseService.query<Role[]>(`SELECT roleID, roleName FROM ${DatabaseTable.Role}`)
+    return roles
+  }
+
+  async createAccount({ account, semesterID }: { account: CreateAccountReqBody; semesterID: string }) {
+    const { firstName, lastName, username, email, password, roles, avatarUrl } = account
+    await databaseService.query(
+      `INSERT INTO ${DatabaseTable.User} (username, email, password, firstName, lastName, avatarUrl) VALUES (?, ?, ?, ?, ?, ?)`,
+      [username, email, hashPassword(password), firstName, lastName, avatarUrl]
+    )
+
+    const [user] = await databaseService.query<{ userID: string }[]>(
+      `SELECT userID FROM ${DatabaseTable.User} WHERE email = ?`,
+      [email]
+    )
+
+    await Promise.all(
+      roles.map((roleID) =>
+        databaseService.query(`INSERT INTO ${DatabaseTable.User_Role} (userID, roleID, semesterID) VALUES (?, ?, ?)`, [
+          user.userID,
+          roleID,
+          semesterID
+        ])
+      )
+    )
   }
 }
 
