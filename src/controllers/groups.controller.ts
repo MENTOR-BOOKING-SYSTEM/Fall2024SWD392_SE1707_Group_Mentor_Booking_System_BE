@@ -15,7 +15,8 @@ import userService from '~/services/user.services'
 
 export const createGroupController = async (req: Request<ParamsDictionary, any, CreateGroupReqBody>, res: Response) => {
   const { groupName, usersID } = req.body
-  const result = await groupServices.createGroup(groupName, usersID)
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const result = await groupServices.createGroup(groupName, usersID, user_id)
 
   return res.json({
     message: GROUPS_MESSAGES.CREATE_GROUP_SUCCESSFULLY,
