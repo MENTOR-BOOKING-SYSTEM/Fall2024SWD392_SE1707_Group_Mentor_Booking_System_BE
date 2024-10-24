@@ -15,7 +15,8 @@ import userService from '~/services/user.services'
 
 export const createGroupController = async (req: Request<ParamsDictionary, any, CreateGroupReqBody>, res: Response) => {
   const { groupName, usersID } = req.body
-  const result = await groupServices.createGroup(groupName, usersID)
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const result = await groupServices.createGroup(groupName, usersID, user_id)
 
   return res.json({
     message: GROUPS_MESSAGES.CREATE_GROUP_SUCCESSFULLY,
@@ -58,6 +59,17 @@ export const assignLeaderController = async (
   const result = await groupServices.assignLeader(groupID, userID, Number(user_id))
   return res.json({
     message: GROUPS_MESSAGES.ASSIGN_NEW_LEADER_SUCCESSFULLY,
+    result
+  })
+}
+export const getListUserFromGroupController = async (
+  req: Request<CreateGroupParams, any, AssignGroupLeaderReqBody>,
+  res: Response
+) => {
+  const { groupID } = req.params
+  const result = await groupServices.getListUserFromGroup(groupID)
+  return res.json({
+    message: GROUPS_MESSAGES.GET_LIST_USER_FROM_GROUP_SUCCESSFULLY,
     result
   })
 }
