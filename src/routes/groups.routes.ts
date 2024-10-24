@@ -3,14 +3,16 @@ import {
   addUserToGroup,
   assignLeaderController,
   createGroupController,
+  getListUserFromGroupController,
   getRequestPendingController,
   removeGroupMemberController
 } from '~/controllers/groups.controller'
-import { loginController } from '~/controllers/users.controller'
+import { getListUsersController, loginController } from '~/controllers/users.controller'
 import {
   addGroupMemberValidator,
   assignLeaderValidator,
   createGroupValidator,
+  getListUserFromGroupValidator,
   getRequestPendingValidator,
   removeGroupMemberValidator
 } from '~/middlewares/groups.middlewares'
@@ -38,4 +40,5 @@ groupsRouter.patch(
   assignLeaderValidator,
   wrapReqHandler(assignLeaderController)
 )
+groupsRouter.get("/:groupID/get-list-users", accessTokenValidator, getListUserFromGroupValidator, getListUserFromGroupController)
 export default groupsRouter

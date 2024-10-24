@@ -61,3 +61,14 @@ export const assignLeaderController = async (
     result
   })
 }
+export const getListUserFromGroupController = async (
+  req: Request<CreateGroupParams, any, AssignGroupLeaderReqBody>,
+  res: Response
+) => {
+  const { groupID } = req.params
+  const result = await groupServices.getListUserFromGroup(groupID)
+  return res.json({
+    message: GROUPS_MESSAGES.GET_LIST_USER_FROM_GROUP_SUCCESSFULLY,
+    result
+  })
+}
