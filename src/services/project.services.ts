@@ -107,19 +107,18 @@ class ProjectServices {
             item
           ])
         )
-        const userReviewProjectPromise = Array.isArray(userIdReviewProject) ? mentorID.map((item) => databaseService.query(
-          `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
-          [item, result.insertId, role]
-        )) : databaseService.query(
-          `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
-          [userIdReviewProject, result.insertId, role]
-        )
-        await Promise.all([
-          userOwnProjectPromises,
-          userReviewProjectPromise
-          ,
-          projectTechnology
-        ])
+        const userReviewProjectPromise = Array.isArray(userIdReviewProject)
+          ? mentorID.map((item) =>
+            databaseService.query(
+              `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
+              [item, result.insertId, role]
+            )
+          )
+          : databaseService.query(
+            `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
+            [userIdReviewProject, result.insertId, role]
+          )
+        await Promise.all([userOwnProjectPromises, userReviewProjectPromise, projectTechnology])
       } else {
         const userOwnProjectPromises = collaborators.map((item) =>
           databaseService.query<{ userID: string; projectID: string }>(
@@ -127,17 +126,18 @@ class ProjectServices {
             [item, result.insertId, type]
           )
         )
-        const userReviewProjectPromise = Array.isArray(userIdReviewProject) ? mentorID.map((item) => databaseService.query(
-          `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
-          [item, result.insertId, role]
-        )) : databaseService.query(
-          `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
-          [userIdReviewProject, result.insertId, role]
-        )
-        await Promise.all([
-          userOwnProjectPromises,
-          userReviewProjectPromise
-        ])
+        const userReviewProjectPromise = Array.isArray(userIdReviewProject)
+          ? mentorID.map((item) =>
+            databaseService.query(
+              `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
+              [item, result.insertId, role]
+            )
+          )
+          : databaseService.query(
+            `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
+            [userIdReviewProject, result.insertId, role]
+          )
+        await Promise.all([userOwnProjectPromises, userReviewProjectPromise])
       }
     } else {
       if (technologies && technologies.length > 0) {
@@ -147,13 +147,17 @@ class ProjectServices {
             item
           ])
         )
-        const userReviewProjectPromise = Array.isArray(userIdReviewProject) ? mentorID.map((item) => databaseService.query(
-          `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
-          [item, result.insertId, role]
-        )) : databaseService.query(
-          `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
-          [userIdReviewProject, result.insertId, role]
-        )
+        const userReviewProjectPromise = Array.isArray(userIdReviewProject)
+          ? mentorID.map((item) =>
+            databaseService.query(
+              `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
+              [item, result.insertId, role]
+            )
+          )
+          : databaseService.query(
+            `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
+            [userIdReviewProject, result.insertId, role]
+          )
         await Promise.all([
           databaseService.query<{ userID: string; projectID: string }>(
             `Insert into ${DatabaseTable.User_Own_Project}(userID,projectID,type) VALUES (?,?,?)`,
@@ -163,13 +167,17 @@ class ProjectServices {
           projectTechnology
         ])
       } else {
-        const userReviewProjectPromise = Array.isArray(userIdReviewProject) ? mentorID.map((item) => databaseService.query(
-          `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
-          [item, result.insertId, role]
-        )) : databaseService.query(
-          `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
-          [userIdReviewProject, result.insertId, role]
-        )
+        const userReviewProjectPromise = Array.isArray(userIdReviewProject)
+          ? mentorID.map((item) =>
+            databaseService.query(
+              `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
+              [item, result.insertId, role]
+            )
+          )
+          : databaseService.query(
+            `insert into ${DatabaseTable.User_Review_Project}(userID,projectID,type) values(?,?,?)`,
+            [userIdReviewProject, result.insertId, role]
+          )
         await Promise.all([
           databaseService.query<{ userID: string; projectID: string }>(
             `Insert into ${DatabaseTable.User_Own_Project}(userID,projectID,type) VALUES (?,?,?)`,
@@ -187,14 +195,88 @@ class ProjectServices {
   async getProject(type: string, limit: number, page: number, userID: string) {
     if (type === 'all') {
       const result = await databaseService.query(
-        `select * from ${DatabaseTable.User_Review_Project} ur join ${DatabaseTable.Project} p on ur.projectID = p.projectID limit ${limit} offset ${limit * (page - 1)}`
+        `SELECT 
+    uo.userID,
+    p.projectID,
+    uo.type,
+    p.projectName,
+    p.slug,
+    p.funcRequirements,
+    p.nonFuncRequirements,
+    p.context,
+    p.actors,
+    p.problems,
+    p.status,
+    p.createdAt,
+    p.updatedAt,
+    p.deletedAt,
+    GROUP_CONCAT(DISTINCT t.techName SEPARATOR ', ') AS techNames,
+   GROUP_CONCAT (DISTINCT u.email SEPARATOR ', ') AS reviewer
+FROM 
+    ${DatabaseTable.User_Own_Project} uo
+JOIN 
+    ${DatabaseTable.Project} p ON uo.projectID = p.projectID
+JOIN 
+    ${DatabaseTable.Project_Technology} pt ON p.projectID = pt.projectID
+JOIN 
+    ${DatabaseTable.Technology} t ON pt.techID = t.techID
+JOIN ${DatabaseTable.User_Review_Project} ur on ur.projectID = p.projectID 
+JOIN ${DatabaseTable.User} u on u.userID =ur.userID 
+GROUP BY 
+    uo.userID, p.projectID
+LIMIT 
+    ${limit}
+OFFSET 
+    ${limit * (page - 1)}`
       )
       return result
-    } else if (type === "get-submit") {
-      const result = await databaseService.query(
-        `select * from ${DatabaseTable.User_Own_Project} uo join ${DatabaseTable.Project} p on uo.projectID = p.projectID  where uo.userID=? limit ${limit} offset ${limit * (page - 1)}`, [userID]
+    } else if (type === 'get-submit') {
+      const result = await databaseService.query<(Project & { reviewer: string; techNames: string })[]>(
+        `SELECT 
+    uo.userID,
+    p.projectID,
+    uo.type,
+    p.projectName,
+    p.slug,
+    p.funcRequirements,
+    p.nonFuncRequirements,
+    p.context,
+    p.actors,
+    p.problems,
+    p.status,
+    p.createdAt,
+    p.updatedAt,
+    p.deletedAt,
+    GROUP_CONCAT(DISTINCT t.techName SEPARATOR ', ') AS techNames,
+   GROUP_CONCAT (DISTINCT u.email SEPARATOR ', ') AS reviewer
+FROM 
+    ${DatabaseTable.User_Own_Project} uo
+JOIN 
+    ${DatabaseTable.Project} p ON uo.projectID = p.projectID
+JOIN 
+    ${DatabaseTable.Project_Technology} pt ON p.projectID = pt.projectID
+JOIN 
+    ${DatabaseTable.Technology} t ON pt.techID = t.techID
+JOIN ${DatabaseTable.User_Review_Project} ur on ur.projectID = p.projectID 
+JOIN ${DatabaseTable.User} u on u.userID =ur.userID 
+WHERE 
+    uo.userID = ?
+GROUP BY 
+    uo.userID, p.projectID
+LIMIT 
+    ${limit}
+OFFSET 
+    ${limit * (page - 1)}`,
+        [userID]
       )
-      return result
+      console.log(result)
+      const processedResult = result.map((item) => ({
+        ...item,
+        techNames: item.techNames ? item.techNames.split(', ') : [],
+        reviewer: item.reviewer ? item.reviewer.split(', ') : []
+      }))
+
+      return processedResult
     }
     return await databaseService.query(
       `select * from ${DatabaseTable.User_Review_Project} ur join ${DatabaseTable.Project} p on ur.projectID = p.projectID where type =?`,

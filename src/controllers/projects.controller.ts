@@ -34,10 +34,7 @@ export const submitProjectController = async (
     result
   })
 }
-export const getProjectController = async (
-  req: Request<GetProjectReqParams, any, any, Pagination>,
-  res: Response
-) => {
+export const getProjectController = async (req: Request<GetProjectReqParams, any, any, Pagination>, res: Response) => {
   const { type } = req.params
   const { user_id } = req.decoded_authorization as TokenPayload
   const result = await projectServices.getProject(type, Number(req.query.limit), Number(req.query.page), user_id)
@@ -45,12 +42,8 @@ export const getProjectController = async (
     message: PROJECTS_MESSAGE.GET_PROJECT_SUCCESSFULLY,
     result
   })
-
 }
-export const getProjectDetailController = async (
-  req: Request<GetProjectDetailReqParams>,
-  res: Response
-) => {
+export const getProjectDetailController = async (req: Request<GetProjectDetailReqParams>, res: Response) => {
   const result = await projectServices.getProjectDetail(Number(req.params.projectID))
   return res.json({
     message: PROJECTS_MESSAGE.GET_PROJECT_DETAIL_SUCCESSFULLY,
