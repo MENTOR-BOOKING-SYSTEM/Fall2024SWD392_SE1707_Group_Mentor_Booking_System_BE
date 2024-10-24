@@ -9,6 +9,9 @@ import User from '~/models/schemas/User.schema'
 import Post from '~/models/schemas/Post.schema'
 import { Sprint } from '~/models/schemas/Sprint.schema'
 import { Attachment } from '~/models/schemas/Attachment.schema'
+import internal from 'stream'
+import { log } from 'console'
+import { query } from 'express'
 
 class ProjectServices {
   async getProjectDetail(id: number) {
@@ -29,15 +32,6 @@ class ProjectServices {
       collaborators,
       technologies
     }
-  }
-
-  async getProjectTechnologies(id: number) {
-    return databaseService.query<{ techID: string, techName: string }[]>(
-      `SELECT t.techID, t.techName FROM ${DatabaseTable.Technology} t
-       JOIN ${DatabaseTable.Project_Technology} pt ON t.techID = pt.techID
-       WHERE pt.projectID = ?`,
-      [id]
-    )
   }
 
   async getProjectPost(id: number) {
@@ -323,6 +317,30 @@ OFFSET
     }
     return project
   }
+
+  async getProjectTechnologiesWithChildren(slug: string) {
+    const technologies = await databaseService.query<{ techID: string, techName: string, parentID: number | null }[]>(
+      `SELECT t.techID, t.techName, t.parentID FROM ${DatabaseTable.Technology} t
+       JOIN ${DatabaseTable.Project_Technology} pt ON t.techID = pt.techID
+       JOIN ${DatabaseTable.Project} p ON pt.projectID = p.projectID
+       WHERE p.slug = ?`,
+      [slug]
+    )
+    const techWithChildren = await Promise.all(technologies.map(async tech => {
+      const children = await databaseService.query<{ techID: string, techName: string }[]>(
+        `SELECT techID, techName FROM ${DatabaseTable.Technology} WHERE techID = ?`,
+        [tech.parentID]
+      );
+      
+      return {
+        techID: tech.techID,
+        techName: tech.techName,
+        children: children.map(child => ({ techID: child.techID, techName: child.techName }))
+      };
+    }));
+    return techWithChildren
+  }
+
 }
 
 export default new ProjectServices()

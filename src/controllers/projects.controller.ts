@@ -8,7 +8,7 @@ import { DatabaseTable } from '~/constants/databaseTable'
 import { ProjectStatus } from '~/constants/enums'
 import { ErrorWithStatus } from '~/models/Errors'
 import HTTP_STATUS from '~/constants/httpStatus'
-import { PROJECTS_MESSAGE } from '~/constants/messages'
+import { PROJECTS_MESSAGE, TECHNOLOGIES_MESSAGE } from '~/constants/messages'
 import { Pagination } from '~/models/Request/Pagination.request'
 import { TokenPayload } from '~/models/Request/User.request'
 export const submitProjectController = async (
@@ -52,14 +52,14 @@ export const getProjectDetailController = async (req: Request<GetProjectDetailRe
 }
 
 export const getProjectTechnologiesController = async (
-  req: Request<GetProjectDetailReqParams>,
+  req: Request<{ slug: string }>,
   res: Response
 ) => {
-  const project = await projectServices.getProjectBySlug(req.params.slug)
-  const result = await projectServices.getProjectTechnologies(Number(project.projectID))
+  const technologies = await projectServices.getProjectTechnologiesWithChildren(req.params.slug)
+  
   return res.json({
-    message: PROJECTS_MESSAGE.GET_PROJECT_TECHNOLOGIES_SUCCESSFULLY,
-    result
+    message: TECHNOLOGIES_MESSAGE.GET_TECHNOLOGIES_BY_PROJECT_SUCCESSFULLY,
+    result: technologies
   })
 }
 
