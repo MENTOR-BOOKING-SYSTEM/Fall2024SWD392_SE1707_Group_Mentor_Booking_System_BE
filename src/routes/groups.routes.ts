@@ -5,6 +5,7 @@ import {
   createGroupController,
   getListUserFromGroupController,
   getRequestPendingController,
+  getUserGroupController,
   removeGroupMemberController
 } from '~/controllers/groups.controller'
 import { getListUsersController, loginController } from '~/controllers/users.controller'
@@ -41,4 +42,5 @@ groupsRouter.patch(
   wrapReqHandler(assignLeaderController)
 )
 groupsRouter.get("/:groupID/get-list-users", accessTokenValidator, getListUserFromGroupValidator, getListUserFromGroupController)
+groupsRouter.get("/my-group", accessTokenValidator, wrapReqHandler(getUserGroupController))
 export default groupsRouter

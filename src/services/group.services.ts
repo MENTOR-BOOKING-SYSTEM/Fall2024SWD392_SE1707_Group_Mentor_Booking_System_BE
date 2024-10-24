@@ -105,6 +105,16 @@ class GroupServices {
     const result = await databaseService.query(`select u.email,u.username,u.firstName,u.lastName,u.avatarUrl,ug.groupID,ug.position,g.groupName from \`${DatabaseTable.User}\` u join ${DatabaseTable.User_Group} ug on ug.userID=u.userID JOIN \`${DatabaseTable.Group}\` g on ug.groupID = g.groupID where g.groupID =? `, [groupID])
     return result
   }
+
+  async getUserGroup(userID: string) {
+    const result = await databaseService.query<Group[]>(
+      `SELECT g.* FROM \`${DatabaseTable.Group}\` g
+       JOIN ${DatabaseTable.User_Group} ug ON g.groupID = ug.groupID
+       WHERE ug.userID = ?`,
+      [userID]
+    )
+    return result.length > 0 ? result[0] : null
+  }
 }
 const groupServices = new GroupServices()
 export default groupServices

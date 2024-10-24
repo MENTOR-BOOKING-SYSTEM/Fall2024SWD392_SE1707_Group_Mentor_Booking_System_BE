@@ -73,3 +73,12 @@ export const getListUserFromGroupController = async (
     result
   })
 }
+
+export const getUserGroupController = async (req: Request, res: Response) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const result = await groupServices.getUserGroup(user_id)
+  return res.json({
+    message: result ? GROUPS_MESSAGES.GET_USER_GROUP_SUCCESSFULLY : GROUPS_MESSAGES.USER_HAS_NO_GROUP,
+    result
+  })
+}

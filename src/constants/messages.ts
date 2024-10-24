@@ -95,7 +95,9 @@ export const GROUPS_MESSAGES = {
   YOU_ALREADY_IS_A_LEADER: 'You already is a leader',
   ONLY_LEADER_CAN_BE_ASSIGN: 'Only the leader can transfer authority to others',
   ASSIGN_NEW_LEADER_SUCCESSFULLY: 'Assign new leader successfully',
-  GET_LIST_USER_FROM_GROUP_SUCCESSFULLY: "Get list users from group successfully"
+  GET_LIST_USER_FROM_GROUP_SUCCESSFULLY: 'Get list users from group successfully',
+  GET_USER_GROUP_SUCCESSFULLY: 'Get user group successfully',
+  USER_HAS_NO_GROUP: 'User has no group'
 } as const
 
 export const SEMESTERS_MESSAGES = {
