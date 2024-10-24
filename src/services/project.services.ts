@@ -11,14 +11,23 @@ import { Sprint } from '~/models/schemas/Sprint.schema'
 
 class ProjectServices {
   async getProjectDetail(id: number) {
-    const [project, attachments] = await Promise.all([
-      databaseService.query<Project[]>(`SELECT * FROM ${DatabaseTable.Project} WHERE projectID = ?`, [id]),
-      databaseService.query<{ attachmentID: string, attachmentURL: string }[]>(
-        `SELECT attachmentID, attachmentURL FROM ${DatabaseTable.Attachment} WHERE projectID = ?`,
+    const [technologies, collaborators, projects] = await Promise.all([
+      databaseService.query<{ techID: string; techName: string }[]>(
+        `SELECT * FROM ${DatabaseTable.Technology} t WHERE t.techID IN (SELECT pt.techID FROM ${DatabaseTable.Project_Technology} pt WHERE pt.projectID IN (SELECT p.projectID FROM ${DatabaseTable.Project} p  WHERE p.projectID = ?))`,
         [id]
-      )
+      ),
+      databaseService.query<User>(
+        `SELECT u.userID,u.email FROM ${DatabaseTable.User} u WHERE u.userID IN (SELECT up.userID FROM ${DatabaseTable.User_Own_Project} up WHERE up.projectID IN (SELECT p.projectID FROM ${DatabaseTable.Project} p where p.projectID = ?)) `,
+        [id]
+      ),
+      await databaseService.query<Project[]>(`select * from ${DatabaseTable.Project} where projectID = ? `, [id])
     ])
-    return { project: project[0], attachments }
+    const [project] = projects
+    return {
+      project,
+      collaborators,
+      technologies
+    }
   }
 
   async getProjectTechnologies(id: number) {
@@ -282,6 +291,17 @@ OFFSET
       `select * from ${DatabaseTable.User_Review_Project} ur join ${DatabaseTable.Project} p on ur.projectID = p.projectID where type =?`,
       ['Reviewer']
     )
+  }
+
+  async getProjectBySlug(slug: string) {
+    const [project] = await databaseService.query<Project[]>(
+      `SELECT projectID FROM ${DatabaseTable.Project} WHERE slug = ?`,
+      [slug]
+    )
+    if (!project) {
+      throw new Error('Project not found')
+    }
+    return project
   }
 }
 const projectServices = new ProjectServices()
