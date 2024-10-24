@@ -122,3 +122,19 @@ export const getProjectSprintController = async (
     result
   })
 }
+
+export const getProjectDetailWithAttachmentsController = async (
+  req: Request<GetProjectDetailReqParams>,
+  res: Response
+) => {
+  const project = await projectServices.getProjectDetailBySlug(req.params.slug)
+  const attachments = await projectServices.getProjectAttachments(Number(project.projectID))
+  
+  return res.json({
+    message: PROJECTS_MESSAGE.GET_PROJECT_DETAIL_SUCCESSFULLY,
+    result: {
+      project,
+      attachments
+    }
+  })
+}

@@ -8,6 +8,7 @@ import { TokenRole } from '~/constants/enums'
 import User from '~/models/schemas/User.schema'
 import Post from '~/models/schemas/Post.schema'
 import { Sprint } from '~/models/schemas/Sprint.schema'
+import { Attachment } from '~/models/schemas/Attachment.schema'
 
 class ProjectServices {
   async getProjectDetail(id: number) {
@@ -303,6 +304,25 @@ OFFSET
     }
     return project
   }
+
+  async getProjectAttachments(projectID: number) {
+    const attachments = await databaseService.query<Attachment[]>(
+      `SELECT * FROM ${DatabaseTable.Attachment} WHERE projectID = ?`,
+      [projectID]
+    )
+    return attachments
+  }
+
+  async getProjectDetailBySlug(slug: string) {
+    const [project] = await databaseService.query<Project[]>(
+      `SELECT * FROM ${DatabaseTable.Project} WHERE slug = ?`,
+      [slug]
+    )
+    if (!project) {
+      throw new Error('Project not found')
+    }
+    return project
+  }
 }
-const projectServices = new ProjectServices()
-export default projectServices
+
+export default new ProjectServices()

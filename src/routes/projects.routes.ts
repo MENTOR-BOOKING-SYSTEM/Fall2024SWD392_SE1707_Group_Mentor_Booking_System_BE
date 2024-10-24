@@ -9,13 +9,15 @@ import {
   getProjectOwnController,
   getProjectReviewController,
   getProjectGuideController,
-  getProjectSprintController
+  getProjectSprintController,
+  getProjectDetailWithAttachmentsController
 } from '~/controllers/projects.controller'
 import { paginationValidator } from '~/middlewares/pagination.middlewares'
 import {
   getProjectDetailValidator,
   getProjectValidator,
-  submitProjectValidator
+  submitProjectValidator,
+  getProjectDetailWithAttachmentsValidator
 } from '~/middlewares/projects.middlewares'
 import { accessTokenValidator } from '~/middlewares/users.middlewares'
 import { wrapReqHandler } from '~/utils/handler'
@@ -35,4 +37,10 @@ projectRouter.get('/owners/:slug', accessTokenValidator, wrapReqHandler(getProje
 projectRouter.get('/reviewers/:slug', accessTokenValidator, wrapReqHandler(getProjectReviewController))
 projectRouter.get('/guides/:slug', accessTokenValidator, wrapReqHandler(getProjectGuideController))
 projectRouter.get('/sprints/:slug', accessTokenValidator, wrapReqHandler(getProjectSprintController))
+projectRouter.get(
+  '/:slug/detail',
+  accessTokenValidator,
+  getProjectDetailWithAttachmentsValidator,
+  wrapReqHandler(getProjectDetailWithAttachmentsController)
+)
 export default projectRouter

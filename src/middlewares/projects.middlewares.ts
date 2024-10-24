@@ -194,3 +194,26 @@ export const getProjectDetailValidator = validate(
     }
   })
 )
+
+export const getProjectDetailWithAttachmentsValidator = checkSchema({
+  slug: {
+    isString: true,
+    notEmpty: {
+      errorMessage: PROJECTS_MESSAGE.PROJECT_NAME_CAN_NOT_EMPTY
+    },
+    custom: {
+      options: async (value) => {
+        const project = await databaseService.query<Project[]>(
+          `SELECT projectID FROM ${DatabaseTable.Project} WHERE slug = ?`,
+          [value]
+        )
+        if (!project) {
+          throw new ErrorWithStatus({
+            message: PROJECTS_MESSAGE.PROJECT_ID_INVALID,
+            status: HTTP_STATUS.NOT_FOUND
+          })
+        }
+      }
+    }
+  }
+})
