@@ -1,7 +1,7 @@
 import { isSameSecond } from 'date-fns'
 import { NextFunction, Request, Response } from 'express'
 import { checkSchema } from 'express-validator'
-import { forEach } from 'lodash'
+import { forEach, isString } from 'lodash'
 import { DatabaseTable } from '~/constants/databaseTable'
 import { TokenRole } from '~/constants/enums'
 import HTTP_STATUS from '~/constants/httpStatus'
@@ -316,3 +316,20 @@ export const assignLeaderValidator = validate(
     }
   })
 )
+export const getListUserFromGroupValidator = validate(checkSchema({
+  groupID: {
+    isString: true,
+    custom: {
+      options: async (value, { req }) => {
+        const isExist = await databaseService.query<{ groupID: string }[]>(`select groupID from \`${DatabaseTable.Group}\` where groupID = ?`, [value])
+        if (isExist.length < 1) {
+          throw new ErrorWithStatus({
+            message: GROUPS_MESSAGES.GROUP_NOT_FOUND,
+            status: HTTP_STATUS.NOT_FOUND
+          })
+        }
+      }
+    }
+  }
+
+}))
