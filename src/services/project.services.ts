@@ -370,9 +370,9 @@ OFFSET
       );
       
       return {
-        techID: tech.techID,
-        techName: tech.techName,
-        children: children.map(child => ({ techID: child.techID, techName: child.techName }))
+        techID: children.map(child => child.techID),
+        techName: children.map(child => child.techName),
+        children: ({ techID: tech.techID, techName: tech.techName })
       };
     }));
     return techWithChildren
