@@ -33,3 +33,7 @@ export enum ColumnID {
   Technology = 'techID',
   User = 'userID'
 }
+export interface Attachments {
+  attachment: string,
+  type: string
+}[]
