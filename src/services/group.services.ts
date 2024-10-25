@@ -101,7 +101,7 @@ class GroupServices {
     return result
   }
   async getListUserFromGroup(groupID: string) {
-    const result = await databaseService.query(`select u.email,u.username,u.firstName,u.lastName,u.avatarUrl,ug.groupID,ug.position,g.groupName from \`${DatabaseTable.User}\` u join ${DatabaseTable.User_Group} ug on ug.userID=u.userID JOIN \`${DatabaseTable.Group}\` g on ug.groupID = g.groupID where g.groupID =? `, [groupID])
+    const result = await databaseService.query(`select u.userID,u.email,u.username,u.firstName,u.lastName,u.avatarUrl,ug.groupID,ug.position,g.groupName from \`${DatabaseTable.User}\` u join ${DatabaseTable.User_Group} ug on ug.userID=u.userID JOIN \`${DatabaseTable.Group}\` g on ug.groupID = g.groupID where g.groupID =? `, [groupID])
     return result
   }
 }

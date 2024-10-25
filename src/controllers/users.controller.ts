@@ -130,8 +130,9 @@ export const getProfileController = async (req: Request, res: Response) => {
 export const getUsersByRolesController = async (req: Request, res: Response) => {
   const rolesJson = req.query.role as string
   const roles = JSON.parse(rolesJson)
+  const isExact = req.query.isExact === 'true'
   const semesterID = req.currentSemester?.semesterID ?? ''
-  const users = await userService.getUsersByRoles(roles, semesterID)
+  const users = await userService.getUsersByRoles(roles, semesterID, isExact)
   return res.json({
     message: USERS_MESSAGES.GET_USER_LIST_SUCCESSFULLY,
     result: users
