@@ -56,7 +56,7 @@ export const createGroupValidator = validate(
       },
       custom: {
         options: async (value, { req }) => {
-          const placeholders = value.map(() => 'SELECT ? AS userID').join(' UNION ALL ');
+          const placeholders = value.map(() => 'SELECT ? AS userID').join(' UNION ALL ')
           const notExist = await databaseService.query<{ userID: string }[]>(
             `SELECT value.userID 
    FROM (
@@ -65,17 +65,15 @@ export const createGroupValidator = validate(
    LEFT JOIN User u ON u.userID = value.userID
    WHERE u.userID IS NULL`,
             value
-          );
-          console.log(notExist);
+          )
+          console.log(notExist)
 
           if (notExist.length > 0) {
             throw new ErrorWithStatus({
               message: `User ${notExist.map((item) => item.userID)} not exist`,
               status: HTTP_STATUS.NOT_FOUND
-            });
-
+            })
           }
-
 
           const isNonGroup = await databaseService.query<{ email: string }[]>(
             `SELECT u.email FROM User u WHERE EXISTS (SELECT 1 FROM User_Group ug WHERE u.userID = ug.userID) AND u.userID IN (?)`,
@@ -335,20 +333,24 @@ export const assignLeaderValidator = validate(
     }
   })
 )
-export const getListUserFromGroupValidator = validate(checkSchema({
-  groupID: {
-    isString: true,
-    custom: {
-      options: async (value, { req }) => {
-        const isExist = await databaseService.query<{ groupID: string }[]>(`select groupID from \`${DatabaseTable.Group}\` where groupID = ?`, [value])
-        if (isExist.length < 1) {
-          throw new ErrorWithStatus({
-            message: GROUPS_MESSAGES.GROUP_NOT_FOUND,
-            status: HTTP_STATUS.NOT_FOUND
-          })
+export const getListUserFromGroupValidator = validate(
+  checkSchema({
+    groupID: {
+      isString: true,
+      custom: {
+        options: async (value, { req }) => {
+          const isExist = await databaseService.query<{ groupID: string }[]>(
+            `select groupID from \`${DatabaseTable.Group}\` where groupID = ?`,
+            [value]
+          )
+          if (isExist.length < 1) {
+            throw new ErrorWithStatus({
+              message: GROUPS_MESSAGES.GROUP_NOT_FOUND,
+              status: HTTP_STATUS.NOT_FOUND
+            })
+          }
         }
       }
     }
-  }
-
-}))
+  })
+)
