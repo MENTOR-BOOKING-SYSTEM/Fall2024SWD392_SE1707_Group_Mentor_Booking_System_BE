@@ -72,8 +72,8 @@ export const createAccountValidator = validate(
         isString: {
           errorMessage: DASHBOARD_MESSAGES.AVATAR_URL_TYPE_INVALID
         },
-        trim: true,
-        optional: true
+        optional: true,
+        trim: true
       },
       password: passwordSchema,
       confirmPassword: confirmPasswordSchema,
@@ -122,10 +122,11 @@ export const editAccountValidator = validate(
         optional: true
       },
       avatarUrl: {
-        isURL: {
+        isString: {
           errorMessage: DASHBOARD_MESSAGES.AVATAR_URL_TYPE_INVALID
         },
-        optional: true
+        optional: true,
+        trim: true
       },
       roles: {
         isArray: {
