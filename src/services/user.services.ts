@@ -337,7 +337,7 @@ class UserService {
     }
 
     const users = await databaseService.query<(User & { roles: string })[]>(query, params)
-    return users.map(user => ({
+    return users.map((user) => ({
       ...user,
       roles: user.roles ? user.roles.split(',') : []
     }))

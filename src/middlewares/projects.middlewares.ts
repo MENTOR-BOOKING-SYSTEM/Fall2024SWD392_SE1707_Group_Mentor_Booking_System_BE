@@ -152,6 +152,25 @@ export const submitProjectValidator = validate(
           }
         }
       }
+    },
+    attachments: {
+      isArray: true
+    },
+    'attachments.*.attachment': {
+      isString: true
+    },
+    'attachments.*.type': {
+      isString: true,
+      custom: {
+        options: async (value, { req }) => {
+          if (value !== 'jpg') {
+            throw new ErrorWithStatus({
+              message: PROJECTS_MESSAGE.TYPE_MUST_BE_JPG,
+              status: HTTP_STATUS.UNPROCESSABLE_ENTITY
+            })
+          }
+        }
+      }
     }
   })
 )
@@ -162,7 +181,7 @@ export const getProjectValidator = validate(
       notEmpty: true,
       custom: {
         options: async (value, { req }) => {
-          if (value !== 'all' && value !== 'review' && value !== 'get-submit') {
+          if (value !== 'all' && value !== 'get-review' && value !== 'get-submit') {
             throw new ErrorWithStatus({
               message: PROJECTS_MESSAGE.PARAMS_IN_VALID,
               status: HTTP_STATUS.BAD_REQUEST
