@@ -18,6 +18,8 @@ dashboardRouter.use(accessTokenValidator)
 
 dashboardRouter.use(allowRoles([TokenRole.Admin]))
 
+dashboardRouter.get('/accounts/:semesterID', paginationValidator, wrapReqHandler(getAccountsController))
+
 dashboardRouter.get('/accounts/roles', wrapReqHandler(getRolesController))
 
 dashboardRouter.get('/accounts/:semesterID', paginationValidator, wrapReqHandler(getAccountsController))
