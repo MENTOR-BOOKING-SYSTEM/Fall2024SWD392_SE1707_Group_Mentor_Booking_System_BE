@@ -5,7 +5,7 @@ import { validate } from '~/utils/validation'
 export const createPostValidator = validate(
   checkSchema(
     {
-      name: {
+      postName: {
         notEmpty: {
           errorMessage: POSTS_MESSAGES.NAME_IS_REQUIRED
         },
@@ -27,7 +27,7 @@ export const createPostValidator = validate(
         },
         trim: true
       },
-      groupID: {
+      projectID: {
         notEmpty: {
           errorMessage: GROUPS_MESSAGES.GROUP_ID_IS_REQUIRED
         },

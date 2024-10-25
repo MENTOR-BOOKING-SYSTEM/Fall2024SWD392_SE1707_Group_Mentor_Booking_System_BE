@@ -70,7 +70,6 @@ export const POSTS_MESSAGES = {
   NAME_MUST_BE_A_STRING: 'Name must be a string',
   NAME_IS_REQUIRED: 'Name is required'
 } as const
-
 export const GROUPS_MESSAGES = {
   GROUP_ID_IS_REQUIRED: 'Group id is required',
   GROUP_ID_MUST_BE_A_STRING: 'Group id must be a string',
