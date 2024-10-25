@@ -264,8 +264,6 @@ OFFSET
     ${limit * (page - 1)}`,
         [userID]
       )
-      console.log(result);
-
       return result
     }
     return await databaseService.query(
