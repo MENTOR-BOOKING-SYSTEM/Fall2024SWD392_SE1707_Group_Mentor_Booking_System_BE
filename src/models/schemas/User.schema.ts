@@ -45,3 +45,27 @@ export default class User {
     this.updatedAt = updatedAt || new Date()
   }
 }
+
+interface AccountType extends UserType {
+  roleID: number
+  roleName: string
+}
+
+export class Account extends User {
+  roleID: number
+  roleName: string
+  constructor({ roleID, roleName, ...user }: AccountType) {
+    super(user)
+    this.roleID = roleID
+    this.roleName = roleName
+  }
+}
+
+export class Role {
+  roleID: number
+  roleName: string
+  constructor({ roleID, roleName }: Role) {
+    this.roleID = roleID
+    this.roleName = roleName
+  }
+}

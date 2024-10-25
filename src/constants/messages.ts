@@ -182,3 +182,22 @@ export const REVIEW_MESSAGES = {
 export const TIMESTAMP_MESSAGES = {
   GET_ALL_TIMESTAMPS_SUCCESSFULLY: 'Get all timestamps successfully'
 }
+
+export const DASHBOARD_MESSAGES = {
+  GET_ACCOUNTS_SUCCESSFULLY: 'Get accounts successfully',
+  GET_ROLES_SUCCESSFULLY: 'Get roles successfully',
+  FIRST_NAME_TYPE_INVALID: 'First name must be a string',
+  LAST_NAME_TYPE_INVALID: 'Last name must be a string',
+  USERNAME_TYPE_INVALID: 'Username must be a string',
+  USERNAME_LENGTH_INVALID: 'Username length must be from 4 to 50',
+  USERNAME_FORMAT_INVALID:
+    'Username can only include alphanumeric characters, underscores, and periods, and must start with a letter',
+  USERNAME_ALREADY_EXISTS: 'Username already exists',
+  EMAIL_INVALID: 'Email is invalid',
+  EMAIL_ALREADY_EXISTS: 'Email already exists',
+  AVATAR_URL_TYPE_INVALID: 'Avatar URL must be a string',
+  ROLES_TYPE_INVALID: 'Roles must be an array',
+  ROLES_REQUIRED: 'Roles are required',
+  INVALID_ROLE_ID: 'Invalid role ID',
+  CREATE_ACCOUNT_SUCCESSFULLY: 'Create account successfully'
+}
