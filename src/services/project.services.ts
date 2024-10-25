@@ -79,7 +79,7 @@ class ProjectServices {
   }
 
   async createProject(body: submitProjectBody, user_id: string, roles: string[]) {
-    const { technologies, collaborators, type, mentorID, ...project } = body
+    const { technologies, collaborators, type, mentorID, attachments, ...project } = body
     const { projectID, ...rest } = new Project(project)
 
     const role = roles.some((item) => item === TokenRole.Mentor) ? TokenRole.Reviewer : TokenRole.Mentor
@@ -192,7 +192,7 @@ class ProjectServices {
         ])
       }
     }
-    const submitProjectData = await this.getProjectDetail(result.insertId)
+    const [submitProjectData] = await Promise.all([this.getProjectDetail(result.insertId), attachments.map((item) => databaseService.query(`Insert into ${DatabaseTable.Attachment}(url,type,projectID) VALUES (?,?,?)`, [item.attachment, item.type, result.insertId]))])
     return submitProjectData
   }
 
@@ -235,7 +235,7 @@ OFFSET
       )
       return result
     } else if (type === 'get-submit') {
-      const result = await databaseService.query<(Project & { reviewer: string; techNames: string })[]>(
+      const result = await databaseService.query<(Project & { collaborators: string; techNames: string })[]>(
         `SELECT 
     uo.userID,
     p.projectID,
@@ -252,7 +252,7 @@ OFFSET
     p.updatedAt,
     p.deletedAt,
     GROUP_CONCAT(DISTINCT t.techName SEPARATOR ', ') AS techNames,
-   GROUP_CONCAT (DISTINCT u.email SEPARATOR ', ') AS reviewer
+   GROUP_CONCAT (DISTINCT u.email SEPARATOR ', ') AS collaborators
 FROM 
     ${DatabaseTable.User_Own_Project} uo
 JOIN 
@@ -261,8 +261,7 @@ JOIN
     ${DatabaseTable.Project_Technology} pt ON p.projectID = pt.projectID
 JOIN 
     ${DatabaseTable.Technology} t ON pt.techID = t.techID
-JOIN ${DatabaseTable.User_Review_Project} ur on ur.projectID = p.projectID 
-JOIN ${DatabaseTable.User} u on u.userID =ur.userID 
+JOIN ${DatabaseTable.User} u on u.userID =uo.userID 
 WHERE 
     uo.userID = ?
 GROUP BY 
@@ -273,14 +272,52 @@ OFFSET
     ${limit * (page - 1)}`,
         [userID]
       )
-      console.log(result)
       const processedResult = result.map((item) => ({
         ...item,
         techNames: item.techNames ? item.techNames.split(', ') : [],
-        reviewer: item.reviewer ? item.reviewer.split(', ') : []
+        collaborators: item.collaborators ? item.collaborators.split(', ') : []
       }))
 
       return processedResult
+    } else if (type === 'get-review') {
+      const result = await databaseService.query<(Project & { collaborators: string; techNames: string })[]>(
+        `SELECT 
+    up.userID,
+    p.projectID,
+    uo.type,
+    p.projectName,
+    p.slug,
+    p.funcRequirements,
+    p.nonFuncRequirements,
+    p.context,
+    p.actors,
+    p.problems,
+    p.status,
+    p.createdAt,
+    p.updatedAt,
+    p.deletedAt,
+    GROUP_CONCAT(DISTINCT t.techName SEPARATOR ', ') AS techNames,
+   GROUP_CONCAT (DISTINCT u.email SEPARATOR ', ') AS collaborators
+FROM 
+    ${DatabaseTable.User_Own_Project} uo
+JOIN 
+    ${DatabaseTable.Project} p ON uo.projectID = p.projectID
+JOIN 
+    ${DatabaseTable.Project_Technology} pt ON p.projectID = pt.projectID
+JOIN 
+    ${DatabaseTable.Technology} t ON pt.techID = t.techID
+JOIN ${DatabaseTable.User} u on u.userID = uo.userID JOIN ${DatabaseTable.User_Review_Project} up on p.projectID = up.projectID
+WHERE 
+    up.userID = ? 
+GROUP BY 
+ p.projectID
+LIMIT 
+    ${limit}
+OFFSET 
+    ${limit * (page - 1)}`,
+        [userID]
+      )
+      return result
     }
     return await databaseService.query(
       `select * from ${DatabaseTable.User_Review_Project} ur join ${DatabaseTable.Project} p on ur.projectID = p.projectID where type =?`,

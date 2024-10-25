@@ -95,7 +95,7 @@ export const GROUPS_MESSAGES = {
   YOU_ALREADY_IS_A_LEADER: 'You already is a leader',
   ONLY_LEADER_CAN_BE_ASSIGN: 'Only the leader can transfer authority to others',
   ASSIGN_NEW_LEADER_SUCCESSFULLY: 'Assign new leader successfully',
-  GET_LIST_USER_FROM_GROUP_SUCCESSFULLY: "Get list users from group successfully"
+  GET_LIST_USER_FROM_GROUP_SUCCESSFULLY: 'Get list users from group successfully'
 } as const
 
 export const SEMESTERS_MESSAGES = {
@@ -149,7 +149,7 @@ export const PROJECTS_MESSAGE = {
   MENTOR_ID_IS_REQUIRED_FOR_STUDENT_OR_BUSINESS_ROLE: 'Mentor id is required for student or business role',
   CAN_NOT_SEND_MORE_PROJECT: 'No more projects can be submitted because the previous project is being processed',
   TECHNOLOGY_MUST_BE_AN_ARRAY_WITH_AT_LEAST_1_ELEMENT: 'Technology Must Be An Array With At Least 1 Element',
-  PARAMS_IN_VALID: 'Params must be "all" or "review" or project id  ',
+  PARAMS_IN_VALID: 'Params must be "all" or "get-review" or "get-submit" ',
   GET_PROJECT_SUCCESSFULLY: 'Get project successfully',
   PROJECT_ID_INVALID: 'Project id is invalid  ',
   GET_PROJECT_DETAIL_SUCCESSFULLY: 'Get project detail successfully',
@@ -159,7 +159,8 @@ export const PROJECTS_MESSAGE = {
   GET_PROJECT_REVIEW_SUCCESSFULLY: "Get project reviewers successfully",
   GET_PROJECT_GUIDE_SUCCESSFULLY: "Get project guides successfully",
   GET_PROJECT_SPRINT_SUCCESSFULLY: "Get project sprints successfully",
-  TYPE_GROUP_ONLY_SENT_1_COLLABORATORS: 'With group mode you can only pass on 1 contributor'
+  TYPE_GROUP_ONLY_SENT_1_COLLABORATORS: 'With group mode you can only pass on 1 contributor',
+  TYPE_MUST_BE_JPG: 'File type must be JPG'
 } as const
 
 export const CRITERIA_MESSAGES = {
@@ -206,5 +207,7 @@ export const DASHBOARD_MESSAGES = {
   ROLES_TYPE_INVALID: 'Roles must be an array',
   ROLES_REQUIRED: 'Roles are required',
   INVALID_ROLE_ID: 'Invalid role ID',
-  CREATE_ACCOUNT_SUCCESSFULLY: 'Create account successfully'
+  CREATE_ACCOUNT_SUCCESSFULLY: 'Create account successfully',
+  GET_ACCOUNT_SUCCESSFULLY: 'Get account successfully',
+  EDIT_ACCOUNT_SUCCESSFULLY: 'Edit account successfully'
 }

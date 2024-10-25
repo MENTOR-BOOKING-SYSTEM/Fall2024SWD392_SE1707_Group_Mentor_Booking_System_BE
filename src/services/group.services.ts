@@ -16,7 +16,7 @@ class GroupServices {
         `SELECT * FROM ${DatabaseTable.Semester} WHERE NOW() BETWEEN startDate AND endDate`
       )
     ])
-    console.log(role);
+    console.log(role)
 
     const { groupID, ...newGroup } = new Group({ groupName, semesterID: semesterNow.semesterID as string })
     const { insertId } = await databaseService.query<OkPacket>(
@@ -29,7 +29,11 @@ class GroupServices {
       ` SELECT * FROM \`${DatabaseTable.Group}\` WHERE groupID = ?`,
       [insertId]
     )
-    const group_user = usersID.map((data, index) => ({ data, insertId, position: data === Number(user_id) ? "Leader" : role[index] ? role[index].roleName : role[0].roleName }))
+    const group_user = usersID.map((data, index) => ({
+      data,
+      insertId,
+      position: data === Number(user_id) ? 'Leader' : role[index] ? role[index].roleName : role[0].roleName
+    }))
     for (const item of group_user) {
       await databaseService.query(
         `INSERT INTO ${DatabaseTable.User_Group}(userID,groupID,position) VALUES(?,?,?)`,
@@ -101,7 +105,10 @@ class GroupServices {
     return result
   }
   async getListUserFromGroup(groupID: string) {
-    const result = await databaseService.query(`select u.userID,u.email,u.username,u.firstName,u.lastName,u.avatarUrl,ug.groupID,ug.position,g.groupName from \`${DatabaseTable.User}\` u join ${DatabaseTable.User_Group} ug on ug.userID=u.userID JOIN \`${DatabaseTable.Group}\` g on ug.groupID = g.groupID where g.groupID =? `, [groupID])
+    const result = await databaseService.query(
+      `select u.userID,u.email,u.username,u.firstName,u.lastName,u.avatarUrl,ug.groupID,ug.position,g.groupName from \`${DatabaseTable.User}\` u join ${DatabaseTable.User_Group} ug on ug.userID=u.userID JOIN \`${DatabaseTable.Group}\` g on ug.groupID = g.groupID where g.groupID =? `,
+      [groupID]
+    )
     return result
   }
 }
