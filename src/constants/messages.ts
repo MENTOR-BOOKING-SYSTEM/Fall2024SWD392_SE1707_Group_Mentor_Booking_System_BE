@@ -201,5 +201,7 @@ export const DASHBOARD_MESSAGES = {
   ROLES_TYPE_INVALID: 'Roles must be an array',
   ROLES_REQUIRED: 'Roles are required',
   INVALID_ROLE_ID: 'Invalid role ID',
-  CREATE_ACCOUNT_SUCCESSFULLY: 'Create account successfully'
+  CREATE_ACCOUNT_SUCCESSFULLY: 'Create account successfully',
+  GET_ACCOUNT_SUCCESSFULLY: 'Get account successfully',
+  EDIT_ACCOUNT_SUCCESSFULLY: 'Edit account successfully'
 }
