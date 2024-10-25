@@ -198,9 +198,9 @@ class UserService {
     return user
   }
 
-  async getUsersByRoles(roles: number[], semesterID: string) {
+  async getUsersByRoles(roles: number[], semesterID: string, isExact: boolean) {
     const placeholders = roles.map(() => '?').join(',')
-    const query = `
+    let query = `
       SELECT DISTINCT u.userID, u.email, u.username, u.firstName, u.lastName, u.avatarUrl, 
              GROUP_CONCAT(DISTINCT r.roleName) as roles
       FROM ${DatabaseTable.User} u
@@ -210,6 +210,11 @@ class UserService {
       AND ur.semesterID = ?
       GROUP BY u.userID
     `
+
+    if (isExact) {
+      query += ` HAVING COUNT(DISTINCT ur.roleID) = ${roles.length}`
+    }
+
     const users = await databaseService.query<(User & { roles: string })[]>(query, [...roles, semesterID])
     return users.map((user) => ({
       ...user,

@@ -134,8 +134,6 @@ export const submitProjectValidator = validate(
       custom: {
         options: async (value, { req }) => {
           if (!((req as Request).body.type === 'Group' && value.length > 0 && value.length < 2)) {
-            console.log(value)
-
             throw new ErrorWithStatus({
               message: PROJECTS_MESSAGE.TYPE_GROUP_ONLY_SENT_1_COLLABORATORS,
               status: HTTP_STATUS.BAD_REQUEST
@@ -145,7 +143,6 @@ export const submitProjectValidator = validate(
             `select groupID from \`${DatabaseTable.Group}\` where groupID =?`,
             [value]
           )
-          console.log(isGroupExist)
 
           if (isGroupExist.length < 1) {
             throw new ErrorWithStatus({
