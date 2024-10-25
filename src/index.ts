@@ -21,6 +21,7 @@ import criteriaRouter from './routes/criteria.routes'
 import reviewsRouter from './routes/reviews.routes'
 
 import timestampRouter from './routes/timestamp.routes'
+import dashboardRouter from './routes/dashboard.routes'
 
 config()
 initFolder()
@@ -41,6 +42,7 @@ app.use('/medias', mediasRouter)
 app.use('/oauth', oauthRouter)
 app.use('/semesters', semesterRouter)
 app.use('/criteria', criteriaRouter)
+app.use('/dashboard', dashboardRouter)
 
 app.use('/reviews', reviewsRouter)
 
