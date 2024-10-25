@@ -40,5 +40,5 @@ groupsRouter.patch(
   assignLeaderValidator,
   wrapReqHandler(assignLeaderController)
 )
-groupsRouter.get("/:groupID/get-list-users", accessTokenValidator, getListUserFromGroupValidator, getListUserFromGroupController)
+groupsRouter.get("/:groupID/get-list-users", accessTokenValidator, getListUserFromGroupValidator, wrapReqHandler(getListUserFromGroupController))
 export default groupsRouter
