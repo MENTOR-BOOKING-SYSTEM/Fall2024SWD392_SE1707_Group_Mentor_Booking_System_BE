@@ -3,6 +3,7 @@ import { wrap } from 'module'
 import {
   getProjectController,
   getProjectDetailController,
+  reviewProjectController,
   submitProjectController,
   getProjectTechnologiesController,
   getProjectPostController,
@@ -16,37 +17,43 @@ import { paginationValidator } from '~/middlewares/pagination.middlewares'
 import {
   getProjectDetailValidator,
   getProjectValidator,
+  reviewProjectValidator,
+  slugValidator,
   submitProjectValidator,
   getProjectDetailWithAttachmentsValidator
 } from '~/middlewares/projects.middlewares'
+import { getCurrentSemester } from '~/middlewares/semester.middlewares'
 import { accessTokenValidator } from '~/middlewares/users.middlewares'
 import { wrapReqHandler } from '~/utils/handler'
 
 const projectRouter = Router()
-projectRouter.get(
-  '/detail/:projectID',
-  accessTokenValidator,
-  getProjectDetailValidator,
-  wrapReqHandler(getProjectDetailController)
+
+projectRouter.use(accessTokenValidator)
+
+projectRouter.get('/detail/:projectID', getProjectDetailValidator, wrapReqHandler(getProjectDetailController))
+
+projectRouter.post('/submit', submitProjectValidator, wrapReqHandler(submitProjectController))
+
+projectRouter.get('/:type', paginationValidator, getProjectValidator, wrapReqHandler(getProjectController))
+
+projectRouter.post(
+  '/:slug/review',
+  slugValidator,
+  reviewProjectValidator,
+  getCurrentSemester,
+  wrapReqHandler(reviewProjectController)
 )
-projectRouter.post('/submit', accessTokenValidator, submitProjectValidator, wrapReqHandler(submitProjectController))
-projectRouter.get(
-  '/:type',
-  accessTokenValidator,
-  paginationValidator,
-  getProjectValidator,
-  wrapReqHandler(getProjectController)
-)
-projectRouter.get('/technologies/:slug', accessTokenValidator, wrapReqHandler(getProjectTechnologiesController))
-projectRouter.get('/posts/:slug', accessTokenValidator, wrapReqHandler(getProjectPostController))
-projectRouter.get('/owners/:slug', accessTokenValidator, wrapReqHandler(getProjectOwnController))
-projectRouter.get('/reviewers/:slug', accessTokenValidator, wrapReqHandler(getProjectReviewController))
-projectRouter.get('/guides/:slug', accessTokenValidator, wrapReqHandler(getProjectGuideController))
-projectRouter.get('/sprints/:slug', accessTokenValidator, wrapReqHandler(getProjectSprintController))
+
+projectRouter.get('/technologies/:slug', wrapReqHandler(getProjectTechnologiesController))
+projectRouter.get('/posts/:slug', wrapReqHandler(getProjectPostController))
+projectRouter.get('/owners/:slug', wrapReqHandler(getProjectOwnController))
+projectRouter.get('/reviewers/:slug', wrapReqHandler(getProjectReviewController))
+projectRouter.get('/guides/:slug', wrapReqHandler(getProjectGuideController))
+projectRouter.get('/sprints/:slug', wrapReqHandler(getProjectSprintController))
 projectRouter.get(
   '/:slug/detail',
-  accessTokenValidator,
   getProjectDetailWithAttachmentsValidator,
   wrapReqHandler(getProjectDetailWithAttachmentsController)
 )
+
 export default projectRouter

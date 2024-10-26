@@ -161,7 +161,15 @@ export const PROJECTS_MESSAGE = {
   GET_PROJECT_GUIDE_SUCCESSFULLY: 'Get project guides successfully',
   GET_PROJECT_SPRINT_SUCCESSFULLY: 'Get project sprints successfully',
   TYPE_GROUP_ONLY_SENT_1_COLLABORATORS: 'With group mode you can only pass on 1 contributor',
-  TYPE_MUST_BE_JPG: 'File type must be JPG'
+  TYPE_MUST_BE_JPG: 'File type must be JPG',
+  SLUG_TYPE_INVALID: 'Slug must be a string',
+  PROJECT_NOT_FOUND: 'Project not found',
+  CRITERIA_ID_TYPE_INVALID: 'Criteria id must be an array',
+  CRITERIA_ID_REQUIRED: 'Criteria is required',
+  CRITERIA_ID_INVALID: 'Criteria id is invalid',
+  REVIEW_TYPE_INVALID: 'Review type must be a string',
+  REVIEW_TYPE_NOT_FOUND: 'Review type not found',
+  REVIEW_PROJECT_SUCCESSFULLY: 'Review project successfully'
 } as const
 
 export const CRITERIA_MESSAGES = {

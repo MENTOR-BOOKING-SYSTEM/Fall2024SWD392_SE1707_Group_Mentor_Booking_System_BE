@@ -7,6 +7,7 @@ declare module 'express' {
     user?: User
     currentSemester?: Semester
     currentPhase?: string[]
+    projectID?: number
     decoded_authorization?: TokenPayload
     decoded_refresh_token?: TokenPayload
     decoded_forgot_password_token?: TokenPayload

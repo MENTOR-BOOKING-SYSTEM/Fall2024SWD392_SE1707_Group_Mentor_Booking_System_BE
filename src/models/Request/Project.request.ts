@@ -24,3 +24,8 @@ export interface GetProjectReqParams extends ParamsDictionary {
 export interface GetProjectDetailReqParams extends ParamsDictionary {
   projectID: string
 }
+export interface ReviewProjectRequestBody {
+  slug: string
+  criteriaID: number[]
+  type: 'Accept' | 'Reject' | 'Consider'
+}

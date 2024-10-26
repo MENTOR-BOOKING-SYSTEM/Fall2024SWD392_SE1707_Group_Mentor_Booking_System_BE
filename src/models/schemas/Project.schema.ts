@@ -56,3 +56,10 @@ export default class Project {
       (this.deletedAt = deletedAt || new Date())
   }
 }
+
+export interface UserReviewProject {
+  userID: number
+  projectID: number
+  type: string
+  status: string
+}

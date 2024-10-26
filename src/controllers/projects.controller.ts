@@ -1,6 +1,11 @@
 import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
-import { GetProjectDetailReqParams, GetProjectReqParams, submitProjectBody } from '~/models/Request/Project.request'
+import {
+  GetProjectDetailReqParams,
+  GetProjectReqParams,
+  ReviewProjectRequestBody,
+  submitProjectBody
+} from '~/models/Request/Project.request'
 import projectServices from '~/services/project.services'
 import Project from '~/models/schemas/Project.schema'
 import databaseService from '~/services/database.services'
@@ -55,6 +60,23 @@ export const getProjectDetailController = async (req: Request<GetProjectDetailRe
   return res.json({
     message: PROJECTS_MESSAGE.GET_PROJECT_DETAIL_SUCCESSFULLY,
     result
+  })
+}
+
+export const reviewProjectController = async (
+  req: Request<ParamsDictionary, any, ReviewProjectRequestBody>,
+  res: Response
+) => {
+  const projectID = req.projectID
+  const currentSemester = req.currentSemester
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const { criteriaID, type } = req.body
+
+  await projectServices.reviewProject(projectID, criteriaID, currentSemester?.semesterID, type, user_id)
+
+  return res.json({
+    message: PROJECTS_MESSAGE.REVIEW_PROJECT_SUCCESSFULLY,
+    result: { projectID, criteriaID, type, currentSemester, user_id }
   })
 }
 
