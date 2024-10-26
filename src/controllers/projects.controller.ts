@@ -58,22 +58,15 @@ export const getProjectDetailController = async (req: Request<GetProjectDetailRe
   })
 }
 
-export const getProjectTechnologiesController = async (
-  req: Request<{ slug: string }>,
-  res: Response
-) => {
+export const getProjectTechnologiesController = async (req: Request<{ slug: string }>, res: Response) => {
   const technologies = await projectServices.getProjectTechnologiesWithChildren(req.params.slug)
-  
   return res.json({
     message: TECHNOLOGIES_MESSAGE.GET_TECHNOLOGIES_BY_PROJECT_SUCCESSFULLY,
     result: technologies
   })
 }
 
-export const getProjectPostController = async (
-  req: Request<GetProjectDetailReqParams>,
-  res: Response
-) => {
+export const getProjectPostController = async (req: Request<GetProjectDetailReqParams>, res: Response) => {
   const project = await projectServices.getProjectBySlug(req.params.slug)
   const result = await projectServices.getProjectPost(Number(project.projectID))
   return res.json({
@@ -81,11 +74,7 @@ export const getProjectPostController = async (
     result
   })
 }
-
-export const getProjectOwnController = async (
-  req: Request<GetProjectDetailReqParams>,
-  res: Response
-) => {
+export const getProjectOwnController = async (req: Request<GetProjectDetailReqParams>, res: Response) => {
   const project = await projectServices.getProjectBySlug(req.params.slug)
   const result = await projectServices.getProjectOwn(Number(project.projectID))
   return res.json({
@@ -93,11 +82,7 @@ export const getProjectOwnController = async (
     result
   })
 }
-
-export const getProjectReviewController = async (
-  req: Request<GetProjectDetailReqParams>,
-  res: Response
-) => {
+export const getProjectReviewController = async (req: Request<GetProjectDetailReqParams>, res: Response) => {
   const project = await projectServices.getProjectBySlug(req.params.slug)
   const result = await projectServices.getProjectReview(Number(project.projectID))
   return res.json({
@@ -105,11 +90,7 @@ export const getProjectReviewController = async (
     result
   })
 }
-
-export const getProjectGuideController = async (
-  req: Request<GetProjectDetailReqParams>,
-  res: Response
-) => {
+export const getProjectGuideController = async (req: Request<GetProjectDetailReqParams>, res: Response) => {
   const project = await projectServices.getProjectBySlug(req.params.slug)
   const result = await projectServices.getProjectGuide(Number(project.projectID))
   return res.json({
@@ -117,11 +98,7 @@ export const getProjectGuideController = async (
     result
   })
 }
-
-export const getProjectSprintController = async (
-  req: Request<GetProjectDetailReqParams>,
-  res: Response
-) => {
+export const getProjectSprintController = async (req: Request<GetProjectDetailReqParams>, res: Response) => {
   const project = await projectServices.getProjectBySlug(req.params.slug)
   const result = await projectServices.getProjectSprint(Number(project.projectID))
   return res.json({
@@ -136,7 +113,7 @@ export const getProjectDetailWithAttachmentsController = async (
 ) => {
   const project = await projectServices.getProjectDetailBySlug(req.params.slug)
   const attachments = await projectServices.getProjectAttachments(Number(project.projectID))
-  
+
   return res.json({
     message: PROJECTS_MESSAGE.GET_PROJECT_DETAIL_SUCCESSFULLY,
     result: {

@@ -7,16 +7,11 @@ import { OkPacket } from 'mysql2'
 
 class GroupServices {
   async createGroup(groupName: string, usersID: number[], user_id: string) {
-    const [role, [semesterNow]] = await Promise.all([
-      databaseService.query<{ roleName: string }[]>(
-        `select r.roleName FROM \`${DatabaseTable.User}\`  u JOIN \`${DatabaseTable.User_Role}\` ur on u.userID = ur.userID JOIN \`${DatabaseTable.Role}\` r on ur.roleID = r.roleID where u.userID in (?)`,
-        usersID
-      ),
+    const [[semesterNow]] = await Promise.all([
       databaseService.query<Semester[]>(
         `SELECT * FROM ${DatabaseTable.Semester} WHERE NOW() BETWEEN startDate AND endDate`
       )
     ])
-    console.log(role)
 
     const { groupID, ...newGroup } = new Group({ groupName, semesterID: semesterNow.semesterID as string })
     const { insertId } = await databaseService.query<OkPacket>(
@@ -29,10 +24,10 @@ class GroupServices {
       ` SELECT * FROM \`${DatabaseTable.Group}\` WHERE groupID = ?`,
       [insertId]
     )
-    const group_user = usersID.map((data, index) => ({
+    const group_user = usersID.map((data) => ({
       data,
       insertId,
-      position: data === Number(user_id) ? 'Leader' : role[index] ? role[index].roleName : role[0].roleName
+      position: data === Number(user_id) ? 'Leader' : 'Member'
     }))
     for (const item of group_user) {
       await databaseService.query(

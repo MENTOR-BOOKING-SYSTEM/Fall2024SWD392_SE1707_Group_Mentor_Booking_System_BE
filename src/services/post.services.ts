@@ -1,4 +1,3 @@
-
 import Post from '~/models/schemas/Post.schema'
 import databaseService from './database.services'
 import { CreatePostReqBody } from '~/models/Request/Post.request'
@@ -15,10 +14,9 @@ class PostService {
     const { postName, description, projectID } = payload
 
     // Kiểm tra project có tồn tại
-    const projectExists: any = await databaseService.query(
-      'SELECT projectID FROM Project WHERE projectID = ?',
-      [projectID]
-    )
+    const projectExists: any = await databaseService.query('SELECT projectID FROM Project WHERE projectID = ?', [
+      projectID
+    ])
     if (!projectExists.length) {
       throw new NotFoundError({ message: 'Project not found' })
     }
@@ -29,7 +27,8 @@ class PostService {
     )
 
     // Sửa lại câu query để lấy đúng định dạng techName
-    const post: any[] = await databaseService.query(`
+    const post: any[] = await databaseService.query(
+      `
       SELECT 
         p.*,
         GROUP_CONCAT(t.techName SEPARATOR ', ') as techName
@@ -38,7 +37,9 @@ class PostService {
       LEFT JOIN Technology t ON pt.techID = t.techID
       WHERE p.postID = ?
       GROUP BY p.postID
-    `, [result.insertId])
+    `,
+      [result.insertId]
+    )
 
     // Đảm bảo techName không bị null
     const postData = {
@@ -140,7 +141,10 @@ class PostService {
   }
 
   async getPostDetail(postID: string) {
-    const post = await databaseService.query('SELECT postID, postName, description, projectID, createdAt, updatedAt FROM Post WHERE postID = ?', [postID])
+    const post = await databaseService.query(
+      'SELECT postID, postName, description, projectID, createdAt, updatedAt FROM Post WHERE postID = ?',
+      [postID]
+    )
     if (!post || Object.keys(post).length === 0) {
       return null
     }

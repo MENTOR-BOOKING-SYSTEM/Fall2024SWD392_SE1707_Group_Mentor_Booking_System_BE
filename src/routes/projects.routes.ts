@@ -30,12 +30,14 @@ projectRouter.get(
   wrapReqHandler(getProjectDetailController)
 )
 projectRouter.post('/submit', accessTokenValidator, submitProjectValidator, wrapReqHandler(submitProjectController))
-projectRouter.get('/:type', accessTokenValidator, paginationValidator, getProjectValidator, wrapReqHandler(getProjectController))
 projectRouter.get(
-  '/technologies/:slug',
+  '/:type',
   accessTokenValidator,
-  wrapReqHandler(getProjectTechnologiesController)
+  paginationValidator,
+  getProjectValidator,
+  wrapReqHandler(getProjectController)
 )
+projectRouter.get('/technologies/:slug', accessTokenValidator, wrapReqHandler(getProjectTechnologiesController))
 projectRouter.get('/posts/:slug', accessTokenValidator, wrapReqHandler(getProjectPostController))
 projectRouter.get('/owners/:slug', accessTokenValidator, wrapReqHandler(getProjectOwnController))
 projectRouter.get('/reviewers/:slug', accessTokenValidator, wrapReqHandler(getProjectReviewController))

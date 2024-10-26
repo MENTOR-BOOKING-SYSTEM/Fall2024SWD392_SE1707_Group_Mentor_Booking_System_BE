@@ -35,14 +35,13 @@ class ProjectServices {
   }
 
   async getProjectPost(id: number) {
-    return databaseService.query<Post[]>(
-      `SELECT * FROM ${DatabaseTable.Post} WHERE projectID = ?`,
-      [id]
-    )
+    return databaseService.query<Post[]>(`SELECT * FROM ${DatabaseTable.Post} WHERE projectID = ?`, [id])
   }
 
   async getProjectOwn(id: number) {
-    return databaseService.query<{ userID: string, email: string, avatarUrl: string, username: string, firstName: string, lastName: string }[]>(
+    return databaseService.query<
+      { userID: string; email: string; avatarUrl: string; username: string; firstName: string; lastName: string }[]
+    >(
       `SELECT u.userID, u.email, u.avatarUrl, u.username, u.firstName, u.lastName
        FROM ${DatabaseTable.User} u
        JOIN ${DatabaseTable.User_Own_Project} uop ON u.userID = uop.userID
@@ -52,7 +51,9 @@ class ProjectServices {
   }
 
   async getProjectReview(id: number) {
-    return databaseService.query<{ userID: string, email: string, avatarUrl: string, username: string, firstName: string, lastName: string }[]>(
+    return databaseService.query<
+      { userID: string; email: string; avatarUrl: string; username: string; firstName: string; lastName: string }[]
+    >(
       `SELECT u.userID, u.email, u.avatarUrl, u.username, u.firstName, u.lastName
        FROM ${DatabaseTable.User} u
        JOIN ${DatabaseTable.User_Review_Project} urp ON u.userID = urp.userID
@@ -62,7 +63,9 @@ class ProjectServices {
   }
 
   async getProjectGuide(id: number) {
-    return databaseService.query<{ userID: string, email: string, avatarUrl: string, username: string, firstName: string, lastName: string }[]>(
+    return databaseService.query<
+      { userID: string; email: string; avatarUrl: string; username: string; firstName: string; lastName: string }[]
+    >(
       `SELECT u.userID, u.email, u.avatarUrl, u.username, u.firstName, u.lastName
        FROM ${DatabaseTable.User} u
        JOIN ${DatabaseTable.User_Guide} ug ON u.userID = ug.userID
@@ -72,10 +75,7 @@ class ProjectServices {
   }
 
   async getProjectSprint(id: number) {
-    return databaseService.query<Sprint[]>(
-      `SELECT * FROM ${DatabaseTable.Sprint} WHERE projectID = ?`,
-      [id]
-    )
+    return databaseService.query<Sprint[]>(`SELECT * FROM ${DatabaseTable.Sprint} WHERE projectID = ?`, [id])
   }
 
   async createProject(body: submitProjectBody, user_id: string, roles: string[]) {
@@ -303,13 +303,15 @@ OFFSET
       })
 
       return processedResult
-    } else if (type === 'get-review') {
-      const result = await databaseService.query<(Project & {
-        collaboratorsEmail: string
-        collaboratorsAvatarUrl: string
-        collaboratorsUserID: string
-        techNames: string
-      })[]>(
+    } else if (type === 'get-review-mentor') {
+      const result = await databaseService.query<
+        (Project & {
+          collaboratorsEmail: string
+          collaboratorsAvatarUrl: string
+          collaboratorsUserID: string
+          techNames: string
+        })[]
+      >(
         `SELECT 
     up.userID,
     p.projectID,
@@ -341,7 +343,7 @@ JOIN
     ${DatabaseTable.Technology} t ON pt.techID = t.techID
 JOIN ${DatabaseTable.User} u on u.userID = uo.userID JOIN ${DatabaseTable.User_Review_Project} up on p.projectID = up.projectID
 WHERE 
-    up.userID = ? 
+    up.userID = ? and up.type = "Mentor"
 GROUP BY 
  p.projectID
 LIMIT 
@@ -350,12 +352,87 @@ OFFSET
     ${limit * (page - 1)}`,
         [userID]
       )
+
       const processResult = result.map((project) => {
-        const collaboratorsEmail = project.collaboratorsEmail.split(", ")
-        const collaboratorsAvatarUrl = project.collaboratorsAvatarUrl.split(", ")
-        const collaboratorsUserID = project.collaboratorsUserID.split(", ")
+        const collaboratorsEmail = project.collaboratorsEmail ? project.collaboratorsEmail.split(', ') : []
+        const collaboratorsAvatarUrl = project.collaboratorsAvatarUrl ? project.collaboratorsAvatarUrl.split(', ') : []
+        const collaboratorsUserID = project.collaboratorsUserID ? project.collaboratorsUserID.split(', ') : []
         const newObject = collaboratorsEmail.map((item, index) => {
-          return { collaboratorsEmail: collaboratorsEmail[index], collaboratorsAvatarUrl: collaboratorsAvatarUrl[index] ?? "", collaboratorsUserID: collaboratorsUserID[index] }
+          return {
+            collaboratorsEmail: collaboratorsEmail[index],
+            collaboratorsAvatarUrl: collaboratorsAvatarUrl[index] ?? '',
+            collaboratorsUserID: collaboratorsUserID[index]
+          }
+        })
+        const { collaboratorsAvatarUrl: _, collaboratorsEmail: __, collaboratorsUserID: ___, ...rest } = project
+        return {
+          ...rest,
+          collaborators: newObject
+        }
+      })
+      return processResult
+    } else if (type === 'get-review-reviewer') {
+      console.log("vc");
+
+      const result = await databaseService.query<
+        (Project & {
+          collaboratorsEmail: string
+          collaboratorsAvatarUrl: string
+          collaboratorsUserID: string
+          techNames: string
+        })[]
+      >(
+        `SELECT 
+    up.userID,
+    p.projectID,
+    uo.type,
+    p.projectName,
+    p.slug,
+    p.funcRequirements,
+    p.nonFuncRequirements,
+    p.context,
+    p.actors,
+    p.problems,
+    p.status,
+    p.createdAt,
+    p.updatedAt,
+    p.deletedAt,
+    up.type as typeReview,
+    up.status,
+    GROUP_CONCAT(DISTINCT t.techName SEPARATOR ', ') AS techNames,
+   GROUP_CONCAT (DISTINCT u.email SEPARATOR ', ') AS collaboratorsEmail,
+    GROUP_CONCAT (DISTINCT u.userID SEPARATOR ', ') AS collaboratorsUserID,
+     GROUP_CONCAT (DISTINCT u.avatarUrl SEPARATOR ', ') AS collaboratorsAvatarUrl
+FROM 
+    ${DatabaseTable.User_Own_Project} uo
+JOIN 
+    ${DatabaseTable.Project} p ON uo.projectID = p.projectID
+JOIN 
+    ${DatabaseTable.Project_Technology} pt ON p.projectID = pt.projectID
+JOIN 
+    ${DatabaseTable.Technology} t ON pt.techID = t.techID
+JOIN ${DatabaseTable.User} u on u.userID = uo.userID JOIN ${DatabaseTable.User_Review_Project} up on p.projectID = up.projectID
+WHERE 
+    up.userID = ? and up.type = "Reviewer"
+GROUP BY 
+ p.projectID
+LIMIT 
+    ${limit}
+OFFSET 
+    ${limit * (page - 1)}`,
+        [userID]
+      )
+
+      const processResult = result.map((project) => {
+        const collaboratorsEmail = project.collaboratorsEmail ? project.collaboratorsEmail.split(', ') : []
+        const collaboratorsAvatarUrl = project.collaboratorsAvatarUrl ? project.collaboratorsAvatarUrl.split(', ') : []
+        const collaboratorsUserID = project.collaboratorsUserID ? project.collaboratorsUserID.split(', ') : []
+        const newObject = collaboratorsEmail.map((item, index) => {
+          return {
+            collaboratorsEmail: collaboratorsEmail[index],
+            collaboratorsAvatarUrl: collaboratorsAvatarUrl[index] ?? '',
+            collaboratorsUserID: collaboratorsUserID[index]
+          }
         })
         const { collaboratorsAvatarUrl: _, collaboratorsEmail: __, collaboratorsUserID: ___, ...rest } = project
         return {
@@ -365,10 +442,7 @@ OFFSET
       })
       return processResult
     }
-    return await databaseService.query(
-      `select * from ${DatabaseTable.User_Review_Project} ur join ${DatabaseTable.Project} p on ur.projectID = p.projectID where type =?`,
-      ['Reviewer']
-    )
+    return []
   }
 
   async getProjectBySlug(slug: string) {
@@ -391,10 +465,9 @@ OFFSET
   }
 
   async getProjectDetailBySlug(slug: string) {
-    const [project] = await databaseService.query<Project[]>(
-      `SELECT * FROM ${DatabaseTable.Project} WHERE slug = ?`,
-      [slug]
-    )
+    const [project] = await databaseService.query<Project[]>(`SELECT * FROM ${DatabaseTable.Project} WHERE slug = ?`, [
+      slug
+    ])
     if (!project) {
       throw new Error('Project not found')
     }
@@ -402,28 +475,29 @@ OFFSET
   }
 
   async getProjectTechnologiesWithChildren(slug: string) {
-    const technologies = await databaseService.query<{ techID: string, techName: string, parentID: number | null }[]>(
+    const technologies = await databaseService.query<{ techID: string; techName: string; parentID: number | null }[]>(
       `SELECT t.techID, t.techName, t.parentID FROM ${DatabaseTable.Technology} t
        JOIN ${DatabaseTable.Project_Technology} pt ON t.techID = pt.techID
        JOIN ${DatabaseTable.Project} p ON pt.projectID = p.projectID
        WHERE p.slug = ?`,
       [slug]
     )
-    const techWithChildren = await Promise.all(technologies.map(async tech => {
-      const children = await databaseService.query<{ techID: string, techName: string }[]>(
-        `SELECT techID, techName FROM ${DatabaseTable.Technology} WHERE techID = ?`,
-        [tech.parentID]
-      );
-      
-      return {
-        techID: children.map(child => child.techID),
-        techName: children.map(child => child.techName),
-        children: ({ techID: tech.techID, techName: tech.techName })
-      };
-    }));
+    const techWithChildren = await Promise.all(
+      technologies.map(async (tech) => {
+        const children = await databaseService.query<{ techID: string; techName: string }[]>(
+          `SELECT techID, techName FROM ${DatabaseTable.Technology} WHERE techID = ?`,
+          [tech.parentID]
+        )
+
+        return {
+          techID: children.map((child) => child.techID),
+          techName: children.map((child) => child.techName),
+          children: { techID: tech.techID, techName: tech.techName }
+        }
+      })
+    )
     return techWithChildren
   }
-
 }
 
 export default new ProjectServices()
