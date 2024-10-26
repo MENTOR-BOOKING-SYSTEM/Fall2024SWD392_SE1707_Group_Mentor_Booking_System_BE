@@ -175,6 +175,30 @@ class PostService {
       membersCount
     }
   }
+
+  async getPostsByGroup(groupID: string) {
+    const posts: any[] = await databaseService.query(
+      `
+      SELECT 
+        p.*,
+        GROUP_CONCAT(t.techName SEPARATOR ', ') as techName
+      FROM Post p
+      LEFT JOIN Project_Technology pt ON p.projectID = pt.projectID
+      LEFT JOIN Technology t ON pt.techID = t.techID
+      WHERE p.projectID IN (
+        SELECT p.projectID 
+        FROM Project p
+        JOIN \`Group\` g ON g.projectID = p.projectID
+        WHERE g.groupID = ?
+      )
+      GROUP BY p.postID
+      ORDER BY p.createdAt DESC
+      `,
+      [groupID]
+    )
+
+    return posts.map((post: any) => new Post(post))
+  }
 }
 
 const postService = new PostService()

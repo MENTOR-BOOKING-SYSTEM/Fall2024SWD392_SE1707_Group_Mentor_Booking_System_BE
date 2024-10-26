@@ -44,3 +44,13 @@ export const getPostDetailController = async (req: Request, res: Response) => {
     result: postDetail
   })
 }
+
+export const getPostsByGroupController = async (req: Request, res: Response) => {
+  const { groupID } = req.params
+  const posts = await postService.getPostsByGroup(groupID)
+  
+  return res.json({
+    message: POSTS_MESSAGES.GET_POSTS_BY_GROUP_SUCCESS,
+    result: posts
+  })
+}

@@ -68,7 +68,8 @@ export const POSTS_MESSAGES = {
   DESCRIPTION_MUST_BE_A_STRING: 'Description must be a string',
   NAME_LENGTH_MUST_BE_FROM_1_TO_100: 'Name length must be from 1 to 100',
   NAME_MUST_BE_A_STRING: 'Name must be a string',
-  NAME_IS_REQUIRED: 'Name is required'
+  NAME_IS_REQUIRED: 'Name is required',
+  GET_POSTS_BY_GROUP_SUCCESS: 'Get posts by group successfully'
 } as const
 export const GROUPS_MESSAGES = {
   GROUP_ID_IS_REQUIRED: 'Group id is required',
