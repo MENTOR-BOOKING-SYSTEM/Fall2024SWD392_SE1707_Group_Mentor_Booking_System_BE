@@ -8,7 +8,7 @@ interface PostType {
   techName: string
 }
 
-export class Post {
+export default class Post {
   postID: number
   postName: string
   description: string
