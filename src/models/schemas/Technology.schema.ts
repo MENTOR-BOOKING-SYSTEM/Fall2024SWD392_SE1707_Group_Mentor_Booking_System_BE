@@ -1,7 +1,6 @@
 export interface TechnologyType {
   techID?: string | null
   techName: string
-  
 }
 export default class Technology {
   techID: string | null
