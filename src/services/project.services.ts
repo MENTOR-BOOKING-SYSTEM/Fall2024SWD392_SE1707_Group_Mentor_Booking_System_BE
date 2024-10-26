@@ -140,7 +140,16 @@ class ProjectServices {
         ])
       }
     }
-    const [submitProjectData] = await Promise.all([this.getProjectDetail(result.insertId), attachments.map((item) => databaseService.query(`Insert into ${DatabaseTable.Attachment}(url,type,projectID) VALUES (?,?,?)`, [item.attachment, item.type, result.insertId]))])
+    const [submitProjectData] = await Promise.all([
+      this.getProjectDetail(result.insertId),
+      attachments.map((item) =>
+        databaseService.query(`Insert into ${DatabaseTable.Attachment}(url,type,projectID) VALUES (?,?,?)`, [
+          item.attachment,
+          item.type,
+          result.insertId
+        ])
+      )
+    ])
     return submitProjectData
   }
   async getProject(type: string, limit: number, page: number, userID: string) {
@@ -182,24 +191,30 @@ OFFSET
       )
       return result
     } else if (type === 'get-submit') {
-      const result = await databaseService.query<(Project & { collaborators: string; techNames: string })[]>(
+      const result = await databaseService.query<
+        (Project & {
+          collaboratorsEmail: string
+          collaboratorsAvatarUrl: string
+          collaboratorsUserID: string
+          techNames: string
+        })[]
+      >(
         `SELECT 
     uo.userID,
-    p.projectID,
-    uo.type,
-    p.projectName,
-    p.slug,
-    p.funcRequirements,
-    p.nonFuncRequirements,
-    p.context,
-    p.actors,
-    p.problems,
-    p.status,
-    p.createdAt,
-    p.updatedAt,
-    p.deletedAt,
-    GROUP_CONCAT(DISTINCT t.techName SEPARATOR ', ') AS techNames,
-   GROUP_CONCAT (DISTINCT u.email SEPARATOR ', ') AS collaborators
+        p.projectID,
+        uo.type,
+        p.projectName,
+        p.slug,
+        p.funcRequirements,
+        p.nonFuncRequirements,
+        p.context,
+        p.actors,
+        p.problems,
+        p.status,
+        p.createdAt,
+        p.updatedAt,
+        p.deletedAt,
+        GROUP_CONCAT(DISTINCT t.techName SEPARATOR ', ') AS techNames
 FROM 
     ${DatabaseTable.User_Own_Project} uo
 JOIN 
@@ -208,26 +223,40 @@ JOIN
     ${DatabaseTable.Project_Technology} pt ON p.projectID = pt.projectID
 JOIN 
     ${DatabaseTable.Technology} t ON pt.techID = t.techID
-JOIN ${DatabaseTable.User} u on u.userID =uo.userID 
 WHERE 
     uo.userID = ?
-GROUP BY 
-    uo.userID, p.projectID
+          GROUP BY 
+ p.projectID
 LIMIT 
     ${limit}
 OFFSET 
     ${limit * (page - 1)}`,
         [userID]
       )
-      const processedResult = result.map((item) => ({
-        ...item,
-        techNames: item.techNames ? item.techNames.split(', ') : [],
-        collaborators: item.collaborators ? item.collaborators.split(', ') : []
-      }))
+
+      const collaboratorsPromise = result.map((item) =>
+        databaseService.query(
+          `select u.email,u.avatarUrl,u.userID FROM ${DatabaseTable.User} u JOIN ${DatabaseTable.User_Own_Project} p on p.userID = u.userID WHERE projectID =? `,
+          [item.projectID]
+        )
+      )
+      const collaborators = await Promise.all(collaboratorsPromise)
+
+      const processedResult = result.map((project, index) => {
+        return {
+          ...project,
+          collaborators: collaborators[index]
+        }
+      })
 
       return processedResult
     } else if (type === 'get-review') {
-      const result = await databaseService.query<(Project & { collaborators: string; techNames: string })[]>(
+      const result = await databaseService.query<(Project & {
+        collaboratorsEmail: string
+        collaboratorsAvatarUrl: string
+        collaboratorsUserID: string
+        techNames: string
+      })[]>(
         `SELECT 
     up.userID,
     p.projectID,
@@ -243,8 +272,12 @@ OFFSET
     p.createdAt,
     p.updatedAt,
     p.deletedAt,
+    up.type as typeReview,
+    up.status,
     GROUP_CONCAT(DISTINCT t.techName SEPARATOR ', ') AS techNames,
-   GROUP_CONCAT (DISTINCT u.email SEPARATOR ', ') AS collaborators
+   GROUP_CONCAT (DISTINCT u.email SEPARATOR ', ') AS collaboratorsEmail,
+    GROUP_CONCAT (DISTINCT u.userID SEPARATOR ', ') AS collaboratorsUserID,
+     GROUP_CONCAT (DISTINCT u.avatarUrl SEPARATOR ', ') AS collaboratorsAvatarUrl
 FROM 
     ${DatabaseTable.User_Own_Project} uo
 JOIN 
@@ -264,7 +297,21 @@ OFFSET
     ${limit * (page - 1)}`,
         [userID]
       )
-      return result
+      const processResult = result.map((project) => {
+        const collaboratorsEmail = project.collaboratorsEmail.split(", ")
+        const collaboratorsAvatarUrl = project.collaboratorsAvatarUrl.split(", ")
+        const collaboratorsUserID = project.collaboratorsUserID.split(", ")
+        const newObject = collaboratorsEmail.map((item, index) => {
+          return { collaboratorsEmail: collaboratorsEmail[index], collaboratorsAvatarUrl: collaboratorsAvatarUrl[index] ?? "", collaboratorsUserID: collaboratorsUserID[index] }
+        })
+        console.log(newObject);
+        const { collaboratorsAvatarUrl: _, collaboratorsEmail: __, collaboratorsUserID: ___, ...rest } = project
+        return {
+          ...rest,
+          collaborators: newObject
+        }
+      })
+      return processResult
     }
     return await databaseService.query(
       `select * from ${DatabaseTable.User_Review_Project} ur join ${DatabaseTable.Project} p on ur.projectID = p.projectID where type =?`,
