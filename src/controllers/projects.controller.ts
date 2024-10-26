@@ -16,14 +16,21 @@ export const submitProjectController = async (
   res: Response
 ) => {
   const { user_id, role } = req.decoded_authorization
-  const [isProjectExist] = await databaseService.query<{ projectName: string; status: number }[]>(
+  const isProjectExist = await databaseService.query<{ projectName: string; status: number }[]>(
     `select p.status,p.projectName,p.status from  ${DatabaseTable.Project} p join ${DatabaseTable.User_Own_Project} up on p.projectID = up.projectID join ${DatabaseTable.User} u on u.userID = up.userID where u.userID = ? `,
     [user_id]
   )
-  if (isProjectExist && isProjectExist.status === ProjectStatus.Pending) {
+
+  if (isProjectExist.length >= 3 && isProjectExist.every((item) => item.status === ProjectStatus.Pending)) {
     throw new ErrorWithStatus<typeof isProjectExist>({
       status: HTTP_STATUS.BAD_REQUEST,
       message: PROJECTS_MESSAGE.CAN_NOT_SEND_MORE_PROJECT,
+      data: isProjectExist
+    })
+  } else if (isProjectExist.some((item) => item.status === ProjectStatus.Accepted)) {
+    throw new ErrorWithStatus({
+      message: PROJECTS_MESSAGE.PROJECT_HAS_BEEN_APPROVED,
+      status: HTTP_STATUS.BAD_REQUEST,
       data: isProjectExist
     })
   }
