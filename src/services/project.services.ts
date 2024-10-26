@@ -304,7 +304,6 @@ OFFSET
         const newObject = collaboratorsEmail.map((item, index) => {
           return { collaboratorsEmail: collaboratorsEmail[index], collaboratorsAvatarUrl: collaboratorsAvatarUrl[index] ?? "", collaboratorsUserID: collaboratorsUserID[index] }
         })
-        console.log(newObject);
         const { collaboratorsAvatarUrl: _, collaboratorsEmail: __, collaboratorsUserID: ___, ...rest } = project
         return {
           ...rest,

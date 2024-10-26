@@ -23,6 +23,7 @@ export enum MediaType {
   HLS
 }
 export enum ProjectStatus {
+  Stateless,
   Accepted,
   Rejected,
   Considered,
@@ -33,8 +34,3 @@ export enum ColumnID {
   Technology = 'techID',
   User = 'userID'
 }
-export interface Attachments {
-  attachment: string
-  type: string
-}
-;[]
