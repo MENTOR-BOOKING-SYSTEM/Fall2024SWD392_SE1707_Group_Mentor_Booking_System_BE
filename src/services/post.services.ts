@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from 'uuid'
-import Post from '~/models/schemas/Post.schema'
+import { Post } from '~/models/schemas/Post.schema'
 import databaseService from './database.services'
 import { CreatePostReqBody } from '~/models/Request/Post.request'
-
+import { NotFoundError } from '~/models/Errors'
+import Technology from '~/models/schemas/Technology.schema'
 interface Guide {
   userID: string
   avatarUrl: string
@@ -11,22 +12,42 @@ interface Guide {
 }
 
 class PostService {
-  async createPost({ name, description, groupID, techID }: CreatePostReqBody) {
-    const postID = uuidv4()
-    const newPost = new Post({ postID, name, description, groupID, techID })
-    await databaseService.query(
-      'INSERT INTO posts (postID, name, description, groupID, techID, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [
-        newPost.postID,
-        newPost.name,
-        newPost.description,
-        newPost.groupID,
-        newPost.techID,
-        newPost.createdAt.toISOString(),
-        newPost.updatedAt.toISOString()
-      ]
+  async createPost(payload: CreatePostReqBody) {
+    const { postName, description, projectID } = payload
+
+    // Kiểm tra project có tồn tại
+    const projectExists:any = await databaseService.query(
+      'SELECT projectID FROM Project WHERE projectID = ?',
+      [projectID]
     )
-    return newPost
+    if (!projectExists.length) {
+      throw new NotFoundError({ message: 'Project not found' })
+    }
+    // Tạo post mới
+    const result:any = await databaseService.query(
+      'INSERT INTO Post (postName, description, projectID, createdAt, updatedAt) VALUES (?, ?, ?, NOW(), NOW())',
+      [postName, description, projectID]
+    )
+
+    // Sửa lại câu query để lấy đúng định dạng techName
+    const post:any[] = await databaseService.query(`
+      SELECT 
+        p.*,
+        GROUP_CONCAT(t.techName SEPARATOR ', ') as techName
+      FROM Post p
+      LEFT JOIN Project_Technology pt ON p.projectID = pt.projectID
+      LEFT JOIN Technology t ON pt.techID = t.techID
+      WHERE p.postID = ?
+      GROUP BY p.postID
+    `, [result.insertId])
+
+    // Đảm bảo techName không bị null
+    const postData = {
+      ...post[0],
+      techName: post[0].techName || ''
+    }
+
+    return new Post(postData)
   }
 
   async getPosts(query: {
@@ -39,7 +60,7 @@ class PostService {
     const { page = 1, limit = 10, technologies, email, groupMembers } = query
     const offset = (page - 1) * limit
 
-    let sqlQuery = 'SELECT * FROM posts WHERE 1=1'
+    let sqlQuery = 'SELECT * FROM Post WHERE 1=1'
     const params: any[] = []
 
     if (technologies && technologies.length > 0) {
@@ -115,12 +136,12 @@ class PostService {
   }
 
   async searchPostsByTitle(title: string) {
-    const posts = await databaseService.query('SELECT * FROM posts WHERE name LIKE ?', [`%${title}%`])
+    const posts = await databaseService.query('SELECT * FROM Post WHERE name LIKE ?', [`%${title}%`])
     return posts
   }
 
   async getPostDetail(postID: string) {
-    const post = await databaseService.query('SELECT * FROM posts WHERE postID = ?', [postID])
+    const post = await databaseService.query('SELECT postID, postName, description, projectID, createdAt, updatedAt FROM Post WHERE postID = ?', [postID])
     if (!post || Object.keys(post).length === 0) {
       return null
     }

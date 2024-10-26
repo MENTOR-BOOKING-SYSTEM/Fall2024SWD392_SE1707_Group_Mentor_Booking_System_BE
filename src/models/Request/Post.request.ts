@@ -1,6 +1,6 @@
 export interface CreatePostReqBody {
-  name: string
+  postName: string
   description: string
-  groupID: string
-  techID: string
+  projectID: number
 }
+
