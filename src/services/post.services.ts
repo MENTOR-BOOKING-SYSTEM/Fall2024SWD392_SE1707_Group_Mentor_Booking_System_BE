@@ -1,9 +1,8 @@
-import { v4 as uuidv4 } from 'uuid'
-import { Post } from '~/models/schemas/Post.schema'
+
+import Post from '~/models/schemas/Post.schema'
 import databaseService from './database.services'
 import { CreatePostReqBody } from '~/models/Request/Post.request'
 import { NotFoundError } from '~/models/Errors'
-import Technology from '~/models/schemas/Technology.schema'
 interface Guide {
   userID: string
   avatarUrl: string
@@ -16,7 +15,7 @@ class PostService {
     const { postName, description, projectID } = payload
 
     // Kiểm tra project có tồn tại
-    const projectExists:any = await databaseService.query(
+    const projectExists: any = await databaseService.query(
       'SELECT projectID FROM Project WHERE projectID = ?',
       [projectID]
     )
@@ -24,13 +23,13 @@ class PostService {
       throw new NotFoundError({ message: 'Project not found' })
     }
     // Tạo post mới
-    const result:any = await databaseService.query(
+    const result: any = await databaseService.query(
       'INSERT INTO Post (postName, description, projectID, createdAt, updatedAt) VALUES (?, ?, ?, NOW(), NOW())',
       [postName, description, projectID]
     )
 
     // Sửa lại câu query để lấy đúng định dạng techName
-    const post:any[] = await databaseService.query(`
+    const post: any[] = await databaseService.query(`
       SELECT 
         p.*,
         GROUP_CONCAT(t.techName SEPARATOR ', ') as techName

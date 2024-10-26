@@ -11,7 +11,6 @@ export const createPostController = async (req: Request, res: Response) => {
     result
   })
 }
-
 export const getPostsController = async (req: Request, res: Response) => {
   const { page, limit, technologies, email, groupMembers } = req.query
 
