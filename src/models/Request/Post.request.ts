@@ -3,4 +3,3 @@ export interface CreatePostReqBody {
   description: string
   projectID: number
 }
-
