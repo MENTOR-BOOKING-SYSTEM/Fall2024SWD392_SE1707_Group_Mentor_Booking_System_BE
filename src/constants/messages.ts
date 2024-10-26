@@ -70,7 +70,6 @@ export const POSTS_MESSAGES = {
   NAME_MUST_BE_A_STRING: 'Name must be a string',
   NAME_IS_REQUIRED: 'Name is required'
 } as const
-
 export const GROUPS_MESSAGES = {
   GROUP_ID_IS_REQUIRED: 'Group id is required',
   GROUP_ID_MUST_BE_A_STRING: 'Group id must be a string',
@@ -147,18 +146,20 @@ export const PROJECTS_MESSAGE = {
     'MENTOR DOES NOT NEED TO REQUEST PROJECT REVIEW FROM OTHER MENTOR',
   PROJECT_NAME_ALREADY_EXISTS: 'Project name already exist',
   MENTOR_ID_IS_REQUIRED_FOR_STUDENT_OR_BUSINESS_ROLE: 'Mentor id is required for student or business role',
-  CAN_NOT_SEND_MORE_PROJECT: 'No more projects can be submitted because the previous project is being processed',
+  CAN_NOT_SEND_MORE_PROJECT:
+    'No more projects can be submitted because the previous project is being processed and maximum of 3 projects can be submitted.',
+  PROJECT_HAS_BEEN_APPROVED: 'No more projects can be submitted because PROJECT IS ACCEPTED',
   TECHNOLOGY_MUST_BE_AN_ARRAY_WITH_AT_LEAST_1_ELEMENT: 'Technology Must Be An Array With At Least 1 Element',
-  PARAMS_IN_VALID: 'Params must be "all" or "get-review" or "get-submit" ',
+  PARAMS_IN_VALID: `Params must bev ${'all'} or "get-review-mentor" or "get-review-reviewer" or "get-submit`,
   GET_PROJECT_SUCCESSFULLY: 'Get project successfully',
   PROJECT_ID_INVALID: 'Project id is invalid  ',
   GET_PROJECT_DETAIL_SUCCESSFULLY: 'Get project detail successfully',
-  GET_PROJECT_TECHNOLOGIES_SUCCESSFULLY: "Get project technologies successfully",
-  GET_PROJECT_POST_SUCCESSFULLY: "Get project post successfully",
-  GET_PROJECT_OWN_SUCCESSFULLY: "Get project owners successfully",
-  GET_PROJECT_REVIEW_SUCCESSFULLY: "Get project reviewers successfully",
-  GET_PROJECT_GUIDE_SUCCESSFULLY: "Get project guides successfully",
-  GET_PROJECT_SPRINT_SUCCESSFULLY: "Get project sprints successfully",
+  GET_PROJECT_TECHNOLOGIES_SUCCESSFULLY: 'Get project technologies successfully',
+  GET_PROJECT_POST_SUCCESSFULLY: 'Get project post successfully',
+  GET_PROJECT_OWN_SUCCESSFULLY: 'Get project owners successfully',
+  GET_PROJECT_REVIEW_SUCCESSFULLY: 'Get project reviewers successfully',
+  GET_PROJECT_GUIDE_SUCCESSFULLY: 'Get project guides successfully',
+  GET_PROJECT_SPRINT_SUCCESSFULLY: 'Get project sprints successfully',
   TYPE_GROUP_ONLY_SENT_1_COLLABORATORS: 'With group mode you can only pass on 1 contributor',
   TYPE_MUST_BE_JPG: 'File type must be JPG'
 } as const

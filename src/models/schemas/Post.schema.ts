@@ -1,29 +1,29 @@
 interface PostType {
-  postID: string
-  name: string
+  postID: number
+  postName: string
   description: string
-  groupID: string
-  techID: string
-  createdAt?: Date
-  updatedAt?: Date
+  projectID: number
+  createdAt: Date
+  updatedAt: Date
+  techName: string
 }
 
 export default class Post {
-  postID: string
-  name: string
+  postID: number
+  postName: string
   description: string
-  groupID: string
-  techID: string
+  projectID: number
   createdAt: Date
   updatedAt: Date
+  techName: string
 
-  constructor({ postID, name, description, groupID, techID, createdAt, updatedAt }: PostType) {
-    this.postID = postID
-    this.name = name
-    this.description = description
-    this.groupID = groupID
-    this.techID = techID
-    this.createdAt = createdAt || new Date()
-    this.updatedAt = updatedAt || new Date()
+  constructor(post: PostType) {
+    this.postID = post.postID
+    this.postName = post.postName
+    this.description = post.description
+    this.projectID = post.projectID
+    this.createdAt = new Date(post.createdAt)
+    this.updatedAt = new Date(post.updatedAt)
+    this.techName = post.techName
   }
 }

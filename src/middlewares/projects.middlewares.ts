@@ -181,7 +181,7 @@ export const getProjectValidator = validate(
       notEmpty: true,
       custom: {
         options: async (value, { req }) => {
-          if (value !== 'all' && value !== 'get-review' && value !== 'get-submit') {
+          if (value !== 'all' && value !== 'get-review-reviewer' && value !== 'get-submit' && value !== 'get-review-mentor') {
             throw new ErrorWithStatus({
               message: PROJECTS_MESSAGE.PARAMS_IN_VALID,
               status: HTTP_STATUS.BAD_REQUEST
