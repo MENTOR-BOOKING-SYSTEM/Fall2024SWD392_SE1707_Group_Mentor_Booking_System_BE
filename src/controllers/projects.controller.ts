@@ -13,7 +13,7 @@ import { DatabaseTable } from '~/constants/databaseTable'
 import { ProjectStatus } from '~/constants/enums'
 import { ErrorWithStatus } from '~/models/Errors'
 import HTTP_STATUS from '~/constants/httpStatus'
-import { PROJECTS_MESSAGE } from '~/constants/messages'
+import { PROJECTS_MESSAGE, TECHNOLOGIES_MESSAGE } from '~/constants/messages'
 import { Pagination } from '~/models/Request/Pagination.request'
 import { TokenPayload } from '~/models/Request/User.request'
 export const submitProjectController = async (
@@ -21,14 +21,21 @@ export const submitProjectController = async (
   res: Response
 ) => {
   const { user_id, role } = req.decoded_authorization
-  const [isProjectExist] = await databaseService.query<{ projectName: string; status: number }[]>(
+  const isProjectExist = await databaseService.query<{ projectName: string; status: number }[]>(
     `select p.status,p.projectName,p.status from  ${DatabaseTable.Project} p join ${DatabaseTable.User_Own_Project} up on p.projectID = up.projectID join ${DatabaseTable.User} u on u.userID = up.userID where u.userID = ? `,
     [user_id]
   )
-  if (isProjectExist && isProjectExist.status === ProjectStatus.Pending) {
+
+  if (isProjectExist.length >= 3 && isProjectExist.every((item) => item.status === ProjectStatus.Pending)) {
     throw new ErrorWithStatus<typeof isProjectExist>({
       status: HTTP_STATUS.BAD_REQUEST,
       message: PROJECTS_MESSAGE.CAN_NOT_SEND_MORE_PROJECT,
+      data: isProjectExist
+    })
+  } else if (isProjectExist.some((item) => item.status === ProjectStatus.Accepted)) {
+    throw new ErrorWithStatus({
+      message: PROJECTS_MESSAGE.PROJECT_HAS_BEEN_APPROVED,
+      status: HTTP_STATUS.BAD_REQUEST,
       data: isProjectExist
     })
   }
@@ -70,5 +77,70 @@ export const reviewProjectController = async (
   return res.json({
     message: PROJECTS_MESSAGE.REVIEW_PROJECT_SUCCESSFULLY,
     result: { projectID, criteriaID, type, currentSemester, user_id }
+  })
+}
+
+export const getProjectTechnologiesController = async (req: Request<{ slug: string }>, res: Response) => {
+  const technologies = await projectServices.getProjectTechnologiesWithChildren(req.params.slug)
+  return res.json({
+    message: TECHNOLOGIES_MESSAGE.GET_TECHNOLOGIES_BY_PROJECT_SUCCESSFULLY,
+    result: technologies
+  })
+}
+
+export const getProjectPostController = async (req: Request<GetProjectDetailReqParams>, res: Response) => {
+  const project = await projectServices.getProjectBySlug(req.params.slug)
+  const result = await projectServices.getProjectPost(Number(project.projectID))
+  return res.json({
+    message: PROJECTS_MESSAGE.GET_PROJECT_POST_SUCCESSFULLY,
+    result
+  })
+}
+export const getProjectOwnController = async (req: Request<GetProjectDetailReqParams>, res: Response) => {
+  const project = await projectServices.getProjectBySlug(req.params.slug)
+  const result = await projectServices.getProjectOwn(Number(project.projectID))
+  return res.json({
+    message: PROJECTS_MESSAGE.GET_PROJECT_OWN_SUCCESSFULLY,
+    result
+  })
+}
+export const getProjectReviewController = async (req: Request<GetProjectDetailReqParams>, res: Response) => {
+  const project = await projectServices.getProjectBySlug(req.params.slug)
+  const result = await projectServices.getProjectReview(Number(project.projectID))
+  return res.json({
+    message: PROJECTS_MESSAGE.GET_PROJECT_REVIEW_SUCCESSFULLY,
+    result
+  })
+}
+export const getProjectGuideController = async (req: Request<GetProjectDetailReqParams>, res: Response) => {
+  const project = await projectServices.getProjectBySlug(req.params.slug)
+  const result = await projectServices.getProjectGuide(Number(project.projectID))
+  return res.json({
+    message: PROJECTS_MESSAGE.GET_PROJECT_GUIDE_SUCCESSFULLY,
+    result
+  })
+}
+export const getProjectSprintController = async (req: Request<GetProjectDetailReqParams>, res: Response) => {
+  const project = await projectServices.getProjectBySlug(req.params.slug)
+  const result = await projectServices.getProjectSprint(Number(project.projectID))
+  return res.json({
+    message: PROJECTS_MESSAGE.GET_PROJECT_SPRINT_SUCCESSFULLY,
+    result
+  })
+}
+
+export const getProjectDetailWithAttachmentsController = async (
+  req: Request<GetProjectDetailReqParams>,
+  res: Response
+) => {
+  const project = await projectServices.getProjectDetailBySlug(req.params.slug)
+  const attachments = await projectServices.getProjectAttachments(Number(project.projectID))
+
+  return res.json({
+    message: PROJECTS_MESSAGE.GET_PROJECT_DETAIL_SUCCESSFULLY,
+    result: {
+      project,
+      attachments
+    }
   })
 }
