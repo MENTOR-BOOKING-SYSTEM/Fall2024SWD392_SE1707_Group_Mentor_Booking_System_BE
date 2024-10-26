@@ -2,7 +2,7 @@ import { checkSchema } from 'express-validator'
 import { DatabaseTable } from '~/constants/databaseTable'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { GROUPS_MESSAGES, PROJECTS_MESSAGE, USERS_MESSAGES } from '~/constants/messages'
-import { ErrorWithStatus } from '~/models/Errors'
+import { ErrorWithStatus, NotFoundError } from '~/models/Errors'
 import databaseService from '~/services/database.services'
 import { databaseCheck } from '~/utils/databaseCheck'
 import { validate } from '~/utils/validation'
@@ -12,6 +12,7 @@ import { ColumnID, TokenRole } from '~/constants/enums'
 import User from '~/models/schemas/User.schema'
 import Project from '~/models/schemas/Project.schema'
 import { isNumber } from 'lodash'
+import { ApprovalCriteria } from '~/models/schemas/Criteria.schema'
 
 export const submitProjectValidator = validate(
   checkSchema({
@@ -209,4 +210,70 @@ export const getProjectDetailValidator = validate(
       }
     }
   })
+)
+
+export const slugValidator = validate(
+  checkSchema(
+    {
+      slug: {
+        isString: { errorMessage: PROJECTS_MESSAGE.SLUG_TYPE_INVALID },
+        trim: true,
+        custom: {
+          options: async (value, { req }) => {
+            const [project] = await databaseService.query<Project[]>(
+              `SELECT projectID FROM ${DatabaseTable.Project} WHERE slug = ?`,
+              [value]
+            )
+            if (!project.projectID) {
+              throw new NotFoundError({
+                message: PROJECTS_MESSAGE.PROJECT_NOT_FOUND
+              })
+            }
+            req.projectID = project.projectID
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
+export const reviewProjectValidator = validate(
+  checkSchema(
+    {
+      criteriaID: {
+        isArray: { errorMessage: PROJECTS_MESSAGE.CRITERIA_ID_TYPE_INVALID },
+        custom: {
+          options: async (value, { req }) => {
+            if (value.length === 0 && req.body?.type === 'Accept') {
+              return true
+            } else if (value.length === 0) {
+              throw new Error(PROJECTS_MESSAGE.CRITERIA_ID_REQUIRED)
+            }
+            const criteria = await databaseService.query<ApprovalCriteria[]>(
+              `SELECT criteriaID FROM ${DatabaseTable.Approval_Criteria} WHERE criteriaID IN (?)`,
+              [value]
+            )
+            if (criteria.length !== value.length) {
+              throw new Error(PROJECTS_MESSAGE.CRITERIA_ID_INVALID)
+            }
+            return true
+          }
+        }
+      },
+      type: {
+        isString: { errorMessage: PROJECTS_MESSAGE.REVIEW_TYPE_INVALID },
+        custom: {
+          options: async (value) => {
+            if (value !== 'Accept' && value !== 'Reject' && value !== 'Consider') {
+              throw new Error(PROJECTS_MESSAGE.REVIEW_TYPE_NOT_FOUND)
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
 )

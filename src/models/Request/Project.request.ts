@@ -1,6 +1,6 @@
 import { ParamsDictionary } from 'express-serve-static-core'
 export interface Attachments {
-  attachment: string,
+  attachment: string
   type: string
 }
 export interface submitProjectBody {
@@ -15,7 +15,7 @@ export interface submitProjectBody {
   collaborators?: string[]
   mentorID: string[]
   type: string
-  groupID?: number,
+  groupID?: number
   attachments: Attachments[]
 }
 export interface GetProjectReqParams extends ParamsDictionary {
@@ -23,4 +23,9 @@ export interface GetProjectReqParams extends ParamsDictionary {
 }
 export interface GetProjectDetailReqParams extends ParamsDictionary {
   projectID: string
+}
+export interface ReviewProjectRequestBody {
+  slug: string
+  criteriaID: number[]
+  type: 'Accept' | 'Reject' | 'Consider'
 }

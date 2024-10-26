@@ -1,5 +1,5 @@
 export interface ApprovalCriteria {
-  criteriaID: string
+  criteriaID: number
   name: string
   description?: string
   type: string

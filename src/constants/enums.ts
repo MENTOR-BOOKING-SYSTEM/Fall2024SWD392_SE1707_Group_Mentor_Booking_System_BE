@@ -34,6 +34,25 @@ export enum ColumnID {
   User = 'userID'
 }
 export interface Attachments {
-  attachment: string,
+  attachment: string
   type: string
-}[]
+}
+;[]
+
+export const PROJECT_STATUS = {
+  ACCEPTED: 1,
+  REJECTED: 2,
+  CREATED: 3,
+  PENDING: 4,
+  CONSIDERED: 5,
+  MENTOR_ACCEPTED: 6,
+  MENTOR_REJECTED: 7
+}
+
+export const REVIEW_STATUS = {
+  ACCEPTED: 'Accepted',
+  REJECTED: 'Rejected',
+  CONSIDERED: 'Considered',
+  WITHDRAWN: 'Withdrawn',
+  PENDING: 'Pending'
+}
