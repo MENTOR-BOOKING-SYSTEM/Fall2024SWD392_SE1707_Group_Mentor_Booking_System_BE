@@ -18,9 +18,18 @@ class CriteriaService {
     return criteria || null
   }
 
-  async getAllCriteria(): Promise<ApprovalCriteria[]> {
-    const criteria = await databaseService.query<ApprovalCriteria[]>('SELECT * FROM Approval_Criteria')
-    return criteria
+  async getAllCriteria(page: number = 1, limit: number = 10): Promise<{criteria: ApprovalCriteria[], total: number}> {
+    const [[{total}], criteria] = await Promise.all([
+      databaseService.query<[{total: number}]>('SELECT COUNT(*) as total FROM Approval_Criteria'),
+      databaseService.query<ApprovalCriteria[]>(
+        'SELECT * FROM Approval_Criteria LIMIT ? OFFSET ?',
+        [limit, (page - 1) * limit]
+      )
+    ])
+    return {
+      criteria,
+      total
+    }
   }
 
   async getCriteriaById(criteriaID: string): Promise<ApprovalCriteria | null> {
@@ -39,11 +48,12 @@ class CriteriaService {
     return criteria
   }
 
-  async getCriteriaTypes(): Promise<ApprovalCriteriaType[]> {
+  async getCriteriaTypes(page: number = 1, limit: number = 10): Promise<ApprovalCriteriaType[]> {
+    const offset = (page - 1) * limit;
     const criteriaTypes = await databaseService.query<ApprovalCriteriaType[]>(
-      `SELECT criteriaTypeID, type FROM ${DatabaseTable.Criteria_Type}`
+      `SELECT criteriaTypeID, type FROM ${DatabaseTable.Criteria_Type} LIMIT ? OFFSET ?`,
+      [limit, offset]
     )
-
     return criteriaTypes
   }
 

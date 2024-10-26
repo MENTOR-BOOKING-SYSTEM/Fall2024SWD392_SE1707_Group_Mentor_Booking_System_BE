@@ -161,29 +161,29 @@ export const editProfileValidator = validate(
       firstName: {
         optional: true,
         isString: {
-          errorMessage: 'Tên phải là chuỗi'
+          errorMessage: 'First name must be a string'
         },
         trim: true,
         isLength: {
           options: { min: 1, max: 50 },
-          errorMessage: 'Tên phải có độ dài từ 1 đến 50 ký tự'
+          errorMessage: 'First name must be between 1 and 50 characters'
         }
       },
       lastName: {
         optional: true,
         isString: {
-          errorMessage: 'Họ phải là chuỗi'
+          errorMessage: 'Last name must be a string'
         },
         trim: true,
         isLength: {
           options: { min: 1, max: 50 },
-          errorMessage: 'Họ phải có độ dài từ 1 đến 50 ký tự'
+          errorMessage: 'Last name must be between 1 and 50 characters'
         }
       },
       avatarUrl: {
         optional: true,
         isURL: {
-          errorMessage: 'URL ảnh đại diện không hợp lệ'
+          errorMessage: 'Avatar URL is invalid'
         }
       }
     },
