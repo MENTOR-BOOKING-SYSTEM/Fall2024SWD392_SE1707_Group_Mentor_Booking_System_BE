@@ -57,7 +57,9 @@ export const USERS_MESSAGES = {
   GET_STUDENTS_IN_SAME_GROUP_SUCCESS: 'Get students in same group successfully',
   SUCCESS: 'Success',
   JOIN_GROUP_SUCCESSFULLY: 'Join group successfully',
-  FILTER_USERS_SUCCESSFULLY: 'Filter users successfully'
+  FILTER_USERS_SUCCESSFULLY: 'Filter users successfully',
+  USERS_NOT_FOUND: 'Users not found'
+  
 } as const
 
 export const POSTS_MESSAGES = {
@@ -161,7 +163,8 @@ export const PROJECTS_MESSAGE = {
   GET_PROJECT_GUIDE_SUCCESSFULLY: 'Get project guides successfully',
   GET_PROJECT_SPRINT_SUCCESSFULLY: 'Get project sprints successfully',
   TYPE_GROUP_ONLY_SENT_1_COLLABORATORS: 'With group mode you can only pass on 1 contributor',
-  TYPE_MUST_BE_JPG: 'File type must be JPG'
+  TYPE_MUST_BE_JPG: 'File type must be JPG',
+  PROJECT_NOT_FOUND: 'Project not found in this semester'
 } as const
 
 export const CRITERIA_MESSAGES = {
@@ -185,7 +188,12 @@ export const REVIEW_MESSAGES = {
   USER_DIFFERENT_GROUP: 'Other groups cannot be evaluated.',
   RATE_MUST_BE_LESS_THAN_5_AND_MORE_THAN_1: 'Rate must be less than 5 and more than 1',
   REVIEW_MEMBER_SUCCESSFULLY: 'Review member successfully',
-  YOU_CAN_NOT_REVIEW_YOURSELF: 'You can not review yourself'
+  YOU_CAN_NOT_REVIEW_YOURSELF: 'You can not review yourself',
+  ASSIGN_REVIEWER_SUCCESSFULLY: 'Assign reviewer successfully',
+  SEMESTER_ID_REQUIRED: 'Semester ID is required',
+  USER_IDS_REQUIRED: 'User IDs are required',
+  USER_IDS_MUST_BE_ARRAY: 'User IDs must be an array',
+  USERS_ALREADY_REVIEWERS: 'Users already reviewers'
 }
 
 export const TIMESTAMP_MESSAGES = {

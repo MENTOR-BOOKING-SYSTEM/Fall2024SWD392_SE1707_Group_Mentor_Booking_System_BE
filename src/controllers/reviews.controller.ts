@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { ReviewMember } from '~/models/Request/Review.request'
+import { AssignReviewerReq, ReviewMember } from '~/models/Request/Review.request'
 import { TokenPayload } from '~/models/Request/User.request'
 import reviewsServices from '~/services/review.services'
 import { ParamsDictionary } from 'express-serve-static-core'
@@ -11,5 +11,16 @@ export const reviewMemberController = async (req: Request<ParamsDictionary, any,
   return res.json({
     message: REVIEW_MESSAGES.REVIEW_MEMBER_SUCCESSFULLY,
     result
+  })
+}
+
+export const assignReviewerController = async (
+  req: Request<ParamsDictionary, any, AssignReviewerReq>,
+  res: Response
+) => {
+  const { semesterID, userIDs } = req.body
+  await reviewsServices.assignReviewer(semesterID, userIDs)
+  return res.json({
+    message: REVIEW_MESSAGES.ASSIGN_REVIEWER_SUCCESSFULLY
   })
 }

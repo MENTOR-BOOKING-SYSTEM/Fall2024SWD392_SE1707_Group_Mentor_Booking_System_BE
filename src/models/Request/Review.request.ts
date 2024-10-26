@@ -5,3 +5,8 @@ export interface ReviewMember {
     receiverID: number
   }[]
 }
+
+export interface AssignReviewerReq {
+  semesterID: number
+  userIDs: number[]
+}
