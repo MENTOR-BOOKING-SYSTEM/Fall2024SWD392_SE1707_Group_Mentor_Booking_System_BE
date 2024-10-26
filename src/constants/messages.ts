@@ -154,6 +154,12 @@ export const PROJECTS_MESSAGE = {
   GET_PROJECT_SUCCESSFULLY: 'Get project successfully',
   PROJECT_ID_INVALID: 'Project id is invalid  ',
   GET_PROJECT_DETAIL_SUCCESSFULLY: 'Get project detail successfully',
+  GET_PROJECT_TECHNOLOGIES_SUCCESSFULLY: "Get project technologies successfully",
+  GET_PROJECT_POST_SUCCESSFULLY: "Get project post successfully",
+  GET_PROJECT_OWN_SUCCESSFULLY: "Get project owners successfully",
+  GET_PROJECT_REVIEW_SUCCESSFULLY: "Get project reviewers successfully",
+  GET_PROJECT_GUIDE_SUCCESSFULLY: "Get project guides successfully",
+  GET_PROJECT_SPRINT_SUCCESSFULLY: "Get project sprints successfully",
   TYPE_GROUP_ONLY_SENT_1_COLLABORATORS: 'With group mode you can only pass on 1 contributor',
   TYPE_MUST_BE_JPG: 'File type must be JPG'
 } as const

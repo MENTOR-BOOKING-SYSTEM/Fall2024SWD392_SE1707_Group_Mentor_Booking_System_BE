@@ -6,6 +6,13 @@ import { OkPacket } from 'mysql2'
 import { submitProjectBody } from '~/models/Request/Project.request'
 import { TokenRole } from '~/constants/enums'
 import User from '~/models/schemas/User.schema'
+import Post from '~/models/schemas/Post.schema'
+import { Sprint } from '~/models/schemas/Sprint.schema'
+import { Attachment } from '~/models/schemas/Attachment.schema'
+import internal from 'stream'
+import { log } from 'console'
+import { query } from 'express'
+
 class ProjectServices {
   async getProjectDetail(id: number) {
     const [technologies, collaborators, projects] = await Promise.all([
@@ -26,6 +33,51 @@ class ProjectServices {
       technologies
     }
   }
+
+  async getProjectPost(id: number) {
+    return databaseService.query<Post[]>(
+      `SELECT * FROM ${DatabaseTable.Post} WHERE projectID = ?`,
+      [id]
+    )
+  }
+
+  async getProjectOwn(id: number) {
+    return databaseService.query<{ userID: string, email: string, avatarUrl: string, username: string, firstName: string, lastName: string }[]>(
+      `SELECT u.userID, u.email, u.avatarUrl, u.username, u.firstName, u.lastName
+       FROM ${DatabaseTable.User} u
+       JOIN ${DatabaseTable.User_Own_Project} uop ON u.userID = uop.userID
+       WHERE uop.projectID = ?`,
+      [id]
+    )
+  }
+
+  async getProjectReview(id: number) {
+    return databaseService.query<{ userID: string, email: string, avatarUrl: string, username: string, firstName: string, lastName: string }[]>(
+      `SELECT u.userID, u.email, u.avatarUrl, u.username, u.firstName, u.lastName
+       FROM ${DatabaseTable.User} u
+       JOIN ${DatabaseTable.User_Review_Project} urp ON u.userID = urp.userID
+       WHERE urp.projectID = ?`,
+      [id]
+    )
+  }
+
+  async getProjectGuide(id: number) {
+    return databaseService.query<{ userID: string, email: string, avatarUrl: string, username: string, firstName: string, lastName: string }[]>(
+      `SELECT u.userID, u.email, u.avatarUrl, u.username, u.firstName, u.lastName
+       FROM ${DatabaseTable.User} u
+       JOIN ${DatabaseTable.User_Guide} ug ON u.userID = ug.userID
+       WHERE ug.projectID = ?`,
+      [id]
+    )
+  }
+
+  async getProjectSprint(id: number) {
+    return databaseService.query<Sprint[]>(
+      `SELECT * FROM ${DatabaseTable.Sprint} WHERE projectID = ?`,
+      [id]
+    )
+  }
+
   async createProject(body: submitProjectBody, user_id: string, roles: string[]) {
     const { technologies, collaborators, type, mentorID, attachments, ...project } = body
     const { projectID, ...rest } = new Project(project)
@@ -152,6 +204,7 @@ class ProjectServices {
     ])
     return submitProjectData
   }
+
   async getProject(type: string, limit: number, page: number, userID: string) {
     if (type === 'all') {
       const result = await databaseService.query(
@@ -317,6 +370,60 @@ OFFSET
       ['Reviewer']
     )
   }
+
+  async getProjectBySlug(slug: string) {
+    const [project] = await databaseService.query<Project[]>(
+      `SELECT projectID FROM ${DatabaseTable.Project} WHERE slug = ?`,
+      [slug]
+    )
+    if (!project) {
+      throw new Error('Project not found')
+    }
+    return project
+  }
+
+  async getProjectAttachments(projectID: number) {
+    const attachments = await databaseService.query<Attachment[]>(
+      `SELECT * FROM ${DatabaseTable.Attachment} WHERE projectID = ?`,
+      [projectID]
+    )
+    return attachments
+  }
+
+  async getProjectDetailBySlug(slug: string) {
+    const [project] = await databaseService.query<Project[]>(
+      `SELECT * FROM ${DatabaseTable.Project} WHERE slug = ?`,
+      [slug]
+    )
+    if (!project) {
+      throw new Error('Project not found')
+    }
+    return project
+  }
+
+  async getProjectTechnologiesWithChildren(slug: string) {
+    const technologies = await databaseService.query<{ techID: string, techName: string, parentID: number | null }[]>(
+      `SELECT t.techID, t.techName, t.parentID FROM ${DatabaseTable.Technology} t
+       JOIN ${DatabaseTable.Project_Technology} pt ON t.techID = pt.techID
+       JOIN ${DatabaseTable.Project} p ON pt.projectID = p.projectID
+       WHERE p.slug = ?`,
+      [slug]
+    )
+    const techWithChildren = await Promise.all(technologies.map(async tech => {
+      const children = await databaseService.query<{ techID: string, techName: string }[]>(
+        `SELECT techID, techName FROM ${DatabaseTable.Technology} WHERE techID = ?`,
+        [tech.parentID]
+      );
+      
+      return {
+        techID: children.map(child => child.techID),
+        techName: children.map(child => child.techName),
+        children: ({ techID: tech.techID, techName: tech.techName })
+      };
+    }));
+    return techWithChildren
+  }
+
 }
-const projectServices = new ProjectServices()
-export default projectServices
+
+export default new ProjectServices()
