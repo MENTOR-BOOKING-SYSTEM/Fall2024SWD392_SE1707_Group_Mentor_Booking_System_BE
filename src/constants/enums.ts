@@ -34,6 +34,7 @@ export enum ColumnID {
   User = 'userID'
 }
 export interface Attachments {
-  attachment: string,
+  attachment: string
   type: string
-}[]
+}
+;[]
