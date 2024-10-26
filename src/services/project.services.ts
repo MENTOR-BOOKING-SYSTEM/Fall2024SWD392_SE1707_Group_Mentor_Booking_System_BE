@@ -475,28 +475,73 @@ OFFSET
   }
 
   async getProjectTechnologiesWithChildren(slug: string) {
-    const technologies = await databaseService.query<{ techID: string; techName: string; parentID: number | null }[]>(
-      `SELECT t.techID, t.techName, t.parentID FROM ${DatabaseTable.Technology} t
-       JOIN ${DatabaseTable.Project_Technology} pt ON t.techID = pt.techID
-       JOIN ${DatabaseTable.Project} p ON pt.projectID = p.projectID
-       WHERE p.slug = ?`,
+    // Lấy project ID từ slug
+    const [project] = await databaseService.query<{ projectID: number }[]>(
+      `SELECT projectID FROM ${DatabaseTable.Project} WHERE slug = ?`,
       [slug]
-    )
-    const techWithChildren = await Promise.all(
-      technologies.map(async (tech) => {
-        const children = await databaseService.query<{ techID: string; techName: string }[]>(
-          `SELECT techID, techName FROM ${DatabaseTable.Technology} WHERE techID = ?`,
-          [tech.parentID]
-        )
+    );
 
-        return {
-          techID: children.map((child) => child.techID),
-          techName: children.map((child) => child.techName),
-          children: { techID: tech.techID, techName: tech.techName }
+    if (!project) {
+      return [];
+    }
+
+    // Đầu tiên lấy tất cả technologies của project
+    const projectTechs = await databaseService.query<{ techID: number }[]>(
+      `SELECT techID FROM ${DatabaseTable.Project_Technology} WHERE projectID = ?`,
+      [project.projectID]
+    );
+
+    const techIDs = projectTechs.map(tech => tech.techID);
+    
+    if (techIDs.length === 0) {
+      return [];
+    }
+
+    // Sau đó lấy thông tin đầy đủ của các technologies và parents của chúng
+    const technologies = await databaseService.query<{ techID: number, techName: string, parentID: number | null }[]>(
+      `SELECT t.* 
+       FROM ${DatabaseTable.Technology} t 
+       WHERE t.techID IN (?) 
+       OR t.techID IN (
+         SELECT parentID 
+         FROM ${DatabaseTable.Technology} 
+         WHERE techID IN (?) 
+         AND parentID IS NOT NULL
+       )
+       ORDER BY CASE WHEN t.parentID IS NULL THEN 0 ELSE 1 END, t.techID`,
+      [techIDs, techIDs]
+    );
+
+    // Tạo cấu trúc phân cấp
+    const techMap = new Map();
+    const rootTechs:any = [];
+
+    // Đầu tiên, tạo map của tất cả technologies
+    technologies.forEach(tech => {
+      techMap.set(tech.techID, {
+        techID: tech.techID.toString(),
+        techName: tech.techName,
+        children: []
+      });
+    });
+
+    // Sau đó, xây dựng cấu trúc cây
+    technologies.forEach(tech => {
+      if (tech.parentID === null) {
+        rootTechs.push(techMap.get(tech.techID));
+      } else {
+        const parent = techMap.get(tech.parentID);
+        if (parent) {
+          // Chỉ thêm techID và techName cho children
+          parent.children.push({
+            techID: tech.techID.toString(),
+            techName: tech.techName
+          });
         }
-      })
-    )
-    return techWithChildren
+      }
+    });
+
+    return rootTechs;
   }
 }
 
