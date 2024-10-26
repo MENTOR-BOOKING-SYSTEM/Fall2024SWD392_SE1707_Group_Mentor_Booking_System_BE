@@ -85,3 +85,22 @@ export const reviewMemberValidator = validate(
     }
   })
 )
+
+export const assignReviewerValidator = validate(
+  checkSchema({
+    semesterID: {
+      notEmpty: {
+        errorMessage: REVIEW_MESSAGES.SEMESTER_ID_REQUIRED
+      },
+      isNumeric: true
+    },
+    userIDs: {
+      notEmpty: {
+        errorMessage: REVIEW_MESSAGES.USER_IDS_REQUIRED
+      },
+      isArray: {
+        errorMessage: REVIEW_MESSAGES.USER_IDS_MUST_BE_ARRAY
+      }
+    }
+  })
+)
